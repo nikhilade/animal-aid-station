@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, PawPrint } from "lucide-react";
 
 const links = [
   { label: "Home", href: "#home" },
@@ -15,7 +15,7 @@ export function Nav() {
     <header className="relative z-20">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
         <a href="#home" className="flex items-center gap-2 text-2xl font-bold text-forest">
-          pet g<span className="inline-block">🐾</span>od
+          pet g<PawPrint className="inline size-5 -rotate-12 text-clay" />od
         </a>
 
         <nav className="hidden items-center gap-10 md:flex">
