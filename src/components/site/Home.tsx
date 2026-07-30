@@ -349,7 +349,7 @@ export function Home() {
         <svg
           viewBox="0 0 1200 60"
           preserveAspectRatio="none"
-          className="relative z-10 block h-6 w-full"
+          className="relative z-10 block h-6 w-full translate-y-[1px]"
         >
           <path
             fill="currentColor"
