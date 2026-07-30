@@ -5,11 +5,12 @@ import img2 from "@/assets/67459a33ff2837ab08e7f16c_Mask-group-1.webp.asset.json
 import img3 from "@/assets/67459a332f75502739bca3b7_Mask-group.webp.asset.json";
 import img4 from "@/assets/67459a34be315ca7f02b1874_image-1.webp.asset.json";
 
+// x / y are the final offsets from the centre of the section (in % of section size)
 const items = [
-  { src: img1.url, alt: "Woman holding two white pomeranian puppies", x: -1, y: -1, rot: 113 },
-  { src: img2.url, alt: "Pomeranian dog sitting with golden baubles", x: 1, y: -1, rot: 119 },
-  { src: img3.url, alt: "Woman kissing her husky", x: -1, y: 1, rot: 100 },
-  { src: img4.url, alt: "Smiling woman cuddling her akita", x: 1, y: 1, rot: 234 },
+  { src: img1.url, alt: "Woman holding two white pomeranian puppies", x: -42, y: -34, rot: -14 },
+  { src: img2.url, alt: "Pomeranian dog sitting with golden baubles", x: 42, y: -36, rot: 12 },
+  { src: img3.url, alt: "Woman kissing her husky", x: -40, y: 32, rot: 10 },
+  { src: img4.url, alt: "Smiling woman cuddling her akita", x: 40, y: 34, rot: -12 },
 ];
 
 export function InstagramSection() {
@@ -23,9 +24,11 @@ export function InstagramSection() {
       const el = ref.current;
       if (!el) return;
       const rect = el.getBoundingClientRect();
-      const total = rect.height + window.innerHeight;
-      const p = (window.innerHeight - rect.top) / total;
-      setProgress(Math.min(1, Math.max(0, p)));
+      const vh = window.innerHeight;
+      // 0 when the section's top edge reaches the bottom of the viewport,
+      // 1 once the section has scrolled roughly to the middle of the screen
+      const raw = (vh - rect.top) / (vh * 0.5 + rect.height * 0.5);
+      setProgress(Math.min(1, Math.max(0, raw)));
     };
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(update);
@@ -40,8 +43,8 @@ export function InstagramSection() {
     };
   }, []);
 
-  // 0 at section centre, grows as it scrolls through the viewport
-  const spread = (progress - 0.5) * 2; // -1 → 1
+  // ease-out so the photos fly apart quickly then settle in the corners
+  const e = 1 - Math.pow(1 - progress, 3);
 
   return (
     <section
@@ -57,15 +60,13 @@ export function InstagramSection() {
             src={it.src}
             alt={it.alt}
             loading="lazy"
-            className="absolute w-40 max-w-none will-change-transform sm:w-56 lg:w-80"
+            className="absolute left-1/2 top-1/2 w-40 max-w-none will-change-transform sm:w-56 lg:w-72"
             style={{
-              left: it.x < 0 ? "6%" : "auto",
-              right: it.x > 0 ? "6%" : "auto",
-              top: it.y < 0 ? "-6%" : "auto",
-              bottom: it.y > 0 ? "-6%" : "auto",
-              transform: `translate3d(${it.x * spread * 6}vw, ${it.y * spread * 6}vh, 0) rotate(${
-                spread * (it.rot > 180 ? -8 : 8)
-              }deg)`,
+              transform: `translate3d(calc(-50% + ${it.x * e}%), calc(-50% + ${
+                it.y * e * 6
+              }%), 0) rotate(${it.rot * e}deg)`,
+              transformOrigin: "center",
+              zIndex: 1,
             }}
           />
         ))}
