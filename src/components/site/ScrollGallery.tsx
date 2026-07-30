@@ -6,6 +6,8 @@ import girlDog from "@/assets/67447b60fa15c36baeb8fc53_medium-shot-smiley-girl-h
 import womanPhone from "@/assets/67456aa8468107880fcbc97b_woman-posing-while-holding-dog-smartphone_1.webp.asset.json";
 import siamese from "@/assets/6746b9cb8fbb4801eee6a9b4_pretty-woman-playing-with-siamese-cat-1-p-500.webp.asset.json";
 import doctorCat from "@/assets/6746b9cb4b51a1c9b8676033_full-shot-doctor-holding-cat-with-leg-injury-1.webp.asset.json";
+import pawCircle from "@/assets/paw-circle.png.asset.json";
+
 
 const leftColumn = [
   { src: vetCat.url, alt: "Veterinarian listening to a fluffy cat's heartbeat" },
