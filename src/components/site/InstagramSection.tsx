@@ -56,7 +56,7 @@ export function InstagramSection() {
       style={{ height: "220vh" }}
     >
       <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden">
-        <div className="pointer-events-none absolute inset-0">
+      <div className="pointer-events-none absolute inset-0 z-20">
           {items.map((it, i) => (
             <img
               key={i}
@@ -67,13 +67,15 @@ export function InstagramSection() {
               style={{
                 transform: `translate3d(calc(-50% + ${it.x * e}vw), calc(-50% + ${
                   it.y * e
-                }vh), 0) rotate(${it.rot * e}deg)`,
+                }vh), 0) rotate(${
+                  it.rot * (e + 6 * Math.sin(Math.PI * progress))
+                }deg)`,
                 transformOrigin: "center",
-                zIndex: 1,
               }}
             />
           ))}
         </div>
+
 
         <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
           <h2 className="text-4xl leading-tight sm:text-5xl lg:text-6xl">
