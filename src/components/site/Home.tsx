@@ -9,6 +9,10 @@ import dogHead from "@/assets/dog-head.webp.asset.json";
 import dogFace from "@/assets/dog-face.png.asset.json";
 import dogLeft from "@/assets/dog-left.png.asset.json";
 import frameArrow from "@/assets/frame-arrow.svg.asset.json";
+import logo1 from "@/assets/logo-1.svg.asset.json";
+import logo2 from "@/assets/logo-2.svg.asset.json";
+import logo3 from "@/assets/logo-3.svg.asset.json";
+import logo4 from "@/assets/logo-4.svg.asset.json";
 import aboutVet from "@/assets/about-vet.jpg";
 import serviceVet from "@/assets/service-vet.jpg";
 import serviceGrooming from "@/assets/service-grooming.jpg";
@@ -65,7 +69,7 @@ const posts = [
   { title: "Creating a Calm Sleep Space for Kittens", author: "Noah Fletcher", date: "January 15, 2025", img: blog8 },
 ];
 
-const sponsors = ["Pawfect", "VetLine", "HappyTail", "CarePlus"];
+const sponsors = [logo4.url, logo1.url, logo3.url, logo2.url];
 
 export function Home() {
   return (
@@ -175,17 +179,20 @@ export function Home() {
         <div className="mx-auto max-w-7xl px-6">
           <h3 className="text-center text-xl font-semibold">Our Generous Sponsors and Donors</h3>
         </div>
-        <div className="mt-10 overflow-hidden">
-          <div className="marquee-track flex w-max gap-16 pr-16">
-            {[...sponsors, ...sponsors, ...sponsors, ...sponsors].map((s, i) => (
-              <span
+        <div className="relative mt-10 overflow-hidden">
+          <div className="marquee-track flex w-max items-center gap-16 pr-16">
+            {[...sponsors, ...sponsors, ...sponsors, ...sponsors].map((src, i) => (
+              <img
                 key={i}
-                className="flex items-center gap-2 whitespace-nowrap text-2xl font-bold text-forest/50"
-              >
-                <PawPrint className="size-6" /> {s}
-              </span>
+                src={src}
+                alt="Sponsor logo"
+                loading="lazy"
+                className="h-10 w-auto shrink-0 lg:h-12"
+              />
             ))}
           </div>
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-cream to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-cream to-transparent" />
         </div>
       </section>
 
