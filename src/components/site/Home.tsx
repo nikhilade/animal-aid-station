@@ -18,6 +18,7 @@ import testimonial1 from "@/assets/testimonial-1.jpg";
 import blog1 from "@/assets/blog-1.jpg";
 import blog2 from "@/assets/blog-2.jpg";
 import blog3 from "@/assets/blog-3.jpg";
+import { BlogCards } from "@/components/site/BlogCards";
 
 const services = [
   {
