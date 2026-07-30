@@ -90,7 +90,7 @@ export function ScrollGallery() {
         alt=""
         aria-hidden="true"
         loading="lazy"
-        className="pointer-events-none absolute left-0 top-0 size-72 -translate-x-1/2 -translate-y-1/2 opacity-100 animate-spin-slow md:size-96 lg:size-[28rem] xl:size-[36rem]"
+        className="pointer-events-none absolute -left-8 top-0 -translate-x-1/2 -translate-y-1/2 z-0 size-96 animate-spin-slow md:size-[28rem] lg:size-[36rem] xl:size-[44rem]"
         style={{
           filter: "brightness(0.5) sepia(1) hue-rotate(120deg) saturate(3)",
         }}
