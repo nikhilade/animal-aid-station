@@ -135,8 +135,10 @@
   opacity: 1 !important;
 }
 
+@utility marquee-track {
   animation: marquee 28s linear infinite;
 }
+
 
 @keyframes marquee {
   from {
