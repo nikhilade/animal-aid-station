@@ -25,11 +25,10 @@ export function InstagramSection() {
       if (!el) return;
       const rect = el.getBoundingClientRect();
       const vh = window.innerHeight;
-      // 0 -> section top hits the bottom of the viewport
-      // 1 -> section centre reaches the centre of the viewport
-      const start = vh;
-      const end = vh * 0.5 - rect.height * 0.5;
-      const raw = (start - rect.top) / Math.max(1, start - end);
+      // The wrapper is taller than the viewport and the inner panel is sticky,
+      // so the section stays pinned while this progress runs 0 -> 1.
+      const distance = Math.max(1, rect.height - vh);
+      const raw = -rect.top / distance;
       setProgress(Math.min(1, Math.max(0, raw)));
     };
     const onScroll = () => {
@@ -45,53 +44,55 @@ export function InstagramSection() {
     };
   }, []);
 
-  // Webflow scroll interactions are linear — only a very slight ease so the
-  // photos track the scroll 1:1 and settle exactly when the section centres.
+  // slight ease so the photos track the scroll almost 1:1 while pinned
   const e = progress * progress * (3 - 2 * progress) * 0.25 + progress * 0.75;
-
 
   return (
     <section
       ref={ref}
       id="instagram"
-      className="relative overflow-hidden bg-sand py-28 lg:py-40"
+      className="relative bg-sand"
       aria-label="Stay Pawsome with us on Instagram"
+      style={{ height: "220vh" }}
     >
-      <div className="pointer-events-none absolute inset-0">
-        {items.map((it, i) => (
-          <img
-            key={i}
-            src={it.src}
-            alt={it.alt}
-            loading="lazy"
-            className="absolute left-1/2 top-1/2 w-40 max-w-none will-change-transform sm:w-56 lg:w-72"
-            style={{
-              transform: `translate3d(calc(-50% + ${it.x * e}vw), calc(-50% + ${
-                it.y * e
-              }vh), 0) rotate(${it.rot * e}deg)`,
-              transformOrigin: "center",
-              zIndex: 1,
-            }}
-          />
-        ))}
-      </div>
+      <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden">
+        <div className="pointer-events-none absolute inset-0">
+          {items.map((it, i) => (
+            <img
+              key={i}
+              src={it.src}
+              alt={it.alt}
+              loading="lazy"
+              className="absolute left-1/2 top-1/2 w-40 max-w-none will-change-transform sm:w-56 lg:w-72"
+              style={{
+                transform: `translate3d(calc(-50% + ${it.x * e}vw), calc(-50% + ${
+                  it.y * e
+                }vh), 0) rotate(${it.rot * e}deg)`,
+                transformOrigin: "center",
+                zIndex: 1,
+              }}
+            />
+          ))}
+        </div>
 
-      <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
-        <h2 className="text-4xl leading-tight sm:text-5xl lg:text-6xl">
-          Stay Pawsome With Us
-          <br />
-          On Instagram
-        </h2>
-        <a
-          href="https://instagram.com"
-          target="_blank"
-          rel="noreferrer"
-          className="mt-6 inline-flex items-center gap-3 text-[17px] text-foreground/85 hover:text-forest"
-        >
-          <Instagram className="size-6 text-clay" />
-          Pet Care_Insta
-        </a>
+        <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
+          <h2 className="text-4xl leading-tight sm:text-5xl lg:text-6xl">
+            Stay Pawsome With Us
+            <br />
+            On Instagram
+          </h2>
+          <a
+            href="https://instagram.com"
+            target="_blank"
+            rel="noreferrer"
+            className="mt-6 inline-flex items-center gap-3 text-[17px] text-foreground/85 hover:text-forest"
+          >
+            <Instagram className="size-6 text-clay" />
+            Pet Care_Insta
+          </a>
+        </div>
       </div>
     </section>
   );
 }
+

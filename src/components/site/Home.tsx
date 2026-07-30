@@ -54,7 +54,7 @@ const sponsors = ["Pawfect", "VetLine", "HappyTail", "CarePlus"];
 
 export function Home() {
   return (
-    <div className="overflow-x-hidden">
+    <div className="[overflow-x:clip]">
       {/* HERO */}
       <section id="home" className="relative bg-sage">
         <div className="paw-field absolute inset-0 opacity-70" aria-hidden />
