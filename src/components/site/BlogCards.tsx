@@ -55,7 +55,7 @@ export function BlogCards({ posts }: { posts: Post[] }) {
     const ctx = gsap.context(() => {
       const mm = gsap.matchMedia();
       mm.add("(min-width: 768px)", () => {
-        const getDistance = () => track.scrollWidth - track.offsetWidth;
+        const getDistance = () => Math.max(0, track.scrollWidth - section.offsetWidth);
         const tween = gsap.to(track, {
           x: () => -getDistance(),
           ease: "none",
