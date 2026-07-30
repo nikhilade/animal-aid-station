@@ -125,20 +125,9 @@
   background-size: 120px 120px;
 }
 
-.paw-print {
-  fill: var(--forest);
-  transition: fill 0.3s ease, opacity 0.3s ease;
-}
-
-.paw-print:hover {
-  fill: var(--clay);
-  opacity: 1 !important;
-}
-
 @utility marquee-track {
   animation: marquee 28s linear infinite;
 }
-
 
 @keyframes marquee {
   from {
