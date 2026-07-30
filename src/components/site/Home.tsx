@@ -99,12 +99,14 @@ export function Home() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:gap-6">
             <h2 className="max-w-xl text-4xl leading-tight sm:text-5xl">
-              Loving Pets Is What We Do Best
+              Loving Pets Is What We
+              <br className="hidden lg:inline" />
+              Do Best
             </h2>
             <img
               src={frameArrow.url}
               alt=""
-              className="hidden h-24 w-auto lg:block"
+              className="hidden h-24 w-auto shrink-0 lg:block"
               aria-hidden="true"
             />
           </div>
