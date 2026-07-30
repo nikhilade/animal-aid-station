@@ -90,7 +90,7 @@ export function ScrollGallery() {
         alt=""
         aria-hidden="true"
         loading="lazy"
-        className="pointer-events-none absolute left-0 top-0 size-96 -translate-x-1/2 -translate-y-1/2 opacity-100 brightness-[0.5] animate-spin-slow lg:size-[28rem]"
+        className="pointer-events-none absolute left-0 top-0 size-96 -translate-x-1/2 -translate-y-1/2 opacity-100 brightness-50 sepia hue-rotate-90 saturate-150 animate-spin-slow lg:size-[28rem]"
       />
       <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 lg:grid-cols-[1fr_1.1fr]">
         <div>
