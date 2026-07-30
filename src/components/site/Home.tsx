@@ -213,6 +213,9 @@ export function Home() {
         </div>
       </section>
 
+      {/* SCROLLING GALLERY */}
+      <ScrollGallery />
+
       {/* TESTIMONIAL */}
       <section className="relative overflow-hidden bg-forest py-20 lg:py-28">
         <div className="paw-field absolute inset-0 opacity-100 invert" aria-hidden />
