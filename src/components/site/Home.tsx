@@ -7,6 +7,7 @@ import { Reveal } from "./Reveal";
 import dogsHero from "@/assets/dogs-hero.webp.asset.json";
 import dogHead from "@/assets/dog-head.webp.asset.json";
 import frameArrow from "@/assets/frame-arrow.svg.asset.json";
+import contactBg from "@/assets/contact-bg.png.asset.json";
 import aboutVet from "@/assets/about-vet.jpg";
 import serviceVet from "@/assets/service-vet.jpg";
 import serviceGrooming from "@/assets/service-grooming.jpg";
@@ -283,7 +284,11 @@ export function Home() {
       <InstagramSection />
 
       {/* CONTACT */}
-      <section id="contact" className="bg-background py-20 lg:py-28">
+      <section
+        id="contact"
+        className="bg-background bg-cover bg-center py-20 lg:py-28"
+        style={{ backgroundImage: `url(${contactBg.url})` }}
+      >
         <div className="mx-auto grid max-w-7xl gap-14 px-6 lg:grid-cols-2">
           <div>
             <h2 className="text-4xl leading-tight sm:text-5xl">Have Questions? We&apos;re Here to Help</h2>
