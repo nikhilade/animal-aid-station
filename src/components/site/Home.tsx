@@ -369,7 +369,7 @@ export function Home() {
           <img
             src={footerDogFace.url}
             alt=""
-            className="pointer-events-none absolute -top-8 right-0 z-0 w-40 sm:-top-12 sm:w-52 md:-top-16 md:w-64 lg:-top-20 lg:w-80"
+            className="pointer-events-none absolute -top-20 right-0 z-0 w-36 sm:-top-24 sm:w-44 md:-top-28 md:w-52 lg:-top-32 lg:w-60"
             aria-hidden
           />
           <div className="relative z-10 mx-auto grid max-w-7xl gap-12 px-6 md:grid-cols-3">
