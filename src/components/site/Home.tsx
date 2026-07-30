@@ -2,6 +2,8 @@ import { PawPrint, Phone, Mail, MapPin, Facebook, Instagram, Twitter, Linkedin, 
 import { Nav } from "./Nav";
 import { ScrollGallery } from "./ScrollGallery";
 import { InstagramSection } from "./InstagramSection";
+import { Reveal } from "./Reveal";
+
 import dogsHero from "@/assets/dogs-hero.webp.asset.json";
 import dogHead from "@/assets/dog-head.webp.asset.json";
 import frameArrow from "@/assets/frame-arrow.svg.asset.json";
