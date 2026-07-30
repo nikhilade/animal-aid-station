@@ -178,7 +178,9 @@ export function Home() {
       <section className="bg-cream py-14">
         <div className="mx-auto flex max-w-7xl flex-col items-center gap-8 px-6 lg:flex-row lg:justify-between">
           <h3 className="shrink-0 text-center text-2xl font-bold lg:text-3xl lg:text-left">
-            Our Generous Sponsors and Donors
+            Our Generous Sponsors
+            <br />
+            and Donors
           </h3>
           <div className="relative w-full overflow-hidden lg:w-auto">
             <div className="marquee-track flex w-max items-center gap-12 pr-12 lg:gap-16 lg:pr-16">
