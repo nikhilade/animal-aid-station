@@ -254,29 +254,7 @@ export function Home() {
         <div className="mx-auto max-w-7xl px-6">
           <h2 className="text-4xl leading-tight sm:text-5xl">Unleashing Expert Tips for Pet Owners</h2>
 
-          <div className="mt-14 grid gap-8 md:grid-cols-3">
-            {posts.map((p) => (
-              <article key={p.title} className="rounded-[2rem] bg-card p-5">
-                <img
-                  src={p.img}
-                  alt={p.title}
-                  loading="lazy"
-                  width={800}
-                  height={600}
-                  className="h-52 w-full rounded-[1.5rem] object-cover"
-                />
-                <h3 className="mt-6 text-xl leading-snug">{p.title}</h3>
-                <div className="mt-4 flex items-center justify-between text-sm text-foreground/70">
-                  <span>
-                    {p.author} · {p.date}
-                  </span>
-                  <span className="inline-flex size-9 items-center justify-center rounded-full bg-forest text-primary-foreground">
-                    <ArrowUpRight className="size-4" />
-                  </span>
-                </div>
-              </article>
-            ))}
-          </div>
+          <BlogCards posts={posts} />
         </div>
       </section>
 
