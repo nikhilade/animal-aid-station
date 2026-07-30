@@ -225,7 +225,7 @@ export function Home() {
           alt=""
           aria-hidden="true"
           loading="lazy"
-          className="animate-spin-slow pointer-events-none absolute -right-24 -top-24 w-72 opacity-20 mix-blend-screen lg:w-96"
+          className="animate-spin-slow pointer-events-none absolute right-6 top-1/2 w-56 -translate-y-1/2 opacity-20 mix-blend-screen lg:right-12 lg:w-72"
         />
         <div className="relative mx-auto max-w-5xl px-6">
           <h2 className="max-w-2xl text-4xl leading-tight text-primary-foreground sm:text-5xl">
