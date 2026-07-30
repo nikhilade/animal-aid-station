@@ -97,7 +97,7 @@ export function Home() {
       {/* ABOUT */}
       <section id="about" className="bg-sand py-20 lg:py-28">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:gap-6">
             <h2 className="max-w-xl text-4xl leading-tight sm:text-5xl">
               Loving Pets Is What We Do Best
             </h2>
