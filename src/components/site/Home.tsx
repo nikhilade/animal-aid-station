@@ -81,7 +81,7 @@ export function Home() {
               <img
                 src={dogHead.url}
                 alt="Illustrated dog head"
-                className="absolute -top-6 right-4 w-28 sm:w-36 lg:-top-10 lg:right-10 lg:w-48"
+                className="pointer-events-none absolute -top-16 right-2 w-56 sm:w-72 lg:-top-24 lg:right-6 lg:w-96"
               />
               <img
                 src={dogsHero.url}
