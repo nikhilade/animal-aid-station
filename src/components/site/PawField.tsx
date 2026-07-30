@@ -30,11 +30,10 @@ export function PawField({ className }: { className?: string }) {
           >
             <svg
               viewBox="0 0 24 24"
-              className="pointer-events-auto fill-forest transition-colors duration-300 hover:fill-clay"
+              className={`pointer-events-auto fill-forest opacity-${paw.opacity} transition-all duration-300 hover:fill-clay hover:opacity-100`}
               style={{
                 width: `${paw.scale * 2.25}rem`,
                 height: `${paw.scale * 2.25}rem`,
-                opacity: paw.opacity,
                 transform: `rotate(${paw.rotate}deg)`,
               }}
             >
