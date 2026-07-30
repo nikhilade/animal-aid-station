@@ -3,6 +3,7 @@ import { Nav } from "./Nav";
 import { ScrollGallery } from "./ScrollGallery";
 import { InstagramSection } from "./InstagramSection";
 import { Reveal } from "./Reveal";
+import { PawField } from "./PawField";
 
 import dogsHero from "@/assets/dogs-hero.webp.asset.json";
 import dogHead from "@/assets/dog-head.webp.asset.json";
