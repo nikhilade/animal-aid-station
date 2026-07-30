@@ -77,7 +77,7 @@ export function Home() {
     <div className="[overflow-x:clip]">
       {/* HERO */}
       <section id="home" className="hero-section relative bg-sage">
-        <div className="paw-field absolute inset-0 opacity-70" aria-hidden />
+        <PawField />
         <div className="relative">
           <Nav />
           <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 pb-0 pt-8 lg:grid-cols-2 lg:pt-16">
