@@ -7,6 +7,7 @@ import { Reveal } from "./Reveal";
 import dogsHero from "@/assets/dogs-hero.webp.asset.json";
 import dogHead from "@/assets/dog-head.webp.asset.json";
 import dogFace from "@/assets/dog-face.png.asset.json";
+import dogLeft from "@/assets/dog-left.png.asset.json";
 import frameArrow from "@/assets/frame-arrow.svg.asset.json";
 import aboutVet from "@/assets/about-vet.jpg";
 import serviceVet from "@/assets/service-vet.jpg";
@@ -341,6 +342,11 @@ export function Home() {
 
       {/* FOOTER */}
       <div aria-hidden className="relative z-10 -mb-px block bg-background leading-[0]">
+        <img
+          src={dogLeft.url}
+          alt=""
+          className="absolute bottom-2 left-0 z-0 w-24 lg:w-24"
+        />
         <img
           src={dogFace.url}
           alt=""
