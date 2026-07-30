@@ -345,7 +345,7 @@ export function Home() {
         <img
           src={dogLeft.url}
           alt=""
-          className="absolute bottom-2 left-0 z-0 w-24 lg:w-24"
+          className="absolute bottom-2 left-0 z-0 w-32 lg:w-32"
         />
         <img
           src={dogFace.url}
