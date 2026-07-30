@@ -85,7 +85,14 @@ export function ScrollGallery() {
       className="relative overflow-hidden bg-sand py-20 lg:py-28"
       aria-label="Moments from our clinic"
     >
-      <div className="mx-auto grid max-w-7xl items-center gap-12 px-6 lg:grid-cols-[1fr_1.1fr]">
+      <img
+        src={pawCircle.url}
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        className="pointer-events-none absolute -left-20 top-1/2 w-80 -translate-y-1/2 opacity-20 animate-spin-slow lg:w-[28rem]"
+      />
+      <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 lg:grid-cols-[1fr_1.1fr]">
         <div>
           <h2 className="text-4xl leading-tight sm:text-5xl">
             Every Visit Is a Happy Tail Story
