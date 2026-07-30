@@ -351,11 +351,16 @@ export function Home() {
       </section>
 
       {/* FOOTER */}
-      <div aria-hidden className="-mb-px block bg-background leading-[0]">
+      <div aria-hidden className="relative -mb-px block overflow-hidden bg-background leading-[0]">
+        <img
+          src={dogFace.url}
+          alt=""
+          className="absolute -bottom-4 right-0 z-0 w-32 translate-x-1/4 sm:w-40 lg:w-56"
+        />
         <svg
           viewBox="0 0 1200 60"
           preserveAspectRatio="none"
-          className="block h-10 w-full sm:h-14 lg:h-[70px]"
+          className="relative z-10 block h-10 w-full sm:h-14 lg:h-[70px]"
         >
           <path
             fill="currentColor"
