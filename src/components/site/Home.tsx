@@ -8,8 +8,6 @@ import dogsHero from "@/assets/dogs-hero.webp.asset.json";
 import dogHead from "@/assets/dog-head.webp.asset.json";
 import frameArrow from "@/assets/frame-arrow.svg.asset.json";
 import contactBg from "@/assets/contact-bg.png.asset.json";
-import footerWave from "@/assets/footer-wave.png.asset.json";
-import footerDog from "@/assets/footer-dog.png.asset.json";
 import aboutVet from "@/assets/about-vet.jpg";
 import serviceVet from "@/assets/service-vet.jpg";
 import serviceGrooming from "@/assets/service-grooming.jpg";
@@ -357,47 +355,22 @@ export function Home() {
       </section>
 
       {/* FOOTER */}
-      <footer className="relative overflow-hidden bg-sand pt-24">
-        <div className="paw-field absolute inset-0 opacity-60" aria-hidden />
-        <div
-          className="absolute inset-x-0 top-0 h-6 bg-background"
-          aria-hidden
-          style={{
-            WebkitMaskImage: `url(${footerWave.url})`,
-            maskImage: `url(${footerWave.url})`,
-            WebkitMaskSize: "100% 100%",
-            maskSize: "100% 100%",
-            WebkitMaskRepeat: "no-repeat",
-            maskRepeat: "no-repeat",
-          }}
-        />
-
-        <div className="relative mx-auto grid max-w-7xl gap-12 px-6 pb-40 md:grid-cols-2 lg:grid-cols-4">
+      <footer className="bg-forest py-16 text-primary-foreground">
+        <div className="mx-auto grid max-w-7xl gap-12 px-6 md:grid-cols-3">
           <Reveal>
-            <span className="flex items-center text-2xl font-bold text-forest">
+            <span className="flex items-center text-2xl font-bold">
               pet g<PawPrint className="inline size-5 -rotate-12 text-clay" />od
             </span>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-foreground/75">
+            <p className="mt-4 max-w-xs text-sm text-primary-foreground/75">
               Full-service veterinary care, grooming and daycare for the pets of Los Angeles.
             </p>
-            <div className="mt-8 flex items-center gap-4">
-              <span className="inline-flex size-11 items-center justify-center rounded-full bg-clay text-primary-foreground">
-                <Phone className="size-5" />
-              </span>
-              <span>
-                <span className="block text-xl font-bold text-forest">(00) 123 654 987</span>
-                <span className="text-xs font-semibold uppercase tracking-wide text-clay">
-                  Call now
-                </span>
-              </span>
-            </div>
-            <div className="mt-8 flex gap-4">
+            <div className="mt-6 flex gap-3">
               {[Facebook, Instagram, Twitter, Linkedin].map((Icon, i) => (
                 <a
                   key={i}
                   href="#contact"
                   aria-label="Social link"
-                  className="text-forest transition-colors hover:text-clay"
+                  className="inline-flex size-10 items-center justify-center rounded-full border border-primary-foreground/30 transition-colors hover:bg-primary-foreground/10"
                 >
                   <Icon className="size-4" />
                 </a>
@@ -406,11 +379,11 @@ export function Home() {
           </Reveal>
 
           <Reveal delay={120}>
-            <h3 className="text-xl text-forest">Quick Link</h3>
-            <ul className="mt-6 space-y-3 text-[15px] text-foreground/80">
+            <h3 className="text-lg text-primary-foreground">Quick Link</h3>
+            <ul className="mt-4 space-y-3 text-sm text-primary-foreground/75">
               {["Home", "About us", "Services", "Blog", "Contact us"].map((l) => (
                 <li key={l}>
-                  <a href="#home" className="transition-colors hover:text-clay">
+                  <a href="#home" className="hover:text-clay">
                     {l}
                   </a>
                 </li>
@@ -419,74 +392,25 @@ export function Home() {
           </Reveal>
 
           <Reveal delay={240}>
-            <h3 className="text-xl text-forest">Our Services</h3>
-            <ul className="mt-6 space-y-3 text-[15px] text-foreground/80">
-              {services.map((s) => (
-                <li key={s.title}>
-                  <a href="#services" className="transition-colors hover:text-clay">
-                    {s.title}
+            <h3 className="text-lg text-primary-foreground">Support</h3>
+            <ul className="mt-4 space-y-3 text-sm text-primary-foreground/75">
+              {["Appointments", "Emergency care", "Pricing"].map((l) => (
+                <li key={l}>
+                  <a href="#contact" className="hover:text-clay">
+                    {l}
                   </a>
                 </li>
               ))}
             </ul>
           </Reveal>
-
-          <Reveal delay={360}>
-            <h3 className="text-xl text-forest">Instagram</h3>
-            <div className="mt-6 grid max-w-xs grid-cols-3 gap-3">
-              {[blog1, blog2, blog3, serviceGrooming, serviceBoarding, serviceTraining].map(
-                (img, i) => (
-                  <a key={i} href="#contact" className="block overflow-hidden rounded-xl">
-                    <img
-                      src={img}
-                      alt="Happy pets at our clinic"
-                      loading="lazy"
-                      width={200}
-                      height={200}
-                      className="aspect-square w-full object-cover transition-transform duration-500 hover:scale-110"
-                    />
-                  </a>
-                ),
-              )}
-            </div>
-          </Reveal>
         </div>
+        <Reveal delay={360} className="mx-auto mt-12 max-w-7xl px-6">
+          <p className="text-xs text-primary-foreground/60">
+            © {new Date().getFullYear()} Pet Good Veterinary Clinic. All rights reserved.
+          </p>
+        </Reveal>
 
-        <img
-          src={footerDog.url}
-          alt=""
-          aria-hidden
-          className="pointer-events-none absolute bottom-16 left-2 w-28 opacity-90 sm:w-36 lg:w-44"
-        />
-        <img
-          src={footerDog.url}
-          alt=""
-          aria-hidden
-          className="pointer-events-none absolute bottom-16 right-2 w-28 -scale-x-100 opacity-90 sm:w-36 lg:w-44"
-        />
-
-        <div className="relative bg-forest">
-          <div
-            className="absolute inset-x-0 top-0 h-6 -translate-y-px bg-sand"
-            aria-hidden
-            style={{
-              WebkitMaskImage: `url(${footerWave.url})`,
-              maskImage: `url(${footerWave.url})`,
-              WebkitMaskSize: "100% 100%",
-              maskSize: "100% 100%",
-              WebkitMaskRepeat: "no-repeat",
-              maskRepeat: "no-repeat",
-            }}
-          />
-          <div className="mx-auto max-w-7xl px-6 py-8 pt-12">
-            <p className="text-sm text-primary-foreground/70">
-              | Copyright © {new Date().getFullYear()} Pet Good Veterinary Clinic. All Rights
-              Reserved.
-            </p>
-          </div>
-        </div>
       </footer>
-
     </div>
   );
 }
