@@ -95,8 +95,8 @@ export function ScrollGallery() {
           filter: "brightness(0.5) sepia(1) hue-rotate(120deg) saturate(3)",
         }}
       />
-      <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 lg:grid-cols-[1fr_1.1fr]">
-        <div>
+      <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-12 px-6 lg:grid-cols-[1fr_1.1fr]">
+        <div className="relative z-10">
           <h2 className="text-4xl leading-tight sm:text-5xl">
             Every Visit Is a Happy Tail Story
           </h2>
