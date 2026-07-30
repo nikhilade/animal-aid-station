@@ -86,7 +86,7 @@ export function Home() {
               <img
                 src={dogHead.url}
                 alt="Illustrated dog head"
-                className="pointer-events-none absolute left-[50%] top-[2%] w-[28%] animate-wiggle"
+                className="pointer-events-none absolute left-[46%] top-[2%] w-[28%] animate-wiggle"
               />
               <img
                 src={dogsHero.url}
