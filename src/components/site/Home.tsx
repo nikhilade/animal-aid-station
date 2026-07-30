@@ -18,6 +18,11 @@ import testimonial1 from "@/assets/testimonial-1.jpg";
 import blog1 from "@/assets/blog-1.jpg";
 import blog2 from "@/assets/blog-2.jpg";
 import blog3 from "@/assets/blog-3.jpg";
+import blog4 from "@/assets/blog-4.jpg";
+import blog5 from "@/assets/blog-5.jpg";
+import blog6 from "@/assets/blog-6.jpg";
+import blog7 from "@/assets/blog-7.jpg";
+import blog8 from "@/assets/blog-8.jpg";
 import { BlogCards } from "@/components/site/BlogCards";
 
 const services = [
@@ -52,6 +57,11 @@ const posts = [
   { title: "Top Foods for a Healthy Pet Diet", author: "Brooklyn Simmons", date: "November 28, 2024", img: blog1 },
   { title: "Holiday Safety Tips for Your Pets", author: "Isabella Parker", date: "November 28, 2024", img: blog2 },
   { title: "How to Stop Unwanted Chewing", author: "Sophia Bennett", date: "November 28, 2024", img: blog3 },
+  { title: "Grooming Routines That Keep Coats Shiny", author: "Ethan Brooks", date: "December 4, 2024", img: blog4 },
+  { title: "Keeping Your Cat Hydrated All Year", author: "Maya Torres", date: "December 11, 2024", img: blog5 },
+  { title: "Daily Exercise Ideas for Active Dogs", author: "Liam Carter", date: "December 18, 2024", img: blog6 },
+  { title: "Dental Care Basics Every Owner Needs", author: "Dr. Amelia Reed", date: "January 6, 2025", img: blog7 },
+  { title: "Creating a Calm Sleep Space for Kittens", author: "Noah Fletcher", date: "January 15, 2025", img: blog8 },
 ];
 
 const sponsors = ["Pawfect", "VetLine", "HappyTail", "CarePlus"];
