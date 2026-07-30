@@ -4,7 +4,6 @@ import { ScrollGallery } from "./ScrollGallery";
 import dogsHero from "@/assets/dogs-hero.webp.asset.json";
 import dogHead from "@/assets/dog-head.webp.asset.json";
 import frameArrow from "@/assets/frame-arrow.svg.asset.json";
-import pawCircle from "@/assets/paw-circle.png.asset.json";
 import aboutVet from "@/assets/about-vet.jpg";
 import serviceVet from "@/assets/service-vet.jpg";
 import serviceGrooming from "@/assets/service-grooming.jpg";
