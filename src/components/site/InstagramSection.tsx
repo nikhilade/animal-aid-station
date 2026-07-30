@@ -25,9 +25,11 @@ export function InstagramSection() {
       if (!el) return;
       const rect = el.getBoundingClientRect();
       const vh = window.innerHeight;
-      // 0 when the section's top edge reaches the bottom of the viewport,
-      // 1 once the section has scrolled roughly to the middle of the screen
-      const raw = (vh - rect.top) / (vh * 0.5 + rect.height * 0.5);
+      // 0 -> section top hits the bottom of the viewport
+      // 1 -> section centre reaches the centre of the viewport
+      const start = vh;
+      const end = vh * 0.5 - rect.height * 0.5;
+      const raw = (start - rect.top) / Math.max(1, start - end);
       setProgress(Math.min(1, Math.max(0, raw)));
     };
     const onScroll = () => {
@@ -43,8 +45,10 @@ export function InstagramSection() {
     };
   }, []);
 
-  // ease-out so the photos fly apart quickly then settle in the corners
-  const e = 1 - Math.pow(1 - progress, 3);
+  // Webflow scroll interactions are linear — only a very slight ease so the
+  // photos track the scroll 1:1 and settle exactly when the section centres.
+  const e = progress * progress * (3 - 2 * progress) * 0.25 + progress * 0.75;
+
 
   return (
     <section
