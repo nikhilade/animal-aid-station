@@ -176,23 +176,25 @@ export function Home() {
 
       {/* SPONSORS */}
       <section className="bg-cream py-14">
-        <div className="mx-auto max-w-7xl px-6">
-          <h3 className="text-center text-xl font-semibold">Our Generous Sponsors and Donors</h3>
-        </div>
-        <div className="relative mt-10 overflow-hidden">
-          <div className="marquee-track flex w-max items-center gap-16 pr-16">
-            {[...sponsors, ...sponsors, ...sponsors, ...sponsors].map((src, i) => (
-              <img
-                key={i}
-                src={src}
-                alt="Sponsor logo"
-                loading="lazy"
-                className="h-10 w-auto shrink-0 lg:h-12"
-              />
-            ))}
+        <div className="mx-auto flex max-w-7xl flex-col items-center gap-8 px-6 lg:flex-row lg:justify-between">
+          <h3 className="shrink-0 text-center text-xl font-semibold lg:text-left">
+            Our Generous Sponsors and Donors
+          </h3>
+          <div className="relative w-full overflow-hidden lg:w-auto">
+            <div className="marquee-track flex w-max items-center gap-12 pr-12 lg:gap-16 lg:pr-16">
+              {[...sponsors, ...sponsors, ...sponsors, ...sponsors].map((src, i) => (
+                <img
+                  key={i}
+                  src={src}
+                  alt="Sponsor logo"
+                  loading="lazy"
+                  className="h-10 w-auto shrink-0 lg:h-12"
+                />
+              ))}
+            </div>
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-cream to-transparent" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-cream to-transparent" />
           </div>
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-cream to-transparent" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-cream to-transparent" />
         </div>
       </section>
 
