@@ -90,7 +90,10 @@ export function ScrollGallery() {
         alt=""
         aria-hidden="true"
         loading="lazy"
-        className="pointer-events-none absolute -left-20 top-1/2 w-80 -translate-y-1/2 opacity-20 animate-spin-slow lg:w-[28rem]"
+        className="pointer-events-none absolute left-0 top-0 size-56 -translate-x-1/2 -translate-y-1/2 opacity-100 animate-spin-slow md:size-72 lg:size-96 xl:size-[28rem]"
+        style={{
+          filter: "brightness(0.5) sepia(1) hue-rotate(120deg) saturate(3)",
+        }}
       />
       <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 lg:grid-cols-[1fr_1.1fr]">
         <div>
