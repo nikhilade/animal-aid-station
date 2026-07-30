@@ -90,13 +90,13 @@ export function ScrollGallery() {
         alt=""
         aria-hidden="true"
         loading="lazy"
-        className="pointer-events-none absolute left-0 top-0 size-72 -translate-x-1/2 -translate-y-1/2 opacity-100 animate-spin-slow md:size-96 lg:size-[28rem] xl:size-[36rem]"
+        className="pointer-events-none absolute -left-8 top-0 -translate-x-1/2 -translate-y-1/2 z-0 size-96 animate-spin-slow md:size-[28rem] lg:size-[36rem] xl:size-[44rem]"
         style={{
           filter: "brightness(0.5) sepia(1) hue-rotate(120deg) saturate(3)",
         }}
       />
-      <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 lg:grid-cols-[1fr_1.1fr]">
-        <div>
+      <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-12 px-6 lg:grid-cols-[1fr_1.1fr]">
+        <div className="relative z-10">
           <h2 className="text-4xl leading-tight sm:text-5xl">
             Every Visit Is a Happy Tail Story
           </h2>
