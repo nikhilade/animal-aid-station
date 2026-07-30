@@ -53,7 +53,6 @@ export function BlogCards({ posts }: { posts: Post[] }) {
 
     /* ---------- horizontal scroll (desktop only) ---------- */
     const ctx = gsap.context(() => {
-      ScrollTrigger.matchMedia?.({});
       const mm = gsap.matchMedia();
       mm.add("(min-width: 768px)", () => {
         const getDistance = () => track.scrollWidth - track.offsetWidth;
