@@ -64,7 +64,7 @@ export function InstagramSection() {
               top: it.y < 0 ? "-6%" : "auto",
               bottom: it.y > 0 ? "-6%" : "auto",
               transform: `translate3d(${it.x * spread * 6}vw, ${it.y * spread * 6}vh, 0) rotate(${
-                it.rot + spread * 12
+                spread * (it.rot > 180 ? -8 : 8)
               }deg)`,
             }}
           />
