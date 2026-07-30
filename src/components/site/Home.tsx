@@ -101,19 +101,12 @@ export function Home() {
             <h2 className="max-w-xl text-4xl leading-tight sm:text-5xl">
               Loving Pets Is What We Do Best
             </h2>
-            <svg
-              className="hidden h-20 w-32 text-clay lg:block"
-              viewBox="0 0 140 80"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+            <img
+              src={frameArrow.url}
+              alt=""
+              className="hidden h-20 w-auto text-clay lg:block"
               aria-hidden="true"
-            >
-              <path d="M12 12 C55 5, 35 48, 90 52 C120 55, 115 75, 90 80" />
-              <path d="M82 72 L90 80 L98 72" />
-            </svg>
+            />
           </div>
 
           <div className="mt-14 grid gap-10 lg:grid-cols-2 lg:items-center">
