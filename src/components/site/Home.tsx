@@ -351,7 +351,7 @@ export function Home() {
       </section>
 
       {/* FOOTER */}
-      <div aria-hidden className="relative -mb-px block overflow-hidden bg-background leading-[0]">
+      <div aria-hidden className="relative z-10 -mb-px block bg-background leading-[0]">
         <img
           src={dogFace.url}
           alt=""
