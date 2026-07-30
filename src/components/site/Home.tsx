@@ -420,7 +420,7 @@ export function Home() {
               </ul>
             </Reveal>
           </div>
-          <Reveal delay={360} className="relative z-10 mx-auto mt-12 max-w-7xl px-6 pr-32 sm:pr-36 md:pr-40 lg:pr-44">
+          <Reveal delay={360} className="relative z-10 mx-auto mt-12 max-w-7xl px-6 pr-36 sm:pr-40 md:pr-44 lg:pr-48">
             <p className="text-xs text-primary-foreground/60">
               © {new Date().getFullYear()} Pet Good Veterinary Clinic. All rights reserved.
             </p>
