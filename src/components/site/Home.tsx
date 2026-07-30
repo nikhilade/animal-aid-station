@@ -350,7 +350,20 @@ export function Home() {
       </section>
 
       {/* FOOTER */}
-      <footer className="bg-forest py-16 text-primary-foreground">
+      <div aria-hidden className="-mb-px block bg-background leading-[0]">
+        <svg
+          viewBox="0 0 1200 60"
+          preserveAspectRatio="none"
+          className="block h-10 w-full sm:h-14 lg:h-[70px]"
+        >
+          <path
+            fill="currentColor"
+            className="text-forest"
+            d="M0,60 L0,30 C25,4 75,4 100,30 C125,56 175,56 200,30 C225,4 275,4 300,30 C325,56 375,56 400,30 C425,4 475,4 500,30 C525,56 575,56 600,30 C625,4 675,4 700,30 C725,56 775,56 800,30 C825,4 875,4 900,30 C925,56 975,56 1000,30 C1025,4 1075,4 1100,30 C1125,56 1175,56 1200,30 L1200,60 Z"
+          />
+        </svg>
+      </div>
+      <footer className="bg-forest pb-16 pt-8 text-primary-foreground">
         <div className="mx-auto grid max-w-7xl gap-12 px-6 md:grid-cols-3">
           <Reveal>
             <span className="flex items-center text-2xl font-bold">
