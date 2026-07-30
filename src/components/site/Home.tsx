@@ -372,7 +372,7 @@ export function Home() {
             className="pointer-events-none absolute -top-16 right-0 z-0 w-32 sm:-top-20 sm:w-36 md:-top-24 md:w-40 lg:-top-28 lg:w-44"
             aria-hidden
           />
-          <div className="relative z-10 mx-auto grid max-w-7xl gap-12 px-6 pr-32 sm:pr-36 md:grid-cols-3 md:pr-40 lg:pr-44">
+          <div className="relative z-10 mx-auto grid max-w-7xl gap-12 px-6 pr-36 sm:pr-40 md:grid-cols-3 md:pr-44 lg:pr-48">
             <Reveal>
               <span className="flex items-center text-2xl font-bold">
                 pet g<PawPrint className="inline size-5 -rotate-12 text-clay" />od
