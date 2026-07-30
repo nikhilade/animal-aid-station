@@ -4,6 +4,7 @@ import { ScrollGallery } from "./ScrollGallery";
 import dogsHero from "@/assets/dogs-hero.webp.asset.json";
 import dogHead from "@/assets/dog-head.webp.asset.json";
 import frameArrow from "@/assets/frame-arrow.svg.asset.json";
+import pawCircle from "@/assets/paw-circle.png.asset.json";
 import aboutVet from "@/assets/about-vet.jpg";
 import serviceVet from "@/assets/service-vet.jpg";
 import serviceGrooming from "@/assets/service-grooming.jpg";
@@ -219,7 +220,19 @@ export function Home() {
       {/* TESTIMONIAL */}
       <section className="relative overflow-hidden bg-forest py-20 lg:py-28">
         <div className="paw-field absolute inset-0 opacity-100 invert" aria-hidden />
-        <div className="relative mx-auto grid max-w-5xl items-center gap-10 px-6 md:grid-cols-[220px_1fr]">
+        <img
+          src={pawCircle.url}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          className="animate-spin-slow pointer-events-none absolute -right-24 -top-24 w-72 opacity-20 mix-blend-screen lg:w-96"
+        />
+        <div className="relative mx-auto max-w-5xl px-6">
+          <h2 className="max-w-2xl text-4xl leading-tight text-primary-foreground sm:text-5xl">
+            Every Visit Is a Happy Tail Story
+          </h2>
+        </div>
+        <div className="relative mx-auto mt-12 grid max-w-5xl items-center gap-10 px-6 md:grid-cols-[220px_1fr]">
           <img
             src={testimonial1}
             alt="Sarah Johnson holding her dog Max"
@@ -238,6 +251,7 @@ export function Home() {
           </div>
         </div>
       </section>
+
 
       {/* BLOG */}
       <section id="blog" className="bg-sand py-20 lg:py-28">
