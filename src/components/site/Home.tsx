@@ -104,7 +104,7 @@ export function Home() {
             <img
               src={frameArrow.url}
               alt=""
-              className="hidden h-20 w-auto text-clay lg:block"
+              className="hidden h-24 w-auto lg:block"
               aria-hidden="true"
             />
           </div>
