@@ -351,75 +351,82 @@ export function Home() {
       </section>
 
       {/* FOOTER */}
-      <div aria-hidden className="-mb-px block bg-background leading-[0]">
-        <svg
-          viewBox="0 0 1200 60"
-          preserveAspectRatio="none"
-          className="block h-10 w-full sm:h-14 lg:h-[70px]"
-        >
-          <path
-            fill="currentColor"
-            className="text-forest"
-            d="M0,60 L0,30 C25,4 75,4 100,30 C125,56 175,56 200,30 C225,4 275,4 300,30 C325,56 375,56 400,30 C425,4 475,4 500,30 C525,56 575,56 600,30 C625,4 675,4 700,30 C725,56 775,56 800,30 C825,4 875,4 900,30 C925,56 975,56 1000,30 C1025,4 1075,4 1100,30 C1125,56 1175,56 1200,30 L1200,60 Z"
-          />
-        </svg>
-      </div>
-      <footer className="bg-forest pb-16 pt-8 text-primary-foreground">
-        <div className="mx-auto grid max-w-7xl gap-12 px-6 md:grid-cols-3">
-          <Reveal>
-            <span className="flex items-center text-2xl font-bold">
-              pet g<PawPrint className="inline size-5 -rotate-12 text-clay" />od
-            </span>
-            <p className="mt-4 max-w-xs text-sm text-primary-foreground/75">
-              Full-service veterinary care, grooming and daycare for the pets of Los Angeles.
-            </p>
-            <div className="mt-6 flex gap-3">
-              {[Facebook, Instagram, Twitter, Linkedin].map((Icon, i) => (
-                <a
-                  key={i}
-                  href="#contact"
-                  aria-label="Social link"
-                  className="inline-flex size-10 items-center justify-center rounded-full border border-primary-foreground/30 transition-colors hover:bg-primary-foreground/10"
-                >
-                  <Icon className="size-4" />
-                </a>
-              ))}
-            </div>
-          </Reveal>
-
-          <Reveal delay={120}>
-            <h3 className="text-lg text-primary-foreground">Quick Link</h3>
-            <ul className="mt-4 space-y-3 text-sm text-primary-foreground/75">
-              {["Home", "About us", "Services", "Blog", "Contact us"].map((l) => (
-                <li key={l}>
-                  <a href="#home" className="hover:text-clay">
-                    {l}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-
-          <Reveal delay={240}>
-            <h3 className="text-lg text-primary-foreground">Support</h3>
-            <ul className="mt-4 space-y-3 text-sm text-primary-foreground/75">
-              {["Appointments", "Emergency care", "Pricing"].map((l) => (
-                <li key={l}>
-                  <a href="#contact" className="hover:text-clay">
-                    {l}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </Reveal>
+      <div className="relative">
+        <div aria-hidden className="relative z-20 -mb-px block bg-background leading-[0]">
+          <svg
+            viewBox="0 0 1200 60"
+            preserveAspectRatio="none"
+            className="block h-10 w-full sm:h-14 lg:h-[70px]"
+          >
+            <path
+              fill="currentColor"
+              className="text-forest"
+              d="M0,60 L0,30 C25,4 75,4 100,30 C125,56 175,56 200,30 C225,4 275,4 300,30 C325,56 375,56 400,30 C425,4 475,4 500,30 C525,56 575,56 600,30 C625,4 675,4 700,30 C725,56 775,56 800,30 C825,4 875,4 900,30 C925,56 975,56 1000,30 C1025,4 1075,4 1100,30 C1125,56 1175,56 1200,30 L1200,60 Z"
+            />
+          </svg>
         </div>
-        <Reveal delay={360} className="mx-auto mt-12 max-w-7xl px-6">
-          <p className="text-xs text-primary-foreground/60">
-            © {new Date().getFullYear()} Pet Good Veterinary Clinic. All rights reserved.
-          </p>
-        </Reveal>
+        <footer className="relative z-10 bg-forest pb-16 pt-8 text-primary-foreground">
+          <img
+            src={footerDogFace.url}
+            alt=""
+            className="pointer-events-none absolute -top-8 right-0 z-0 w-40 sm:-top-12 sm:w-52 md:-top-16 md:w-64 lg:-top-20 lg:w-80"
+            aria-hidden
+          />
+          <div className="relative z-10 mx-auto grid max-w-7xl gap-12 px-6 md:grid-cols-3">
+            <Reveal>
+              <span className="flex items-center text-2xl font-bold">
+                pet g<PawPrint className="inline size-5 -rotate-12 text-clay" />od
+              </span>
+              <p className="mt-4 max-w-xs text-sm text-primary-foreground/75">
+                Full-service veterinary care, grooming and daycare for the pets of Los Angeles.
+              </p>
+              <div className="mt-6 flex gap-3">
+                {[Facebook, Instagram, Twitter, Linkedin].map((Icon, i) => (
+                  <a
+                    key={i}
+                    href="#contact"
+                    aria-label="Social link"
+                    className="inline-flex size-10 items-center justify-center rounded-full border border-primary-foreground/30 transition-colors hover:bg-primary-foreground/10"
+                  >
+                    <Icon className="size-4" />
+                  </a>
+                ))}
+              </div>
+            </Reveal>
 
-      </footer>
+            <Reveal delay={120}>
+              <h3 className="text-lg text-primary-foreground">Quick Link</h3>
+              <ul className="mt-4 space-y-3 text-sm text-primary-foreground/75">
+                {["Home", "About us", "Services", "Blog", "Contact us"].map((l) => (
+                  <li key={l}>
+                    <a href="#home" className="hover:text-clay">
+                      {l}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+
+            <Reveal delay={240}>
+              <h3 className="text-lg text-primary-foreground">Support</h3>
+              <ul className="mt-4 space-y-3 text-sm text-primary-foreground/75">
+                {["Appointments", "Emergency care", "Pricing"].map((l) => (
+                  <li key={l}>
+                    <a href="#contact" className="hover:text-clay">
+                      {l}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+          </div>
+          <Reveal delay={360} className="relative z-10 mx-auto mt-12 max-w-7xl px-6">
+            <p className="text-xs text-primary-foreground/60">
+              © {new Date().getFullYear()} Pet Good Veterinary Clinic. All rights reserved.
+            </p>
+          </Reveal>
+        </footer>
+      </div>
     </div>
   );
 }
