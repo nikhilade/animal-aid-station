@@ -6,6 +6,7 @@ import { Reveal } from "./Reveal";
 
 import dogsHero from "@/assets/dogs-hero.webp.asset.json";
 import dogHead from "@/assets/dog-head.webp.asset.json";
+import dogFace from "@/assets/dog-face.png.asset.json";
 import frameArrow from "@/assets/frame-arrow.svg.asset.json";
 import aboutVet from "@/assets/about-vet.jpg";
 import serviceVet from "@/assets/service-vet.jpg";
