@@ -1,20 +1,26 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight } from "lucide-react";
 
 type Post = { title: string; author: string; date: string; img: string };
 
 export function BlogCards({ posts }: { posts: Post[] }) {
-  const wrapRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const root = wrapRef.current;
-    if (!root) return;
+    const section = sectionRef.current;
+    const track = trackRef.current;
+    if (!section || !track) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const cards = gsap.utils.toArray<HTMLElement>("[data-card]", root);
+    gsap.registerPlugin(ScrollTrigger);
     gsap.defaults({ ease: "none" });
 
+    const cards = gsap.utils.toArray<HTMLElement>("[data-card]", track);
+
+    /* ---------- ripple elevation on hover ---------- */
     const ripple = (index: number, active: boolean) => {
       cards.forEach((card, i) => {
         const d = Math.abs(i - index);
@@ -29,7 +35,7 @@ export function BlogCards({ posts }: { posts: Post[] }) {
           duration: 0.5 + d * 0.12,
           delay: active ? d * 0.07 : d * 0.04,
           ease: active ? "elastic.out(1, 0.6)" : "power2.out",
-          overwrite: true,
+          overwrite: "auto",
         });
       });
     };
@@ -45,39 +51,68 @@ export function BlogCards({ posts }: { posts: Post[] }) {
       };
     });
 
+    /* ---------- horizontal scroll (desktop only) ---------- */
+    const ctx = gsap.context(() => {
+      const mm = gsap.matchMedia();
+      mm.add("(min-width: 768px)", () => {
+        const getDistance = () => Math.max(0, track.scrollWidth - section.offsetWidth);
+        const tween = gsap.to(track, {
+          x: () => -getDistance(),
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: () => "+=" + getDistance(),
+            pin: true,
+            scrub: 1,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+          },
+        });
+        return () => {
+          tween.scrollTrigger?.kill();
+          tween.kill();
+          gsap.set(track, { x: 0 });
+        };
+      });
+    }, section);
+
     return () => {
       cleanups.forEach((fn) => fn());
       gsap.killTweensOf(cards);
+      ctx.revert();
     };
   }, [posts.length]);
 
   return (
-    <div ref={wrapRef} className="mt-14 grid gap-8 md:grid-cols-3">
-      {posts.map((p) => (
-        <article
-          key={p.title}
-          data-card
-          className="cursor-pointer rounded-[2rem] bg-card p-5 will-change-transform"
-        >
-          <img
-            src={p.img}
-            alt={p.title}
-            loading="lazy"
-            width={800}
-            height={600}
-            className="h-52 w-full rounded-[1.5rem] object-cover"
-          />
-          <h3 className="mt-6 text-xl leading-snug">{p.title}</h3>
-          <div className="mt-4 flex items-center justify-between text-sm text-foreground/70">
-            <span>
-              {p.author} · {p.date}
-            </span>
-            <span className="inline-flex size-9 items-center justify-center rounded-full bg-forest text-primary-foreground">
-              <ArrowUpRight className="size-4" />
-            </span>
-          </div>
-        </article>
-      ))}
+    <div ref={sectionRef} className="mt-14 overflow-hidden md:flex md:h-screen md:items-center">
+      <div ref={trackRef} className="flex w-max gap-8 max-md:w-full max-md:flex-col">
+        {posts.map((p) => (
+          <article
+            key={p.title}
+            data-card
+            className="w-full cursor-pointer rounded-[2rem] bg-card p-5 will-change-transform md:w-[calc((100vw-3rem-4rem)/3)] md:max-w-[26rem]"
+          >
+            <img
+              src={p.img}
+              alt={p.title}
+              loading="lazy"
+              width={800}
+              height={600}
+              className="h-52 w-full rounded-[1.5rem] object-cover"
+            />
+            <h3 className="mt-6 text-xl leading-snug">{p.title}</h3>
+            <div className="mt-4 flex items-center justify-between text-sm text-foreground/70">
+              <span>
+                {p.author} · {p.date}
+              </span>
+              <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-forest text-primary-foreground">
+                <ArrowUpRight className="size-4" />
+              </span>
+            </div>
+          </article>
+        ))}
+      </div>
     </div>
   );
 }
