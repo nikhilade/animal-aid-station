@@ -96,11 +96,23 @@ export function Home() {
       {/* ABOUT */}
       <section id="about" className="bg-sand py-20 lg:py-28">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <h2 className="max-w-xl text-4xl leading-tight sm:text-5xl">
               Loving Pets Is What We Do Best
             </h2>
-            <ArrowRight className="hidden size-12 -rotate-12 text-clay lg:block" strokeWidth={1.5} />
+            <svg
+              className="hidden h-20 w-32 text-clay lg:block"
+              viewBox="0 0 140 80"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M12 12 C55 5, 35 48, 90 52 C120 55, 115 75, 90 80" />
+              <path d="M82 72 L90 80 L98 72" />
+            </svg>
           </div>
 
           <div className="mt-14 grid gap-10 lg:grid-cols-2 lg:items-center">
