@@ -9,6 +9,10 @@ import dogHead from "@/assets/dog-head.webp.asset.json";
 import dogFace from "@/assets/dog-face.png.asset.json";
 import dogLeft from "@/assets/dog-left.png.asset.json";
 import frameArrow from "@/assets/frame-arrow.svg.asset.json";
+import logo1 from "@/assets/logo-1.svg.asset.json";
+import logo2 from "@/assets/logo-2.svg.asset.json";
+import logo3 from "@/assets/logo-3.svg.asset.json";
+import logo4 from "@/assets/logo-4.svg.asset.json";
 import aboutVet from "@/assets/about-vet.jpg";
 import serviceVet from "@/assets/service-vet.jpg";
 import serviceGrooming from "@/assets/service-grooming.jpg";
@@ -65,7 +69,7 @@ const posts = [
   { title: "Creating a Calm Sleep Space for Kittens", author: "Noah Fletcher", date: "January 15, 2025", img: blog8 },
 ];
 
-const sponsors = ["Pawfect", "VetLine", "HappyTail", "CarePlus"];
+const sponsors = [logo4.url, logo1.url, logo3.url, logo2.url];
 
 export function Home() {
   return (
