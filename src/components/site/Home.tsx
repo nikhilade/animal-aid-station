@@ -344,7 +344,7 @@ export function Home() {
         <img
           src={dogFace.url}
           alt=""
-          className="absolute -bottom-4 right-0 z-0 w-28 translate-x-[20%] sm:w-32 lg:w-32 xl:w-36"
+          className="absolute -bottom-4 right-0 z-0 w-18 translate-x-[20%] sm:w-18 lg:w-24"
         />
         <svg
           viewBox="0 0 1200 60"
