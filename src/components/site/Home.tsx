@@ -183,7 +183,7 @@ export function Home() {
             {services.map((s) => (
               <article
                 key={s.title}
-                className="group overflow-hidden rounded-[2rem] bg-cream p-6 transition-transform hover:-translate-y-1"
+                className="group relative overflow-hidden rounded-[2rem] border-y-2 border-dashed border-clay/60 bg-cream px-6 py-10 text-center"
               >
                 <img
                   src={s.img}
@@ -191,19 +191,24 @@ export function Home() {
                   loading="lazy"
                   width={800}
                   height={600}
-                  className="h-56 w-full rounded-[1.5rem] object-cover"
+                  className="pointer-events-none absolute left-1/2 top-1/2 z-10 h-56 w-56 -translate-x-1/2 -translate-y-1/2 scale-75 rotate-0 rounded-[1.5rem] object-cover opacity-0 shadow-xl transition-all duration-500 ease-out group-hover:scale-100 group-hover:rotate-6 group-hover:opacity-100"
                 />
-                <h3 className="mt-6 text-2xl">{s.title}</h3>
-                <p className="mt-3 text-[15px] leading-relaxed text-foreground/75">{s.copy}</p>
+                <h3 className="text-2xl transition-opacity duration-300 group-hover:opacity-30">
+                  {s.title}
+                </h3>
+                <p className="mt-3 text-[15px] leading-relaxed text-foreground/75 transition-opacity duration-300 group-hover:opacity-30">
+                  {s.copy}
+                </p>
                 <a
                   href="#contact"
-                  className="mt-6 inline-flex items-center gap-2 text-[15px] font-medium text-clay"
+                  className="relative z-20 mt-6 inline-flex items-center gap-2 text-[15px] font-medium text-clay"
                 >
                   Book now <ArrowUpRight className="size-4" />
                 </a>
               </article>
             ))}
           </div>
+
         </div>
       </section>
 
