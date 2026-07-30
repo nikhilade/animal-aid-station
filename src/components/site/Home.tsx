@@ -192,7 +192,7 @@ export function Home() {
       {/* SERVICES */}
       <section id="services" className="bg-background py-20 lg:py-28">
         <div className="mx-auto max-w-7xl px-6">
-          <h2 className="max-w-3xl text-4xl leading-tight sm:text-5xl">
+          <h2 className="mx-auto max-w-3xl text-center text-4xl leading-tight sm:text-5xl">
             Expert Care for Every Stage of Your Pet's Life
           </h2>
 
