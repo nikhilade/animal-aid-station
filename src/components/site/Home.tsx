@@ -4,7 +4,6 @@ import { ScrollGallery } from "./ScrollGallery";
 import dogsHero from "@/assets/dogs-hero.webp.asset.json";
 import dogHead from "@/assets/dog-head.webp.asset.json";
 import frameArrow from "@/assets/frame-arrow.svg.asset.json";
-import pawCircle from "@/assets/paw-circle.png.asset.json";
 import aboutVet from "@/assets/about-vet.jpg";
 import serviceVet from "@/assets/service-vet.jpg";
 import serviceGrooming from "@/assets/service-grooming.jpg";
@@ -220,13 +219,6 @@ export function Home() {
       {/* TESTIMONIAL */}
       <section className="relative overflow-hidden bg-forest py-20 lg:py-28">
         <div className="paw-field absolute inset-0 opacity-100 invert" aria-hidden />
-        <img
-          src={pawCircle.url}
-          alt=""
-          aria-hidden="true"
-          loading="lazy"
-          className="animate-spin-slow pointer-events-none absolute right-6 top-1/2 w-56 -translate-y-1/2 opacity-20 mix-blend-screen lg:right-12 lg:w-72"
-        />
         <div className="relative mx-auto max-w-5xl px-6">
           <h2 className="max-w-2xl text-4xl leading-tight text-primary-foreground sm:text-5xl">
             Every Visit Is a Happy Tail Story

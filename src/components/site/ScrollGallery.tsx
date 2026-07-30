@@ -6,6 +6,8 @@ import girlDog from "@/assets/67447b60fa15c36baeb8fc53_medium-shot-smiley-girl-h
 import womanPhone from "@/assets/67456aa8468107880fcbc97b_woman-posing-while-holding-dog-smartphone_1.webp.asset.json";
 import siamese from "@/assets/6746b9cb8fbb4801eee6a9b4_pretty-woman-playing-with-siamese-cat-1-p-500.webp.asset.json";
 import doctorCat from "@/assets/6746b9cb4b51a1c9b8676033_full-shot-doctor-holding-cat-with-leg-injury-1.webp.asset.json";
+import pawCircle from "@/assets/paw-circle.png.asset.json";
+
 
 const leftColumn = [
   { src: vetCat.url, alt: "Veterinarian listening to a fluffy cat's heartbeat" },
@@ -83,7 +85,14 @@ export function ScrollGallery() {
       className="relative overflow-hidden bg-sand py-20 lg:py-28"
       aria-label="Moments from our clinic"
     >
-      <div className="mx-auto grid max-w-7xl items-center gap-12 px-6 lg:grid-cols-[1fr_1.1fr]">
+      <img
+        src={pawCircle.url}
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        className="pointer-events-none absolute -left-20 top-1/2 w-80 -translate-y-1/2 opacity-20 animate-spin-slow lg:w-[28rem]"
+      />
+      <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 lg:grid-cols-[1fr_1.1fr]">
         <div>
           <h2 className="text-4xl leading-tight sm:text-5xl">
             Every Visit Is a Happy Tail Story
