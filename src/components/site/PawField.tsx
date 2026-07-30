@@ -15,7 +15,7 @@ export function PawField({ className }: { className?: string }) {
     return Array.from({ length: cols * rows }, (_, i) => ({
       id: i,
       rotate: Math.round((randomSeed(i) - 0.5) * 60),
-      opacity: Math.round(10 + randomSeed(i + 1) * 20) * 5,
+      opacity: Math.round(10 + randomSeed(i + 1) * 20),
       scale: 0.7 + randomSeed(i + 2) * 0.4,
     }));
   }, []);
