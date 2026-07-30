@@ -2,6 +2,8 @@ import { PawPrint, Phone, Mail, MapPin, Facebook, Instagram, Twitter, Linkedin, 
 import { Nav } from "./Nav";
 import { ScrollGallery } from "./ScrollGallery";
 import { InstagramSection } from "./InstagramSection";
+import { Reveal } from "./Reveal";
+
 import dogsHero from "@/assets/dogs-hero.webp.asset.json";
 import dogHead from "@/assets/dog-head.webp.asset.json";
 import frameArrow from "@/assets/frame-arrow.svg.asset.json";
@@ -350,7 +352,7 @@ export function Home() {
       {/* FOOTER */}
       <footer className="bg-forest py-16 text-primary-foreground">
         <div className="mx-auto grid max-w-7xl gap-12 px-6 md:grid-cols-3">
-          <div>
+          <Reveal>
             <span className="flex items-center text-2xl font-bold">
               pet g<PawPrint className="inline size-5 -rotate-12 text-clay" />od
             </span>
@@ -369,9 +371,9 @@ export function Home() {
                 </a>
               ))}
             </div>
-          </div>
+          </Reveal>
 
-          <div>
+          <Reveal delay={120}>
             <h3 className="text-lg text-primary-foreground">Quick Link</h3>
             <ul className="mt-4 space-y-3 text-sm text-primary-foreground/75">
               {["Home", "About us", "Services", "Blog", "Contact us"].map((l) => (
@@ -382,9 +384,9 @@ export function Home() {
                 </li>
               ))}
             </ul>
-          </div>
+          </Reveal>
 
-          <div>
+          <Reveal delay={240}>
             <h3 className="text-lg text-primary-foreground">Support</h3>
             <ul className="mt-4 space-y-3 text-sm text-primary-foreground/75">
               {["Appointments", "Emergency care", "Pricing"].map((l) => (
@@ -395,11 +397,14 @@ export function Home() {
                 </li>
               ))}
             </ul>
-          </div>
+          </Reveal>
         </div>
-        <p className="mx-auto mt-12 max-w-7xl px-6 text-xs text-primary-foreground/60">
-          © {new Date().getFullYear()} Pet Good Veterinary Clinic. All rights reserved.
-        </p>
+        <Reveal delay={360} className="mx-auto mt-12 max-w-7xl px-6">
+          <p className="text-xs text-primary-foreground/60">
+            © {new Date().getFullYear()} Pet Good Veterinary Clinic. All rights reserved.
+          </p>
+        </Reveal>
+
       </footer>
     </div>
   );
