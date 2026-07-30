@@ -26,11 +26,11 @@ export function PawField({ className }: { className?: string }) {
         {paws.map((paw) => (
           <div
             key={paw.id}
-            className="pointer-events-auto flex items-center justify-center transition-colors duration-300 hover:[&>svg]:fill-clay"
+            className="pointer-events-none flex items-center justify-center"
           >
             <svg
               viewBox="0 0 24 24"
-              className="fill-forest transition-colors duration-300"
+              className="pointer-events-auto fill-forest transition-colors duration-300 hover:fill-clay"
               style={{
                 width: `${paw.scale * 2.25}rem`,
                 height: `${paw.scale * 2.25}rem`,
