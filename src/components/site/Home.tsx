@@ -356,22 +356,22 @@ export function Home() {
         <img
           src={dogLeft}
           alt=""
-          className="absolute bottom-2 left-0 z-0 w-36 lg:w-36"
+          className="pointer-events-none absolute -top-12 left-2 z-0 w-28 [clip-path:inset(0_0_25%_0)] sm:-top-14 sm:w-36 lg:-top-16 lg:left-8 lg:w-40"
         />
         <img
           src={dogFace}
           alt=""
-          className="absolute bottom-2 right-0 z-0 w-24 translate-x-0 lg:w-24"
+          className="pointer-events-none absolute -top-18 right-6 z-0 w-20 sm:-top-20 sm:right-10 sm:w-24 lg:-top-24 lg:right-16 lg:w-28"
         />
         <svg
           viewBox="0 0 1200 60"
           preserveAspectRatio="none"
-          className="relative z-10 block h-6 w-full"
+          className="relative z-10 block h-6 w-full text-forest sm:h-8 md:h-9 lg:h-10"
         >
           <path
             fill="currentColor"
             className="text-forest"
-            d="M0,60 L0,30 C25,4 75,4 100,30 C125,56 175,56 200,30 C225,4 275,4 300,30 C325,56 375,56 400,30 C425,4 475,4 500,30 C525,56 575,56 600,30 C625,4 675,4 700,30 C725,56 775,56 800,30 C825,4 875,4 900,30 C925,56 975,56 1000,30 C1025,4 1075,4 1100,30 C1125,56 1175,56 1200,30 L1200,60 Z"
+            d="M0,60 L0,30 C15,8 45,8 60,30 C75,52 105,52 120,30 C135,8 165,8 180,30 C195,52 225,52 240,30 C255,8 285,8 300,30 C315,52 345,52 360,30 C375,8 405,8 420,30 C435,52 465,52 480,30 C495,8 525,8 540,30 C555,52 585,52 600,30 C615,8 645,8 660,30 C675,52 705,52 720,30 C735,8 765,8 780,30 C795,52 825,52 840,30 C855,8 885,8 900,30 C915,52 945,52 960,30 C975,8 1005,8 1020,30 C1035,52 1065,52 1080,30 C1095,8 1125,8 1140,30 C1155,52 1185,52 1200,30 L1200,60 Z"
           />
         </svg>
       </div>
