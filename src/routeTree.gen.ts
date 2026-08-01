@@ -15,7 +15,12 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as PortalRouteImport } from './routes/portal'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as PortalIndexRouteImport } from './routes/portal.index'
+import { Route as PortalBookAppointmentRouteImport } from './routes/portal.book-appointment'
 import { Route as PortalDashboardRouteImport } from './routes/portal.dashboard'
+import { Route as PortalInvoicesRouteImport } from './routes/portal.invoices'
+import { Route as PortalMyAppointmentsRouteImport } from './routes/portal.my-appointments'
+import { Route as PortalMyPetsRouteImport } from './routes/portal.my-pets'
+import { Route as PortalPrescriptionsRouteImport } from './routes/portal.prescriptions'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -47,9 +52,34 @@ const PortalIndexRoute = PortalIndexRouteImport.update({
   path: '/',
   getParentRoute: () => PortalRoute,
 } as any)
+const PortalBookAppointmentRoute = PortalBookAppointmentRouteImport.update({
+  id: '/book-appointment',
+  path: '/book-appointment',
+  getParentRoute: () => PortalRoute,
+} as any)
 const PortalDashboardRoute = PortalDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalInvoicesRoute = PortalInvoicesRouteImport.update({
+  id: '/invoices',
+  path: '/invoices',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalMyAppointmentsRoute = PortalMyAppointmentsRouteImport.update({
+  id: '/my-appointments',
+  path: '/my-appointments',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalMyPetsRoute = PortalMyPetsRouteImport.update({
+  id: '/my-pets',
+  path: '/my-pets',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalPrescriptionsRoute = PortalPrescriptionsRouteImport.update({
+  id: '/prescriptions',
+  path: '/prescriptions',
   getParentRoute: () => PortalRoute,
 } as any)
 
@@ -59,7 +89,12 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/portal': typeof PortalRouteWithChildren
   '/signup': typeof SignupRoute
+  '/portal/book-appointment': typeof PortalBookAppointmentRoute
   '/portal/dashboard': typeof PortalDashboardRoute
+  '/portal/invoices': typeof PortalInvoicesRoute
+  '/portal/my-appointments': typeof PortalMyAppointmentsRoute
+  '/portal/my-pets': typeof PortalMyPetsRoute
+  '/portal/prescriptions': typeof PortalPrescriptionsRoute
   '/portal/': typeof PortalIndexRoute
 }
 export interface FileRoutesByTo {
@@ -67,7 +102,12 @@ export interface FileRoutesByTo {
   '/book-appointment': typeof BookAppointmentRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/portal/book-appointment': typeof PortalBookAppointmentRoute
   '/portal/dashboard': typeof PortalDashboardRoute
+  '/portal/invoices': typeof PortalInvoicesRoute
+  '/portal/my-appointments': typeof PortalMyAppointmentsRoute
+  '/portal/my-pets': typeof PortalMyPetsRoute
+  '/portal/prescriptions': typeof PortalPrescriptionsRoute
   '/portal': typeof PortalIndexRoute
 }
 export interface FileRoutesById {
@@ -77,7 +117,12 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/portal': typeof PortalRouteWithChildren
   '/signup': typeof SignupRoute
+  '/portal/book-appointment': typeof PortalBookAppointmentRoute
   '/portal/dashboard': typeof PortalDashboardRoute
+  '/portal/invoices': typeof PortalInvoicesRoute
+  '/portal/my-appointments': typeof PortalMyAppointmentsRoute
+  '/portal/my-pets': typeof PortalMyPetsRoute
+  '/portal/prescriptions': typeof PortalPrescriptionsRoute
   '/portal/': typeof PortalIndexRoute
 }
 export interface FileRouteTypes {
@@ -88,7 +133,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/portal'
     | '/signup'
+    | '/portal/book-appointment'
     | '/portal/dashboard'
+    | '/portal/invoices'
+    | '/portal/my-appointments'
+    | '/portal/my-pets'
+    | '/portal/prescriptions'
     | '/portal/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -96,7 +146,12 @@ export interface FileRouteTypes {
     | '/book-appointment'
     | '/login'
     | '/signup'
+    | '/portal/book-appointment'
     | '/portal/dashboard'
+    | '/portal/invoices'
+    | '/portal/my-appointments'
+    | '/portal/my-pets'
+    | '/portal/prescriptions'
     | '/portal'
   id:
     | '__root__'
@@ -105,7 +160,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/portal'
     | '/signup'
+    | '/portal/book-appointment'
     | '/portal/dashboard'
+    | '/portal/invoices'
+    | '/portal/my-appointments'
+    | '/portal/my-pets'
+    | '/portal/prescriptions'
     | '/portal/'
   fileRoutesById: FileRoutesById
 }
@@ -161,6 +221,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalIndexRouteImport
       parentRoute: typeof PortalRoute
     }
+    '/portal/book-appointment': {
+      id: '/portal/book-appointment'
+      path: '/book-appointment'
+      fullPath: '/portal/book-appointment'
+      preLoaderRoute: typeof PortalBookAppointmentRouteImport
+      parentRoute: typeof PortalRoute
+    }
     '/portal/dashboard': {
       id: '/portal/dashboard'
       path: '/dashboard'
@@ -168,16 +235,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalDashboardRouteImport
       parentRoute: typeof PortalRoute
     }
+    '/portal/invoices': {
+      id: '/portal/invoices'
+      path: '/invoices'
+      fullPath: '/portal/invoices'
+      preLoaderRoute: typeof PortalInvoicesRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/my-appointments': {
+      id: '/portal/my-appointments'
+      path: '/my-appointments'
+      fullPath: '/portal/my-appointments'
+      preLoaderRoute: typeof PortalMyAppointmentsRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/my-pets': {
+      id: '/portal/my-pets'
+      path: '/my-pets'
+      fullPath: '/portal/my-pets'
+      preLoaderRoute: typeof PortalMyPetsRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/prescriptions': {
+      id: '/portal/prescriptions'
+      path: '/prescriptions'
+      fullPath: '/portal/prescriptions'
+      preLoaderRoute: typeof PortalPrescriptionsRouteImport
+      parentRoute: typeof PortalRoute
+    }
   }
 }
 
 interface PortalRouteChildren {
+  PortalBookAppointmentRoute: typeof PortalBookAppointmentRoute
   PortalDashboardRoute: typeof PortalDashboardRoute
+  PortalInvoicesRoute: typeof PortalInvoicesRoute
+  PortalMyAppointmentsRoute: typeof PortalMyAppointmentsRoute
+  PortalMyPetsRoute: typeof PortalMyPetsRoute
+  PortalPrescriptionsRoute: typeof PortalPrescriptionsRoute
   PortalIndexRoute: typeof PortalIndexRoute
 }
 
 const PortalRouteChildren: PortalRouteChildren = {
+  PortalBookAppointmentRoute: PortalBookAppointmentRoute,
   PortalDashboardRoute: PortalDashboardRoute,
+  PortalInvoicesRoute: PortalInvoicesRoute,
+  PortalMyAppointmentsRoute: PortalMyAppointmentsRoute,
+  PortalMyPetsRoute: PortalMyPetsRoute,
+  PortalPrescriptionsRoute: PortalPrescriptionsRoute,
   PortalIndexRoute: PortalIndexRoute,
 }
 
