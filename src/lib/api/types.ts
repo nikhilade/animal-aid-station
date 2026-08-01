@@ -78,6 +78,11 @@ export interface Doctor {
   available_slots: string[];
 }
 
+export interface AppointmentSlot {
+  start_at: string;
+  available: boolean;
+}
+
 export type AppointmentStatus = "SCHEDULED" | "CHECKED_IN" | "COMPLETED" | "CANCELLED";
 
 export interface Appointment {
