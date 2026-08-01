@@ -10,10 +10,13 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as BookAppointmentRouteImport } from './routes/book-appointment'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PortalRouteImport } from './routes/portal'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
 import { Route as PortalIndexRouteImport } from './routes/portal.index'
 import { Route as PortalBookAppointmentRouteImport } from './routes/portal.book-appointment'
 import { Route as PortalDashboardRouteImport } from './routes/portal.dashboard'
@@ -25,6 +28,11 @@ import { Route as PortalPrescriptionsRouteImport } from './routes/portal.prescri
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BookAppointmentRoute = BookAppointmentRouteImport.update({
@@ -46,6 +54,16 @@ const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
 } as any)
 const PortalIndexRoute = PortalIndexRouteImport.update({
   id: '/',
@@ -85,16 +103,19 @@ const PortalPrescriptionsRoute = PortalPrescriptionsRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
   '/book-appointment': typeof BookAppointmentRoute
   '/login': typeof LoginRoute
   '/portal': typeof PortalRouteWithChildren
   '/signup': typeof SignupRoute
+  '/app/dashboard': typeof AppDashboardRoute
   '/portal/book-appointment': typeof PortalBookAppointmentRoute
   '/portal/dashboard': typeof PortalDashboardRoute
   '/portal/invoices': typeof PortalInvoicesRoute
   '/portal/my-appointments': typeof PortalMyAppointmentsRoute
   '/portal/my-pets': typeof PortalMyPetsRoute
   '/portal/prescriptions': typeof PortalPrescriptionsRoute
+  '/app/': typeof AppIndexRoute
   '/portal/': typeof PortalIndexRoute
 }
 export interface FileRoutesByTo {
@@ -102,43 +123,51 @@ export interface FileRoutesByTo {
   '/book-appointment': typeof BookAppointmentRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/app/dashboard': typeof AppDashboardRoute
   '/portal/book-appointment': typeof PortalBookAppointmentRoute
   '/portal/dashboard': typeof PortalDashboardRoute
   '/portal/invoices': typeof PortalInvoicesRoute
   '/portal/my-appointments': typeof PortalMyAppointmentsRoute
   '/portal/my-pets': typeof PortalMyPetsRoute
   '/portal/prescriptions': typeof PortalPrescriptionsRoute
+  '/app': typeof AppIndexRoute
   '/portal': typeof PortalIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
   '/book-appointment': typeof BookAppointmentRoute
   '/login': typeof LoginRoute
   '/portal': typeof PortalRouteWithChildren
   '/signup': typeof SignupRoute
+  '/app/dashboard': typeof AppDashboardRoute
   '/portal/book-appointment': typeof PortalBookAppointmentRoute
   '/portal/dashboard': typeof PortalDashboardRoute
   '/portal/invoices': typeof PortalInvoicesRoute
   '/portal/my-appointments': typeof PortalMyAppointmentsRoute
   '/portal/my-pets': typeof PortalMyPetsRoute
   '/portal/prescriptions': typeof PortalPrescriptionsRoute
+  '/app/': typeof AppIndexRoute
   '/portal/': typeof PortalIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/app'
     | '/book-appointment'
     | '/login'
     | '/portal'
     | '/signup'
+    | '/app/dashboard'
     | '/portal/book-appointment'
     | '/portal/dashboard'
     | '/portal/invoices'
     | '/portal/my-appointments'
     | '/portal/my-pets'
     | '/portal/prescriptions'
+    | '/app/'
     | '/portal/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -146,31 +175,37 @@ export interface FileRouteTypes {
     | '/book-appointment'
     | '/login'
     | '/signup'
+    | '/app/dashboard'
     | '/portal/book-appointment'
     | '/portal/dashboard'
     | '/portal/invoices'
     | '/portal/my-appointments'
     | '/portal/my-pets'
     | '/portal/prescriptions'
+    | '/app'
     | '/portal'
   id:
     | '__root__'
     | '/'
+    | '/app'
     | '/book-appointment'
     | '/login'
     | '/portal'
     | '/signup'
+    | '/app/dashboard'
     | '/portal/book-appointment'
     | '/portal/dashboard'
     | '/portal/invoices'
     | '/portal/my-appointments'
     | '/portal/my-pets'
     | '/portal/prescriptions'
+    | '/app/'
     | '/portal/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
   BookAppointmentRoute: typeof BookAppointmentRoute
   LoginRoute: typeof LoginRoute
   PortalRoute: typeof PortalRouteWithChildren
@@ -184,6 +219,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/book-appointment': {
@@ -213,6 +255,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/dashboard': {
+      id: '/app/dashboard'
+      path: '/dashboard'
+      fullPath: '/app/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
     }
     '/portal/': {
       id: '/portal/'
@@ -266,6 +322,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AppRouteChildren {
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppDashboardRoute: AppDashboardRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 interface PortalRouteChildren {
   PortalBookAppointmentRoute: typeof PortalBookAppointmentRoute
   PortalDashboardRoute: typeof PortalDashboardRoute
@@ -291,6 +359,7 @@ const PortalRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
   BookAppointmentRoute: BookAppointmentRoute,
   LoginRoute: LoginRoute,
   PortalRoute: PortalRouteWithChildren,
