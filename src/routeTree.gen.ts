@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as BookAppointmentRouteImport } from './routes/book-appointment'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as PlaygroundRouteImport } from './routes/playground'
 import { Route as PortalRouteImport } from './routes/portal'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as AppIndexRouteImport } from './routes/app.index'
@@ -54,6 +55,11 @@ const BookAppointmentRoute = BookAppointmentRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlaygroundRoute = PlaygroundRouteImport.update({
+  id: '/playground',
+  path: '/playground',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PortalRoute = PortalRouteImport.update({
@@ -172,6 +178,7 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppRouteWithChildren
   '/book-appointment': typeof BookAppointmentRoute
   '/login': typeof LoginRoute
+  '/playground': typeof PlaygroundRoute
   '/portal': typeof PortalRouteWithChildren
   '/signup': typeof SignupRoute
   '/app/appointments': typeof AppAppointmentsRoute
@@ -199,6 +206,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/book-appointment': typeof BookAppointmentRoute
   '/login': typeof LoginRoute
+  '/playground': typeof PlaygroundRoute
   '/signup': typeof SignupRoute
   '/app/appointments': typeof AppAppointmentsRoute
   '/app/billing': typeof AppBillingRoute
@@ -227,6 +235,7 @@ export interface FileRoutesById {
   '/app': typeof AppRouteWithChildren
   '/book-appointment': typeof BookAppointmentRoute
   '/login': typeof LoginRoute
+  '/playground': typeof PlaygroundRoute
   '/portal': typeof PortalRouteWithChildren
   '/signup': typeof SignupRoute
   '/app/appointments': typeof AppAppointmentsRoute
@@ -257,6 +266,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/book-appointment'
     | '/login'
+    | '/playground'
     | '/portal'
     | '/signup'
     | '/app/appointments'
@@ -284,6 +294,7 @@ export interface FileRouteTypes {
     | '/'
     | '/book-appointment'
     | '/login'
+    | '/playground'
     | '/signup'
     | '/app/appointments'
     | '/app/billing'
@@ -311,6 +322,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/book-appointment'
     | '/login'
+    | '/playground'
     | '/portal'
     | '/signup'
     | '/app/appointments'
@@ -340,6 +352,7 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   BookAppointmentRoute: typeof BookAppointmentRoute
   LoginRoute: typeof LoginRoute
+  PlaygroundRoute: typeof PlaygroundRoute
   PortalRoute: typeof PortalRouteWithChildren
   SignupRoute: typeof SignupRoute
 }
@@ -372,6 +385,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/playground': {
+      id: '/playground'
+      path: '/playground'
+      fullPath: '/playground'
+      preLoaderRoute: typeof PlaygroundRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/portal': {
@@ -593,9 +613,20 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   BookAppointmentRoute: BookAppointmentRoute,
   LoginRoute: LoginRoute,
+  PlaygroundRoute: PlaygroundRoute,
   PortalRoute: PortalRouteWithChildren,
   SignupRoute: SignupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
