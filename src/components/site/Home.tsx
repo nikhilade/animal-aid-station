@@ -298,7 +298,7 @@ export function Home() {
             <ul className="mt-10 space-y-6">
               {[
                 { icon: Phone, text: "(00) 123 654 987" },
-                { icon: Mail, text: "info@petgood.com" },
+                { icon: Mail, text: "info@pawcareos.com" },
                 { icon: MapPin, text: "9400 S Normandie Ave #14, Los Angeles, CA" },
               ].map(({ icon: Icon, text }) => (
                 <li key={text} className="flex items-center gap-4">
@@ -385,7 +385,7 @@ export function Home() {
         <div className="mx-auto grid max-w-7xl gap-12 px-6 md:grid-cols-3">
           <Reveal>
             <span className="flex items-center text-2xl font-bold">
-              pet g<PawPrint className="inline size-5 -rotate-12 text-clay" />od
+              PawCareOS<PawPrint className="inline size-5 -rotate-12 text-clay ml-1" />
             </span>
             <p className="mt-4 max-w-xs text-sm text-primary-foreground/75">
               Full-service veterinary care, grooming and daycare for the pets of Los Angeles.
@@ -432,7 +432,7 @@ export function Home() {
         </div>
         <Reveal delay={360} className="mx-auto mt-12 max-w-7xl px-6">
           <p className="text-xs text-primary-foreground/60">
-            © {new Date().getFullYear()} Pet Good Veterinary Clinic. All rights reserved.
+            © {new Date().getFullYear()} PawCareOS Veterinary Clinic. All rights reserved.
           </p>
         </Reveal>
 

@@ -43,7 +43,7 @@
 :root {
   --radius: 1.5rem;
 
-  /* Pet Good palette */
+  /* PawCareOS palette */
   --sage: oklch(0.9 0.045 118);          /* hero sage green background */
   --cream: oklch(0.945 0.017 92);        /* soft cream section background */
   --sand: oklch(0.912 0.026 92);         /* warm sand band */

@@ -13,22 +13,36 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SmoothScroll } from "../components/site/SmoothScroll";
 import { LoadingScreen } from "../components/site/LoadingScreen";
+import dog404 from "../assets/404-dog-yellow.png";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+    <div className="relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden bg-sand px-6 py-12 text-center">
+      <div className="paw-field absolute inset-0 opacity-40" aria-hidden />
+      
+      <div className="relative z-10 mx-auto flex flex-col items-center justify-center w-full max-w-lg">
+        <img
+          src={dog404}
+          alt="Sad dog 404"
+          className="mx-auto w-auto max-h-[25vh] drop-shadow-xl animate-wiggle"
+        />
+        
+        <h1 className="mt-4 text-5xl font-bold text-clay sm:text-6xl lg:text-7xl leading-none">
+          404
+        </h1>
+        <h2 className="mt-2 text-xl font-semibold sm:text-2xl text-forest">
+          Barking up the wrong tree?
+        </h2>
+        <p className="mt-2 text-[15px] sm:text-[16px] leading-relaxed text-foreground/80">
+          The page you're looking for doesn't exist, has been moved, or is currently taking a nap. Let's get you back on track!
         </p>
-        <div className="mt-6">
+        
+        <div className="mt-6 mb-4">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex items-center gap-2 rounded-full border-2 border-forest bg-forest px-8 py-3.5 text-[15px] sm:text-[16px] font-medium text-primary-foreground transition-all hover:bg-transparent hover:text-forest"
           >
-            Go home
+            Go Back Home
           </Link>
         </div>
       </div>
@@ -99,7 +113,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
     ],
   }),
   shellComponent: RootShell,
