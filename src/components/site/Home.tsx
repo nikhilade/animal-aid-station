@@ -28,6 +28,7 @@ import blog5 from "@/assets/blog-5.jpg";
 import blog6 from "@/assets/blog-6.jpg";
 import blog7 from "@/assets/blog-7.jpg";
 import blog8 from "@/assets/blog-8.jpg";
+import contactBg from "@/assets/contact-bg.png";
 import { BlogCards } from "@/components/site/BlogCards";
 
 const services = [
@@ -285,8 +286,13 @@ export function Home() {
       <InstagramSection />
 
       {/* CONTACT */}
-      <section id="contact" className="bg-background py-20 lg:py-28">
-        <div className="mx-auto grid max-w-7xl gap-14 px-6 lg:grid-cols-2">
+      <section id="contact" className="relative overflow-hidden bg-background py-20 lg:py-28">
+        <div
+          className="pointer-events-none absolute inset-0 bg-cover bg-center bg-no-repeat opacity-90"
+          style={{ backgroundImage: `url(${contactBg})` }}
+          aria-hidden="true"
+        />
+        <div className="relative z-10 mx-auto grid max-w-7xl gap-14 px-6 lg:grid-cols-2">
           <div>
             <h2 className="text-4xl leading-tight sm:text-5xl">Have Questions? We&apos;re Here to Help</h2>
             <ul className="mt-10 space-y-6">
