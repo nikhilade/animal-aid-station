@@ -15,6 +15,7 @@ export const endpoints = {
   },
   petOwners: {
     list: "/pet-owners",
+    search: "/pet-owners/search",
     detail: (id: string) => `/pet-owners/${id}`,
     create: "/pet-owners",
   },
