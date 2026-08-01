@@ -15,6 +15,7 @@ export const endpoints = {
   },
   petOwners: {
     list: "/pet-owners",
+    search: "/pet-owners/search",
     detail: (id: string) => `/pet-owners/${id}`,
     create: "/pet-owners",
   },
@@ -33,6 +34,7 @@ export const endpoints = {
     detail: (id: string) => `/appointments/${id}`,
     create: "/appointments",
     mine: "/appointments/mine",
+    availableSlots: "/appointments/slots/available",
   },
   prescriptions: {
     list: "/prescriptions",

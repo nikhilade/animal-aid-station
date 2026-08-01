@@ -38,10 +38,11 @@ type RequestOptions = {
   method?: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
   body?: Record<string, unknown>;
   query?: Record<string, string | number | boolean | undefined>;
+  headers?: Record<string, string>;
 };
 
 async function request<T>(path: string, options: RequestOptions = {}): Promise<ApiResponse<T>> {
-  const { method = "GET", body, query } = options;
+  const { method = "GET", body, query, headers } = options;
   const search = new URLSearchParams();
   Object.entries(query ?? {}).forEach(([k, v]) => {
     if (v !== undefined) search.set(k, String(v));
@@ -59,6 +60,7 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<A
       headers: {
         "Content-Type": "application/json",
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(headers ?? {}),
       },
       body: body ? JSON.stringify(body) : undefined,
     });
@@ -80,11 +82,11 @@ export const apiClient = {
   async get<T>(path: string, query?: RequestOptions["query"]) {
     return (await request<T>(path, { method: "GET", query })).data;
   },
-  async post<T>(path: string, body?: Record<string, unknown>) {
-    return (await request<T>(path, { method: "POST", body })).data;
+  async post<T>(path: string, body?: Record<string, unknown>, headers?: Record<string, string>) {
+    return (await request<T>(path, { method: "POST", body, headers })).data;
   },
-  async patch<T>(path: string, body?: Record<string, unknown>) {
-    return (await request<T>(path, { method: "PATCH", body })).data;
+  async patch<T>(path: string, body?: Record<string, unknown>, headers?: Record<string, string>) {
+    return (await request<T>(path, { method: "PATCH", body, headers })).data;
   },
   async delete<T>(path: string) {
     return (await request<T>(path, { method: "DELETE" })).data;

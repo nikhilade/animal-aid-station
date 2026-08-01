@@ -26,6 +26,26 @@ function envelope<T>(data: T, overrides: Partial<ApiResponse<T>> = {}): ApiRespo
   };
 }
 
+/** Cursor-based pagination for list endpoints (?cursor=&limit=). */
+function paginate<T>(all: T[], query: URLSearchParams): ApiResponse<T[]> {
+  const limit = Math.max(1, Number(query.get("limit") ?? 10));
+  const start = Number(query.get("cursor") ?? 0) || 0;
+  const slice = all.slice(start, start + limit);
+  const next = start + limit;
+  const hasNext = next < all.length;
+  return {
+    success: true,
+    data: slice,
+    error: null,
+    meta: {
+      total_count: all.length,
+      has_next_page: hasNext,
+      next_cursor: hasNext ? String(next) : null,
+      limit,
+    },
+  };
+}
+
 function failure(code: string, message: string): ApiResponse<null> {
   return {
     success: false,
@@ -97,6 +117,22 @@ const routes: { pattern: RegExp; handler: Handler }[] = [
     },
   },
   {
+    pattern: /^\/pet-owners\/search$/,
+    handler: ({ query }) => {
+      const q = (query.get("q") ?? "").trim().toLowerCase();
+      const digits = q.replace(/\D/g, "");
+      const matches = !q
+        ? owners.slice(0, 5)
+        : owners.filter(
+            (o) =>
+              (digits.length >= 2 && o.phone.replace(/\D/g, "").includes(digits)) ||
+              o.name.toLowerCase().includes(q) ||
+              o.email.toLowerCase().includes(q),
+          );
+      return envelope(matches);
+    },
+  },
+  {
     pattern: /^\/pet-owners\/([^/]+)$/,
     handler: ({ query }) => {
       const found = owners.find((o) => o.id === query.get("__p1"));
@@ -105,13 +141,16 @@ const routes: { pattern: RegExp; handler: Handler }[] = [
   },
   {
     pattern: /^\/pet-owners$/,
-    handler: ({ method, body }) => {
+    handler: ({ method, body, query }) => {
       if (method === "POST") {
+        const phone = String(body.phone ?? "");
+        const existing = owners.find((o) => o.phone.replace(/\D/g, "") === phone.replace(/\D/g, "") && phone !== "");
+        if (existing) return envelope(existing);
         const created = {
           id: `own_${owners.length + 1}`,
           name: String(body.name ?? "New Owner"),
           email: String(body.email ?? ""),
-          phone: String(body.phone ?? ""),
+          phone,
           address: String(body.address ?? ""),
           pets_count: 0,
           created_at: new Date().toISOString(),
@@ -119,7 +158,7 @@ const routes: { pattern: RegExp; handler: Handler }[] = [
         owners.push(created);
         return envelope(created);
       }
-      return envelope(owners);
+      return paginate(owners, query);
     },
   },
   {
@@ -131,7 +170,26 @@ const routes: { pattern: RegExp; handler: Handler }[] = [
   },
   {
     pattern: /^\/pets$/,
-    handler: ({ query }) => {
+    handler: ({ method, body, query }) => {
+      if (method === "POST") {
+        const owner = owners.find((o) => o.id === body.owner_id) ?? owners[0];
+        const created = {
+          id: `pet_${pets.length + 1}`,
+          owner_id: owner.id,
+          owner_name: owner.name,
+          name: String(body.name ?? "New Pet"),
+          species: (body.species as "Dog") ?? "Dog",
+          breed: String(body.breed ?? "Mixed"),
+          sex: (body.sex as "Male") ?? "Male",
+          age_years: Number(body.age_years ?? 1),
+          weight_kg: Number(body.weight_kg ?? 5),
+          photo_url: null,
+          microchip_id: null,
+        };
+        pets.push(created);
+        owner.pets_count += 1;
+        return envelope(created);
+      }
       const ownerId = query.get("owner_id");
       return envelope(ownerId ? pets.filter((p) => p.owner_id === ownerId) : pets);
     },
@@ -145,6 +203,26 @@ const routes: { pattern: RegExp; handler: Handler }[] = [
   },
   { pattern: /^\/doctors$/, handler: () => envelope(doctors) },
   { pattern: /^\/appointments\/mine$/, handler: () => envelope(appointments.filter((a) => a.owner_id === currentOwnerId)) },
+  {
+    pattern: /^\/appointments\/slots\/available$/,
+    handler: ({ query }) => {
+      const date = query.get("date") ?? new Date().toISOString().slice(0, 10);
+      const doctorId = query.get("doctor_id") ?? "doc_1";
+      const branchId = query.get("branch_id") ?? "br_1";
+      const seedBase = [...`${doctorId}${branchId}${date}`].reduce((a, c) => a + c.charCodeAt(0), 0);
+      const slots: { start_at: string; available: boolean }[] = [];
+      for (let h = 9; h < 18; h++) {
+        for (const m of [0, 30]) {
+          const start = new Date(`${date}T00:00:00`);
+          start.setHours(h, m, 0, 0);
+          const idx = (h - 9) * 2 + (m === 30 ? 1 : 0);
+          const booked = (seedBase + idx * 7) % 4 === 0 || start.getTime() < Date.now();
+          slots.push({ start_at: start.toISOString(), available: !booked });
+        }
+      }
+      return envelope(slots);
+    },
+  },
   {
     pattern: /^\/appointments\/([^/]+)$/,
     handler: ({ query }) => {
