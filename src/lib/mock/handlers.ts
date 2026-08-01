@@ -97,13 +97,6 @@ const routes: { pattern: RegExp; handler: Handler }[] = [
     },
   },
   {
-    pattern: /^\/pet-owners\/([^/]+)$/,
-    handler: ({ query }) => {
-      const found = owners.find((o) => o.id === query.get("__p1"));
-      return found ? envelope(found) : failure("NOT_FOUND", "Pet owner not found.");
-    },
-  },
-  {
     pattern: /^\/pet-owners\/search$/,
     handler: ({ query }) => {
       const q = (query.get("q") ?? "").trim().toLowerCase();
@@ -117,6 +110,13 @@ const routes: { pattern: RegExp; handler: Handler }[] = [
               o.email.toLowerCase().includes(q),
           );
       return envelope(matches);
+    },
+  },
+  {
+    pattern: /^\/pet-owners\/([^/]+)$/,
+    handler: ({ query }) => {
+      const found = owners.find((o) => o.id === query.get("__p1"));
+      return found ? envelope(found) : failure("NOT_FOUND", "Pet owner not found.");
     },
   },
   {
