@@ -84,7 +84,7 @@ export function Home() {
             <div className="pb-12 lg:pb-28">
               <p className="text-lg font-medium text-clay">The Best Pet Care Service</p>
               <h1 className="mt-4 text-5xl leading-[1.1] sm:text-6xl lg:text-[64px]">
-                Where Happy Pets
+                Where Sad Pets
                 <br />
                 Meet Expert Care
               </h1>
