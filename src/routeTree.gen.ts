@@ -14,6 +14,7 @@ import { Route as BookAppointmentRouteImport } from './routes/book-appointment'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PortalRouteImport } from './routes/portal'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as PortalIndexRouteImport } from './routes/portal.index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,42 +41,57 @@ const SignupRoute = SignupRouteImport.update({
   path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PortalIndexRoute = PortalIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PortalRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/book-appointment': typeof BookAppointmentRoute
   '/login': typeof LoginRoute
-  '/portal': typeof PortalRoute
+  '/portal': typeof PortalRouteWithChildren
   '/signup': typeof SignupRoute
+  '/portal/': typeof PortalIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/book-appointment': typeof BookAppointmentRoute
   '/login': typeof LoginRoute
-  '/portal': typeof PortalRoute
   '/signup': typeof SignupRoute
+  '/portal': typeof PortalIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/book-appointment': typeof BookAppointmentRoute
   '/login': typeof LoginRoute
-  '/portal': typeof PortalRoute
+  '/portal': typeof PortalRouteWithChildren
   '/signup': typeof SignupRoute
+  '/portal/': typeof PortalIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/book-appointment' | '/login' | '/portal' | '/signup'
+  fullPaths:
+    '/' | '/book-appointment' | '/login' | '/portal' | '/signup' | '/portal/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/book-appointment' | '/login' | '/portal' | '/signup'
-  id: '__root__' | '/' | '/book-appointment' | '/login' | '/portal' | '/signup'
+  to: '/' | '/book-appointment' | '/login' | '/signup' | '/portal'
+  id:
+    | '__root__'
+    | '/'
+    | '/book-appointment'
+    | '/login'
+    | '/portal'
+    | '/signup'
+    | '/portal/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BookAppointmentRoute: typeof BookAppointmentRoute
   LoginRoute: typeof LoginRoute
-  PortalRoute: typeof PortalRoute
+  PortalRoute: typeof PortalRouteWithChildren
   SignupRoute: typeof SignupRoute
 }
 
@@ -116,14 +132,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/portal/': {
+      id: '/portal/'
+      path: '/'
+      fullPath: '/portal/'
+      preLoaderRoute: typeof PortalIndexRouteImport
+      parentRoute: typeof PortalRoute
+    }
   }
 }
+
+interface PortalRouteChildren {
+  PortalIndexRoute: typeof PortalIndexRoute
+}
+
+const PortalRouteChildren: PortalRouteChildren = {
+  PortalIndexRoute: PortalIndexRoute,
+}
+
+const PortalRouteWithChildren =
+  PortalRoute._addFileChildren(PortalRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BookAppointmentRoute: BookAppointmentRoute,
   LoginRoute: LoginRoute,
-  PortalRoute: PortalRoute,
+  PortalRoute: PortalRouteWithChildren,
   SignupRoute: SignupRoute,
 }
 export const routeTree = rootRouteImport
