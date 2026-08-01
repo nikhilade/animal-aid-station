@@ -46,7 +46,7 @@ const ALL_STAFF: Permission[] = [
 
 export const rolePermissions: Record<Role, Permission[]> = {
   SUPER_ADMIN: ALL_STAFF,
-  HOSPITAL_ADMIN: ALL_STAFF.filter((p) => p !== "settings:write").concat("settings:write"),
+  HOSPITAL_ADMIN: ALL_STAFF,
   RECEPTIONIST: [
     "staff:access",
     "owners:read",
