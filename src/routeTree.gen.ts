@@ -16,7 +16,12 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as PortalRouteImport } from './routes/portal'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppAppointmentsRouteImport } from './routes/app.appointments'
+import { Route as AppBillingRouteImport } from './routes/app.billing'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
+import { Route as AppInventoryRouteImport } from './routes/app.inventory'
+import { Route as AppOwnersRouteImport } from './routes/app.owners'
+import { Route as AppPetsRouteImport } from './routes/app.pets'
 import { Route as PortalIndexRouteImport } from './routes/portal.index'
 import { Route as PortalBookAppointmentRouteImport } from './routes/portal.book-appointment'
 import { Route as PortalDashboardRouteImport } from './routes/portal.dashboard'
@@ -60,9 +65,34 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAppointmentsRoute = AppAppointmentsRouteImport.update({
+  id: '/appointments',
+  path: '/appointments',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBillingRoute = AppBillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInventoryRoute = AppInventoryRouteImport.update({
+  id: '/inventory',
+  path: '/inventory',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppOwnersRoute = AppOwnersRouteImport.update({
+  id: '/owners',
+  path: '/owners',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPetsRoute = AppPetsRouteImport.update({
+  id: '/pets',
+  path: '/pets',
   getParentRoute: () => AppRoute,
 } as any)
 const PortalIndexRoute = PortalIndexRouteImport.update({
@@ -108,7 +138,12 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/portal': typeof PortalRouteWithChildren
   '/signup': typeof SignupRoute
+  '/app/appointments': typeof AppAppointmentsRoute
+  '/app/billing': typeof AppBillingRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/inventory': typeof AppInventoryRoute
+  '/app/owners': typeof AppOwnersRoute
+  '/app/pets': typeof AppPetsRoute
   '/portal/book-appointment': typeof PortalBookAppointmentRoute
   '/portal/dashboard': typeof PortalDashboardRoute
   '/portal/invoices': typeof PortalInvoicesRoute
@@ -123,7 +158,12 @@ export interface FileRoutesByTo {
   '/book-appointment': typeof BookAppointmentRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
+  '/app/appointments': typeof AppAppointmentsRoute
+  '/app/billing': typeof AppBillingRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/inventory': typeof AppInventoryRoute
+  '/app/owners': typeof AppOwnersRoute
+  '/app/pets': typeof AppPetsRoute
   '/portal/book-appointment': typeof PortalBookAppointmentRoute
   '/portal/dashboard': typeof PortalDashboardRoute
   '/portal/invoices': typeof PortalInvoicesRoute
@@ -141,7 +181,12 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/portal': typeof PortalRouteWithChildren
   '/signup': typeof SignupRoute
+  '/app/appointments': typeof AppAppointmentsRoute
+  '/app/billing': typeof AppBillingRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/inventory': typeof AppInventoryRoute
+  '/app/owners': typeof AppOwnersRoute
+  '/app/pets': typeof AppPetsRoute
   '/portal/book-appointment': typeof PortalBookAppointmentRoute
   '/portal/dashboard': typeof PortalDashboardRoute
   '/portal/invoices': typeof PortalInvoicesRoute
@@ -160,7 +205,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/portal'
     | '/signup'
+    | '/app/appointments'
+    | '/app/billing'
     | '/app/dashboard'
+    | '/app/inventory'
+    | '/app/owners'
+    | '/app/pets'
     | '/portal/book-appointment'
     | '/portal/dashboard'
     | '/portal/invoices'
@@ -175,7 +225,12 @@ export interface FileRouteTypes {
     | '/book-appointment'
     | '/login'
     | '/signup'
+    | '/app/appointments'
+    | '/app/billing'
     | '/app/dashboard'
+    | '/app/inventory'
+    | '/app/owners'
+    | '/app/pets'
     | '/portal/book-appointment'
     | '/portal/dashboard'
     | '/portal/invoices'
@@ -192,7 +247,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/portal'
     | '/signup'
+    | '/app/appointments'
+    | '/app/billing'
     | '/app/dashboard'
+    | '/app/inventory'
+    | '/app/owners'
+    | '/app/pets'
     | '/portal/book-appointment'
     | '/portal/dashboard'
     | '/portal/invoices'
@@ -263,11 +323,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/appointments': {
+      id: '/app/appointments'
+      path: '/appointments'
+      fullPath: '/app/appointments'
+      preLoaderRoute: typeof AppAppointmentsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/billing': {
+      id: '/app/billing'
+      path: '/billing'
+      fullPath: '/app/billing'
+      preLoaderRoute: typeof AppBillingRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/dashboard': {
       id: '/app/dashboard'
       path: '/dashboard'
       fullPath: '/app/dashboard'
       preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/inventory': {
+      id: '/app/inventory'
+      path: '/inventory'
+      fullPath: '/app/inventory'
+      preLoaderRoute: typeof AppInventoryRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/owners': {
+      id: '/app/owners'
+      path: '/owners'
+      fullPath: '/app/owners'
+      preLoaderRoute: typeof AppOwnersRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/pets': {
+      id: '/app/pets'
+      path: '/pets'
+      fullPath: '/app/pets'
+      preLoaderRoute: typeof AppPetsRouteImport
       parentRoute: typeof AppRoute
     }
     '/portal/': {
@@ -323,12 +418,22 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteChildren {
+  AppAppointmentsRoute: typeof AppAppointmentsRoute
+  AppBillingRoute: typeof AppBillingRoute
   AppDashboardRoute: typeof AppDashboardRoute
+  AppInventoryRoute: typeof AppInventoryRoute
+  AppOwnersRoute: typeof AppOwnersRoute
+  AppPetsRoute: typeof AppPetsRoute
   AppIndexRoute: typeof AppIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAppointmentsRoute: AppAppointmentsRoute,
+  AppBillingRoute: AppBillingRoute,
   AppDashboardRoute: AppDashboardRoute,
+  AppInventoryRoute: AppInventoryRoute,
+  AppOwnersRoute: AppOwnersRoute,
+  AppPetsRoute: AppPetsRoute,
   AppIndexRoute: AppIndexRoute,
 }
 
