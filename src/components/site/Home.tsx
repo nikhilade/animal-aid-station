@@ -1,4 +1,5 @@
 import { PawPrint, Phone, Mail, MapPin, Facebook, Instagram, Twitter, Linkedin, ArrowUpRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { Nav } from "./Nav";
 import { ScrollGallery } from "./ScrollGallery";
 import { InstagramSection } from "./InstagramSection";
@@ -228,12 +229,12 @@ export function Home() {
                 <p className="mt-3 text-[15px] leading-relaxed text-foreground/75 transition-opacity duration-300 group-hover:opacity-30">
                   {s.copy}
                 </p>
-                <a
-                  href="#contact"
+                <Link
+                  to="/book-appointment"
                   className="relative z-20 mt-6 inline-flex items-center gap-2 text-[15px] font-medium text-clay"
                 >
                   Book now <ArrowUpRight className="size-4" />
-                </a>
+                </Link>
               </article>
             ))}
           </div>
