@@ -104,14 +104,33 @@ const routes: { pattern: RegExp; handler: Handler }[] = [
     },
   },
   {
+    pattern: /^\/pet-owners\/search$/,
+    handler: ({ query }) => {
+      const q = (query.get("q") ?? "").trim().toLowerCase();
+      const digits = q.replace(/\D/g, "");
+      const matches = !q
+        ? owners.slice(0, 5)
+        : owners.filter(
+            (o) =>
+              (digits.length >= 2 && o.phone.replace(/\D/g, "").includes(digits)) ||
+              o.name.toLowerCase().includes(q) ||
+              o.email.toLowerCase().includes(q),
+          );
+      return envelope(matches);
+    },
+  },
+  {
     pattern: /^\/pet-owners$/,
-    handler: ({ method, body }) => {
+    handler: ({ method, body, query }) => {
       if (method === "POST") {
+        const phone = String(body.phone ?? "");
+        const existing = owners.find((o) => o.phone.replace(/\D/g, "") === phone.replace(/\D/g, "") && phone !== "");
+        if (existing) return envelope(existing);
         const created = {
           id: `own_${owners.length + 1}`,
           name: String(body.name ?? "New Owner"),
           email: String(body.email ?? ""),
-          phone: String(body.phone ?? ""),
+          phone,
           address: String(body.address ?? ""),
           pets_count: 0,
           created_at: new Date().toISOString(),
@@ -119,7 +138,7 @@ const routes: { pattern: RegExp; handler: Handler }[] = [
         owners.push(created);
         return envelope(created);
       }
-      return envelope(owners);
+      return paginate(owners, query);
     },
   },
   {
@@ -131,7 +150,26 @@ const routes: { pattern: RegExp; handler: Handler }[] = [
   },
   {
     pattern: /^\/pets$/,
-    handler: ({ query }) => {
+    handler: ({ method, body, query }) => {
+      if (method === "POST") {
+        const owner = owners.find((o) => o.id === body.owner_id) ?? owners[0];
+        const created = {
+          id: `pet_${pets.length + 1}`,
+          owner_id: owner.id,
+          owner_name: owner.name,
+          name: String(body.name ?? "New Pet"),
+          species: (body.species as "Dog") ?? "Dog",
+          breed: String(body.breed ?? "Mixed"),
+          sex: (body.sex as "Male") ?? "Male",
+          age_years: Number(body.age_years ?? 1),
+          weight_kg: Number(body.weight_kg ?? 5),
+          photo_url: null,
+          microchip_id: null,
+        };
+        pets.push(created);
+        owner.pets_count += 1;
+        return envelope(created);
+      }
       const ownerId = query.get("owner_id");
       return envelope(ownerId ? pets.filter((p) => p.owner_id === ownerId) : pets);
     },
