@@ -1,4 +1,5 @@
 import { PawPrint, Phone, Mail, MapPin, Facebook, Instagram, Twitter, Linkedin, ArrowUpRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { Nav } from "./Nav";
 import { ScrollGallery } from "./ScrollGallery";
 import { InstagramSection } from "./InstagramSection";
@@ -228,12 +229,12 @@ export function Home() {
                 <p className="mt-3 text-[15px] leading-relaxed text-foreground/75 transition-opacity duration-300 group-hover:opacity-30">
                   {s.copy}
                 </p>
-                <a
-                  href="#contact"
+                <Link
+                  to="/book-appointment"
                   className="relative z-20 mt-6 inline-flex items-center gap-2 text-[15px] font-medium text-clay"
                 >
                   Book now <ArrowUpRight className="size-4" />
-                </a>
+                </Link>
               </article>
             ))}
           </div>
@@ -385,7 +386,7 @@ export function Home() {
         <div className="mx-auto grid max-w-7xl gap-12 px-6 md:grid-cols-3">
           <Reveal>
             <span className="flex items-center text-2xl font-bold">
-              pet g<PawPrint className="inline size-5 -rotate-12 text-clay" />od
+              Pet G<PawPrint className="inline size-5 -rotate-12 text-clay" />od
             </span>
             <p className="mt-4 max-w-xs text-sm text-primary-foreground/75">
               Full-service veterinary care, grooming and daycare for the pets of Los Angeles.
