@@ -34,6 +34,7 @@ export const endpoints = {
     detail: (id: string) => `/appointments/${id}`,
     create: "/appointments",
     mine: "/appointments/mine",
+    availableSlots: "/appointments/slots/available",
   },
   prescriptions: {
     list: "/prescriptions",
