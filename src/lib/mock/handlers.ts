@@ -26,6 +26,26 @@ function envelope<T>(data: T, overrides: Partial<ApiResponse<T>> = {}): ApiRespo
   };
 }
 
+/** Cursor-based pagination for list endpoints (?cursor=&limit=). */
+function paginate<T>(all: T[], query: URLSearchParams): ApiResponse<T[]> {
+  const limit = Math.max(1, Number(query.get("limit") ?? 10));
+  const start = Number(query.get("cursor") ?? 0) || 0;
+  const slice = all.slice(start, start + limit);
+  const next = start + limit;
+  const hasNext = next < all.length;
+  return {
+    success: true,
+    data: slice,
+    error: null,
+    meta: {
+      total_count: all.length,
+      has_next_page: hasNext,
+      next_cursor: hasNext ? String(next) : null,
+      limit,
+    },
+  };
+}
+
 function failure(code: string, message: string): ApiResponse<null> {
   return {
     success: false,
