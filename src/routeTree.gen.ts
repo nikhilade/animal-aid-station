@@ -10,33 +10,338 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppRouteImport } from './routes/app'
+import { Route as BookAppointmentRouteImport } from './routes/book-appointment'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as PortalRouteImport } from './routes/portal'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppAppointmentsRouteImport } from './routes/app.appointments'
+import { Route as AppBillingRouteImport } from './routes/app.billing'
+import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
+import { Route as AppDoctorsRouteImport } from './routes/app.doctors'
+import { Route as AppGroomingRouteImport } from './routes/app.grooming'
+import { Route as AppInventoryRouteImport } from './routes/app.inventory'
+import { Route as AppLabRouteImport } from './routes/app.lab'
+import { Route as AppOwnersRouteImport } from './routes/app.owners'
+import { Route as AppPetsRouteImport } from './routes/app.pets'
+import { Route as AppPharmacyRouteImport } from './routes/app.pharmacy'
+import { Route as AppReportsRouteImport } from './routes/app.reports'
+import { Route as AppSettingsRouteImport } from './routes/app.settings'
+import { Route as PortalIndexRouteImport } from './routes/portal.index'
+import { Route as PortalBookAppointmentRouteImport } from './routes/portal.book-appointment'
+import { Route as PortalDashboardRouteImport } from './routes/portal.dashboard'
+import { Route as PortalInvoicesRouteImport } from './routes/portal.invoices'
+import { Route as PortalMyAppointmentsRouteImport } from './routes/portal.my-appointments'
+import { Route as PortalMyPetsRouteImport } from './routes/portal.my-pets'
+import { Route as PortalPrescriptionsRouteImport } from './routes/portal.prescriptions'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookAppointmentRoute = BookAppointmentRouteImport.update({
+  id: '/book-appointment',
+  path: '/book-appointment',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortalRoute = PortalRouteImport.update({
+  id: '/portal',
+  path: '/portal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAppointmentsRoute = AppAppointmentsRouteImport.update({
+  id: '/appointments',
+  path: '/appointments',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBillingRoute = AppBillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDoctorsRoute = AppDoctorsRouteImport.update({
+  id: '/doctors',
+  path: '/doctors',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppGroomingRoute = AppGroomingRouteImport.update({
+  id: '/grooming',
+  path: '/grooming',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInventoryRoute = AppInventoryRouteImport.update({
+  id: '/inventory',
+  path: '/inventory',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLabRoute = AppLabRouteImport.update({
+  id: '/lab',
+  path: '/lab',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppOwnersRoute = AppOwnersRouteImport.update({
+  id: '/owners',
+  path: '/owners',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPetsRoute = AppPetsRouteImport.update({
+  id: '/pets',
+  path: '/pets',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPharmacyRoute = AppPharmacyRouteImport.update({
+  id: '/pharmacy',
+  path: '/pharmacy',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppReportsRoute = AppReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const PortalIndexRoute = PortalIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalBookAppointmentRoute = PortalBookAppointmentRouteImport.update({
+  id: '/book-appointment',
+  path: '/book-appointment',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalDashboardRoute = PortalDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalInvoicesRoute = PortalInvoicesRouteImport.update({
+  id: '/invoices',
+  path: '/invoices',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalMyAppointmentsRoute = PortalMyAppointmentsRouteImport.update({
+  id: '/my-appointments',
+  path: '/my-appointments',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalMyPetsRoute = PortalMyPetsRouteImport.update({
+  id: '/my-pets',
+  path: '/my-pets',
+  getParentRoute: () => PortalRoute,
+} as any)
+const PortalPrescriptionsRoute = PortalPrescriptionsRouteImport.update({
+  id: '/prescriptions',
+  path: '/prescriptions',
+  getParentRoute: () => PortalRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/book-appointment': typeof BookAppointmentRoute
+  '/login': typeof LoginRoute
+  '/portal': typeof PortalRouteWithChildren
+  '/signup': typeof SignupRoute
+  '/app/appointments': typeof AppAppointmentsRoute
+  '/app/billing': typeof AppBillingRoute
+  '/app/dashboard': typeof AppDashboardRoute
+  '/app/doctors': typeof AppDoctorsRoute
+  '/app/grooming': typeof AppGroomingRoute
+  '/app/inventory': typeof AppInventoryRoute
+  '/app/lab': typeof AppLabRoute
+  '/app/owners': typeof AppOwnersRoute
+  '/app/pets': typeof AppPetsRoute
+  '/app/pharmacy': typeof AppPharmacyRoute
+  '/app/reports': typeof AppReportsRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/portal/book-appointment': typeof PortalBookAppointmentRoute
+  '/portal/dashboard': typeof PortalDashboardRoute
+  '/portal/invoices': typeof PortalInvoicesRoute
+  '/portal/my-appointments': typeof PortalMyAppointmentsRoute
+  '/portal/my-pets': typeof PortalMyPetsRoute
+  '/portal/prescriptions': typeof PortalPrescriptionsRoute
+  '/app/': typeof AppIndexRoute
+  '/portal/': typeof PortalIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/book-appointment': typeof BookAppointmentRoute
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
+  '/app/appointments': typeof AppAppointmentsRoute
+  '/app/billing': typeof AppBillingRoute
+  '/app/dashboard': typeof AppDashboardRoute
+  '/app/doctors': typeof AppDoctorsRoute
+  '/app/grooming': typeof AppGroomingRoute
+  '/app/inventory': typeof AppInventoryRoute
+  '/app/lab': typeof AppLabRoute
+  '/app/owners': typeof AppOwnersRoute
+  '/app/pets': typeof AppPetsRoute
+  '/app/pharmacy': typeof AppPharmacyRoute
+  '/app/reports': typeof AppReportsRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/portal/book-appointment': typeof PortalBookAppointmentRoute
+  '/portal/dashboard': typeof PortalDashboardRoute
+  '/portal/invoices': typeof PortalInvoicesRoute
+  '/portal/my-appointments': typeof PortalMyAppointmentsRoute
+  '/portal/my-pets': typeof PortalMyPetsRoute
+  '/portal/prescriptions': typeof PortalPrescriptionsRoute
+  '/app': typeof AppIndexRoute
+  '/portal': typeof PortalIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/book-appointment': typeof BookAppointmentRoute
+  '/login': typeof LoginRoute
+  '/portal': typeof PortalRouteWithChildren
+  '/signup': typeof SignupRoute
+  '/app/appointments': typeof AppAppointmentsRoute
+  '/app/billing': typeof AppBillingRoute
+  '/app/dashboard': typeof AppDashboardRoute
+  '/app/doctors': typeof AppDoctorsRoute
+  '/app/grooming': typeof AppGroomingRoute
+  '/app/inventory': typeof AppInventoryRoute
+  '/app/lab': typeof AppLabRoute
+  '/app/owners': typeof AppOwnersRoute
+  '/app/pets': typeof AppPetsRoute
+  '/app/pharmacy': typeof AppPharmacyRoute
+  '/app/reports': typeof AppReportsRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/portal/book-appointment': typeof PortalBookAppointmentRoute
+  '/portal/dashboard': typeof PortalDashboardRoute
+  '/portal/invoices': typeof PortalInvoicesRoute
+  '/portal/my-appointments': typeof PortalMyAppointmentsRoute
+  '/portal/my-pets': typeof PortalMyPetsRoute
+  '/portal/prescriptions': typeof PortalPrescriptionsRoute
+  '/app/': typeof AppIndexRoute
+  '/portal/': typeof PortalIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/book-appointment'
+    | '/login'
+    | '/portal'
+    | '/signup'
+    | '/app/appointments'
+    | '/app/billing'
+    | '/app/dashboard'
+    | '/app/doctors'
+    | '/app/grooming'
+    | '/app/inventory'
+    | '/app/lab'
+    | '/app/owners'
+    | '/app/pets'
+    | '/app/pharmacy'
+    | '/app/reports'
+    | '/app/settings'
+    | '/portal/book-appointment'
+    | '/portal/dashboard'
+    | '/portal/invoices'
+    | '/portal/my-appointments'
+    | '/portal/my-pets'
+    | '/portal/prescriptions'
+    | '/app/'
+    | '/portal/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/book-appointment'
+    | '/login'
+    | '/signup'
+    | '/app/appointments'
+    | '/app/billing'
+    | '/app/dashboard'
+    | '/app/doctors'
+    | '/app/grooming'
+    | '/app/inventory'
+    | '/app/lab'
+    | '/app/owners'
+    | '/app/pets'
+    | '/app/pharmacy'
+    | '/app/reports'
+    | '/app/settings'
+    | '/portal/book-appointment'
+    | '/portal/dashboard'
+    | '/portal/invoices'
+    | '/portal/my-appointments'
+    | '/portal/my-pets'
+    | '/portal/prescriptions'
+    | '/app'
+    | '/portal'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/book-appointment'
+    | '/login'
+    | '/portal'
+    | '/signup'
+    | '/app/appointments'
+    | '/app/billing'
+    | '/app/dashboard'
+    | '/app/doctors'
+    | '/app/grooming'
+    | '/app/inventory'
+    | '/app/lab'
+    | '/app/owners'
+    | '/app/pets'
+    | '/app/pharmacy'
+    | '/app/reports'
+    | '/app/settings'
+    | '/portal/book-appointment'
+    | '/portal/dashboard'
+    | '/portal/invoices'
+    | '/portal/my-appointments'
+    | '/portal/my-pets'
+    | '/portal/prescriptions'
+    | '/app/'
+    | '/portal/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  BookAppointmentRoute: typeof BookAppointmentRoute
+  LoginRoute: typeof LoginRoute
+  PortalRoute: typeof PortalRouteWithChildren
+  SignupRoute: typeof SignupRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,22 +353,249 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/book-appointment': {
+      id: '/book-appointment'
+      path: '/book-appointment'
+      fullPath: '/book-appointment'
+      preLoaderRoute: typeof BookAppointmentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portal': {
+      id: '/portal'
+      path: '/portal'
+      fullPath: '/portal'
+      preLoaderRoute: typeof PortalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/appointments': {
+      id: '/app/appointments'
+      path: '/appointments'
+      fullPath: '/app/appointments'
+      preLoaderRoute: typeof AppAppointmentsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/billing': {
+      id: '/app/billing'
+      path: '/billing'
+      fullPath: '/app/billing'
+      preLoaderRoute: typeof AppBillingRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/dashboard': {
+      id: '/app/dashboard'
+      path: '/dashboard'
+      fullPath: '/app/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/doctors': {
+      id: '/app/doctors'
+      path: '/doctors'
+      fullPath: '/app/doctors'
+      preLoaderRoute: typeof AppDoctorsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/grooming': {
+      id: '/app/grooming'
+      path: '/grooming'
+      fullPath: '/app/grooming'
+      preLoaderRoute: typeof AppGroomingRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/inventory': {
+      id: '/app/inventory'
+      path: '/inventory'
+      fullPath: '/app/inventory'
+      preLoaderRoute: typeof AppInventoryRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/lab': {
+      id: '/app/lab'
+      path: '/lab'
+      fullPath: '/app/lab'
+      preLoaderRoute: typeof AppLabRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/owners': {
+      id: '/app/owners'
+      path: '/owners'
+      fullPath: '/app/owners'
+      preLoaderRoute: typeof AppOwnersRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/pets': {
+      id: '/app/pets'
+      path: '/pets'
+      fullPath: '/app/pets'
+      preLoaderRoute: typeof AppPetsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/pharmacy': {
+      id: '/app/pharmacy'
+      path: '/pharmacy'
+      fullPath: '/app/pharmacy'
+      preLoaderRoute: typeof AppPharmacyRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/reports': {
+      id: '/app/reports'
+      path: '/reports'
+      fullPath: '/app/reports'
+      preLoaderRoute: typeof AppReportsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/settings': {
+      id: '/app/settings'
+      path: '/settings'
+      fullPath: '/app/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/portal/': {
+      id: '/portal/'
+      path: '/'
+      fullPath: '/portal/'
+      preLoaderRoute: typeof PortalIndexRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/book-appointment': {
+      id: '/portal/book-appointment'
+      path: '/book-appointment'
+      fullPath: '/portal/book-appointment'
+      preLoaderRoute: typeof PortalBookAppointmentRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/dashboard': {
+      id: '/portal/dashboard'
+      path: '/dashboard'
+      fullPath: '/portal/dashboard'
+      preLoaderRoute: typeof PortalDashboardRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/invoices': {
+      id: '/portal/invoices'
+      path: '/invoices'
+      fullPath: '/portal/invoices'
+      preLoaderRoute: typeof PortalInvoicesRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/my-appointments': {
+      id: '/portal/my-appointments'
+      path: '/my-appointments'
+      fullPath: '/portal/my-appointments'
+      preLoaderRoute: typeof PortalMyAppointmentsRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/my-pets': {
+      id: '/portal/my-pets'
+      path: '/my-pets'
+      fullPath: '/portal/my-pets'
+      preLoaderRoute: typeof PortalMyPetsRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/portal/prescriptions': {
+      id: '/portal/prescriptions'
+      path: '/prescriptions'
+      fullPath: '/portal/prescriptions'
+      preLoaderRoute: typeof PortalPrescriptionsRouteImport
+      parentRoute: typeof PortalRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppAppointmentsRoute: typeof AppAppointmentsRoute
+  AppBillingRoute: typeof AppBillingRoute
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppDoctorsRoute: typeof AppDoctorsRoute
+  AppGroomingRoute: typeof AppGroomingRoute
+  AppInventoryRoute: typeof AppInventoryRoute
+  AppLabRoute: typeof AppLabRoute
+  AppOwnersRoute: typeof AppOwnersRoute
+  AppPetsRoute: typeof AppPetsRoute
+  AppPharmacyRoute: typeof AppPharmacyRoute
+  AppReportsRoute: typeof AppReportsRoute
+  AppSettingsRoute: typeof AppSettingsRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAppointmentsRoute: AppAppointmentsRoute,
+  AppBillingRoute: AppBillingRoute,
+  AppDashboardRoute: AppDashboardRoute,
+  AppDoctorsRoute: AppDoctorsRoute,
+  AppGroomingRoute: AppGroomingRoute,
+  AppInventoryRoute: AppInventoryRoute,
+  AppLabRoute: AppLabRoute,
+  AppOwnersRoute: AppOwnersRoute,
+  AppPetsRoute: AppPetsRoute,
+  AppPharmacyRoute: AppPharmacyRoute,
+  AppReportsRoute: AppReportsRoute,
+  AppSettingsRoute: AppSettingsRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
+interface PortalRouteChildren {
+  PortalBookAppointmentRoute: typeof PortalBookAppointmentRoute
+  PortalDashboardRoute: typeof PortalDashboardRoute
+  PortalInvoicesRoute: typeof PortalInvoicesRoute
+  PortalMyAppointmentsRoute: typeof PortalMyAppointmentsRoute
+  PortalMyPetsRoute: typeof PortalMyPetsRoute
+  PortalPrescriptionsRoute: typeof PortalPrescriptionsRoute
+  PortalIndexRoute: typeof PortalIndexRoute
+}
+
+const PortalRouteChildren: PortalRouteChildren = {
+  PortalBookAppointmentRoute: PortalBookAppointmentRoute,
+  PortalDashboardRoute: PortalDashboardRoute,
+  PortalInvoicesRoute: PortalInvoicesRoute,
+  PortalMyAppointmentsRoute: PortalMyAppointmentsRoute,
+  PortalMyPetsRoute: PortalMyPetsRoute,
+  PortalPrescriptionsRoute: PortalPrescriptionsRoute,
+  PortalIndexRoute: PortalIndexRoute,
+}
+
+const PortalRouteWithChildren =
+  PortalRoute._addFileChildren(PortalRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  BookAppointmentRoute: BookAppointmentRoute,
+  LoginRoute: LoginRoute,
+  PortalRoute: PortalRouteWithChildren,
+  SignupRoute: SignupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
