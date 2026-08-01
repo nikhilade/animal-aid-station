@@ -204,6 +204,26 @@ const routes: { pattern: RegExp; handler: Handler }[] = [
   { pattern: /^\/doctors$/, handler: () => envelope(doctors) },
   { pattern: /^\/appointments\/mine$/, handler: () => envelope(appointments.filter((a) => a.owner_id === currentOwnerId)) },
   {
+    pattern: /^\/appointments\/slots\/available$/,
+    handler: ({ query }) => {
+      const date = query.get("date") ?? new Date().toISOString().slice(0, 10);
+      const doctorId = query.get("doctor_id") ?? "doc_1";
+      const branchId = query.get("branch_id") ?? "br_1";
+      const seedBase = [...`${doctorId}${branchId}${date}`].reduce((a, c) => a + c.charCodeAt(0), 0);
+      const slots: { start_at: string; available: boolean }[] = [];
+      for (let h = 9; h < 18; h++) {
+        for (const m of [0, 30]) {
+          const start = new Date(`${date}T00:00:00`);
+          start.setHours(h, m, 0, 0);
+          const idx = (h - 9) * 2 + (m === 30 ? 1 : 0);
+          const booked = (seedBase + idx * 7) % 4 === 0 || start.getTime() < Date.now();
+          slots.push({ start_at: start.toISOString(), available: !booked });
+        }
+      }
+      return envelope(slots);
+    },
+  },
+  {
     pattern: /^\/appointments\/([^/]+)$/,
     handler: ({ query }) => {
       const found = appointments.find((a) => a.id === query.get("__p1"));
