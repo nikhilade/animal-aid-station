@@ -19,6 +19,7 @@ import { Route as SignupRouteImport } from './routes/signup'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppAppointmentsRouteImport } from './routes/app.appointments'
 import { Route as AppBillingRouteImport } from './routes/app.billing'
+import { Route as AppCalendarRouteImport } from './routes/app.calendar'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
 import { Route as AppDoctorsRouteImport } from './routes/app.doctors'
 import { Route as AppGroomingRouteImport } from './routes/app.grooming'
@@ -91,6 +92,11 @@ const AppAppointmentsRoute = AppAppointmentsRouteImport.update({
 const AppBillingRoute = AppBillingRouteImport.update({
   id: '/billing',
   path: '/billing',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCalendarRoute = AppCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
@@ -219,6 +225,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/app/appointments': typeof AppAppointmentsRoute
   '/app/billing': typeof AppBillingRoute
+  '/app/calendar': typeof AppCalendarRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/doctors': typeof AppDoctorsRoute
   '/app/grooming': typeof AppGroomingRoute
@@ -252,6 +259,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/app/appointments': typeof AppAppointmentsRoute
   '/app/billing': typeof AppBillingRoute
+  '/app/calendar': typeof AppCalendarRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/doctors': typeof AppDoctorsRoute
   '/app/grooming': typeof AppGroomingRoute
@@ -288,6 +296,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/app/appointments': typeof AppAppointmentsRoute
   '/app/billing': typeof AppBillingRoute
+  '/app/calendar': typeof AppCalendarRoute
   '/app/dashboard': typeof AppDashboardRoute
   '/app/doctors': typeof AppDoctorsRoute
   '/app/grooming': typeof AppGroomingRoute
@@ -325,6 +334,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/app/appointments'
     | '/app/billing'
+    | '/app/calendar'
     | '/app/dashboard'
     | '/app/doctors'
     | '/app/grooming'
@@ -358,6 +368,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/app/appointments'
     | '/app/billing'
+    | '/app/calendar'
     | '/app/dashboard'
     | '/app/doctors'
     | '/app/grooming'
@@ -393,6 +404,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/app/appointments'
     | '/app/billing'
+    | '/app/calendar'
     | '/app/dashboard'
     | '/app/doctors'
     | '/app/grooming'
@@ -499,6 +511,13 @@ declare module '@tanstack/react-router' {
       path: '/billing'
       fullPath: '/app/billing'
       preLoaderRoute: typeof AppBillingRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/calendar': {
+      id: '/app/calendar'
+      path: '/calendar'
+      fullPath: '/app/calendar'
+      preLoaderRoute: typeof AppCalendarRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/dashboard': {
@@ -668,6 +687,7 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppAppointmentsRoute: typeof AppAppointmentsRoute
   AppBillingRoute: typeof AppBillingRoute
+  AppCalendarRoute: typeof AppCalendarRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppDoctorsRoute: typeof AppDoctorsRoute
   AppGroomingRoute: typeof AppGroomingRoute
@@ -689,6 +709,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppAppointmentsRoute: AppAppointmentsRoute,
   AppBillingRoute: AppBillingRoute,
+  AppCalendarRoute: AppCalendarRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppDoctorsRoute: AppDoctorsRoute,
   AppGroomingRoute: AppGroomingRoute,
