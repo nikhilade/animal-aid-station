@@ -62,6 +62,18 @@ function failure(code: string, message: string): ApiResponse<null> {
   };
 }
 
+/**
+ * Slot-lock simulation: roughly one in four slots fails its first booking
+ * attempt with ERR_SLOT_LOCK_TIMEOUT so the retry UX is exercisable.
+ */
+const lockedSlots = new Set<string>();
+function shouldLock(doctorId: string, iso: string) {
+  const seed = [...`${doctorId}${iso}`].reduce((a, c) => a + c.charCodeAt(0), 0);
+  return seed % 4 === 0;
+}
+
+
+
 function base64url(value: string) {
   const b64 = typeof btoa === "function" ? btoa(value) : Buffer.from(value).toString("base64");
   return b64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
