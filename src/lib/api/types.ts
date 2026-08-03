@@ -86,7 +86,32 @@ export interface AppointmentSlot {
   available: boolean;
 }
 
-export type AppointmentStatus = "SCHEDULED" | "CHECKED_IN" | "COMPLETED" | "CANCELLED";
+export interface BranchWorkingHours {
+  /** 24h clock, e.g. 9 = 09:00 */
+  open_hour: number;
+  close_hour: number;
+  slot_minutes: number;
+  /** 0 = Sunday … 6 = Saturday */
+  closed_days: number[];
+}
+
+export interface Branch {
+  id: string;
+  name: string;
+  address: string;
+  working_hours: BranchWorkingHours;
+}
+
+export type AppointmentStatus =
+  | "SCHEDULED"
+  | "CONFIRMED"
+  | "CHECKED_IN"
+  | "IN_PROGRESS"
+  | "COMPLETED"
+  | "CANCELLED"
+  | "NO_SHOW";
+
+export type SourceChannel = "WALK_IN" | "PHONE" | "ONLINE";
 
 export interface Appointment {
   id: string;
@@ -100,7 +125,12 @@ export interface Appointment {
   scheduled_at: string;
   status: AppointmentStatus;
   notes: string;
+  branch_id?: string;
+  token_number?: number | null;
+  checked_in_at?: string | null;
+  source_channel?: SourceChannel;
 }
+
 
 export interface Prescription {
   id: string;
