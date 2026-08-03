@@ -6,7 +6,7 @@ import { apiClient } from "@/lib/api-client";
 import { endpoints } from "@/lib/api/endpoints";
 import type { Pet } from "@/lib/api/types";
 
-export const Route = createFileRoute("/app/pets")({
+export const Route = createFileRoute("/app/pets/")({
   head: () => ({
     meta: [
       { title: "Patients | Pet Good Console" },
