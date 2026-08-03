@@ -42,7 +42,7 @@ function NowServing() {
   }, [load]);
 
   const serving = items.find((a) => a.status === "IN_PROGRESS") ?? null;
-  const waiting = items.filter((a) => a.status === "CHECKED_IN").slice(0, 6);
+  const waiting = items.filter((a) => a.status === "CHECKED_IN" && a.token_number).slice(0, 6);
 
   return (
     <main className="min-h-screen bg-forest px-8 py-10 text-primary-foreground">
