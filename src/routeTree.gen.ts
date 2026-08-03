@@ -27,6 +27,7 @@ import { Route as AppLabRouteImport } from './routes/app.lab'
 import { Route as AppPharmacyRouteImport } from './routes/app.pharmacy'
 import { Route as AppReportsRouteImport } from './routes/app.reports'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
+import { Route as AppVaccinationsRouteImport } from './routes/app.vaccinations'
 import { Route as PortalIndexRouteImport } from './routes/portal.index'
 import { Route as PortalBookAppointmentRouteImport } from './routes/portal.book-appointment'
 import { Route as PortalDashboardRouteImport } from './routes/portal.dashboard'
@@ -131,6 +132,11 @@ const AppSettingsRoute = AppSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AppRoute,
 } as any)
+const AppVaccinationsRoute = AppVaccinationsRouteImport.update({
+  id: '/vaccinations',
+  path: '/vaccinations',
+  getParentRoute: () => AppRoute,
+} as any)
 const PortalIndexRoute = PortalIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -215,6 +221,7 @@ export interface FileRoutesByFullPath {
   '/app/pharmacy': typeof AppPharmacyRoute
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/vaccinations': typeof AppVaccinationsRoute
   '/portal/book-appointment': typeof PortalBookAppointmentRoute
   '/portal/dashboard': typeof PortalDashboardRoute
   '/portal/invoices': typeof PortalInvoicesRoute
@@ -246,6 +253,7 @@ export interface FileRoutesByTo {
   '/app/pharmacy': typeof AppPharmacyRoute
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/vaccinations': typeof AppVaccinationsRoute
   '/portal/book-appointment': typeof PortalBookAppointmentRoute
   '/portal/dashboard': typeof PortalDashboardRoute
   '/portal/invoices': typeof PortalInvoicesRoute
@@ -280,6 +288,7 @@ export interface FileRoutesById {
   '/app/pharmacy': typeof AppPharmacyRoute
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/vaccinations': typeof AppVaccinationsRoute
   '/portal/book-appointment': typeof PortalBookAppointmentRoute
   '/portal/dashboard': typeof PortalDashboardRoute
   '/portal/invoices': typeof PortalInvoicesRoute
@@ -315,6 +324,7 @@ export interface FileRouteTypes {
     | '/app/pharmacy'
     | '/app/reports'
     | '/app/settings'
+    | '/app/vaccinations'
     | '/portal/book-appointment'
     | '/portal/dashboard'
     | '/portal/invoices'
@@ -346,6 +356,7 @@ export interface FileRouteTypes {
     | '/app/pharmacy'
     | '/app/reports'
     | '/app/settings'
+    | '/app/vaccinations'
     | '/portal/book-appointment'
     | '/portal/dashboard'
     | '/portal/invoices'
@@ -379,6 +390,7 @@ export interface FileRouteTypes {
     | '/app/pharmacy'
     | '/app/reports'
     | '/app/settings'
+    | '/app/vaccinations'
     | '/portal/book-appointment'
     | '/portal/dashboard'
     | '/portal/invoices'
@@ -533,6 +545,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/vaccinations': {
+      id: '/app/vaccinations'
+      path: '/vaccinations'
+      fullPath: '/app/vaccinations'
+      preLoaderRoute: typeof AppVaccinationsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/portal/': {
       id: '/portal/'
       path: '/'
@@ -638,6 +657,7 @@ interface AppRouteChildren {
   AppPharmacyRoute: typeof AppPharmacyRoute
   AppReportsRoute: typeof AppReportsRoute
   AppSettingsRoute: typeof AppSettingsRoute
+  AppVaccinationsRoute: typeof AppVaccinationsRoute
   AppIndexRoute: typeof AppIndexRoute
   AppOwnersIdRoute: typeof AppOwnersIdRoute
   AppOwnersNewRoute: typeof AppOwnersNewRoute
@@ -658,6 +678,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppPharmacyRoute: AppPharmacyRoute,
   AppReportsRoute: AppReportsRoute,
   AppSettingsRoute: AppSettingsRoute,
+  AppVaccinationsRoute: AppVaccinationsRoute,
   AppIndexRoute: AppIndexRoute,
   AppOwnersIdRoute: AppOwnersIdRoute,
   AppOwnersNewRoute: AppOwnersNewRoute,
