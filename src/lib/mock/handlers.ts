@@ -248,8 +248,24 @@ const routes: { pattern: RegExp; handler: Handler }[] = [
     handler: ({ body, query }) => {
       const found = appointments.find((a) => a.id === query.get("__p1"));
       if (!found) return failure("NOT_FOUND", "Appointment not found.");
-      found.scheduled_at = String(body.scheduled_at ?? found.scheduled_at);
-      found.status = "SCHEDULED";
+      const target = String(body.scheduled_at ?? found.scheduled_at);
+      const clash = appointments.find(
+        (a) =>
+          a.id !== found.id &&
+          a.doctor_id === (body.doctor_id ?? found.doctor_id) &&
+          a.scheduled_at === target &&
+          !["CANCELLED", "NO_SHOW"].includes(a.status),
+      );
+      if (clash) return failure("ERR_DOUBLE_BOOKING", "That slot was just taken. Pick another one.");
+      found.scheduled_at = target;
+      if (body.doctor_id) {
+        const doc = doctors.find((d) => d.id === body.doctor_id);
+        if (doc) {
+          found.doctor_id = doc.id;
+          found.doctor_name = doc.name;
+        }
+      }
+      if (found.status === "CANCELLED" || found.status === "NO_SHOW") found.status = "SCHEDULED";
       return envelope(found);
     },
   },
@@ -262,6 +278,41 @@ const routes: { pattern: RegExp; handler: Handler }[] = [
       return envelope(found);
     },
   },
+  {
+    pattern: /^\/appointments\/([^/]+)\/check-in$/,
+    handler: ({ query }) => {
+      const found = appointments.find((a) => a.id === query.get("__p1"));
+      if (!found) return failure("NOT_FOUND", "Appointment not found.");
+      if (found.token_number) return envelope(found);
+      tokenState.last += 1;
+      found.token_number = tokenState.last;
+      found.status = "CHECKED_IN";
+      found.checked_in_at = new Date().toISOString();
+      return envelope(found);
+    },
+  },
+  {
+    pattern: /^\/appointments\/([^/]+)\/status$/,
+    handler: ({ body, query }) => {
+      const found = appointments.find((a) => a.id === query.get("__p1"));
+      if (!found) return failure("NOT_FOUND", "Appointment not found.");
+      found.status = String(body.status ?? found.status) as typeof found.status;
+      return envelope(found);
+    },
+  },
+  {
+    pattern: /^\/appointments\/queue$/,
+    handler: ({ query }) => {
+      const branchId = query.get("branch_id") ?? "br_1";
+      const today = new Date().toDateString();
+      const list = appointments
+        .filter((a) => (a.branch_id ?? "br_1") === branchId && new Date(a.scheduled_at).toDateString() === today)
+        .sort((a, b) => a.scheduled_at.localeCompare(b.scheduled_at));
+      return envelope(list);
+    },
+  },
+  { pattern: /^\/branches$/, handler: () => envelope(branches) },
+
   { pattern: new RegExp(`^${endpoints.auth.login}$`), handler: ({ body }) => login(body) },
   { pattern: new RegExp(`^${endpoints.auth.signup}$`), handler: ({ body }) => login(body) },
   {
