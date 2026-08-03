@@ -69,6 +69,9 @@ export interface Pet {
   weight_kg: number;
   photo_url: string | null;
   microchip_id: string | null;
+  allergies?: string;
+  color?: string;
+  notes?: string;
 }
 
 export interface Doctor {
@@ -141,4 +144,46 @@ export interface DashboardStats {
   pending_invoices: number;
   low_stock_items: number;
   upcoming: Appointment[];
+}
+
+export interface OwnerDocument {
+  id: string;
+  owner_id: string;
+  name: string;
+  type: "ID Proof" | "Consent Form" | "Insurance" | "Lab Report" | "Other";
+  size_kb: number;
+  uploaded_at: string;
+}
+
+export interface CommunicationLog {
+  id: string;
+  owner_id: string;
+  channel: "SMS" | "Email" | "Call" | "WhatsApp";
+  subject: string;
+  body: string;
+  direction: "OUTBOUND" | "INBOUND";
+  sent_at: string;
+}
+
+export interface MedicalEvent {
+  id: string;
+  pet_id: string;
+  type: "VISIT" | "VACCINE" | "LAB" | "SURGERY" | "PRESCRIPTION" | "GROOMING";
+  title: string;
+  detail: string;
+  doctor_name: string;
+  occurred_at: string;
+}
+
+export interface Vaccine {
+  id: string;
+  pet_id: string;
+  pet_name: string;
+  owner_id: string;
+  owner_name: string;
+  vaccine_name: string;
+  batch_no: string;
+  vaccination_date: string;
+  next_due_date: string;
+  administered_by: string;
 }

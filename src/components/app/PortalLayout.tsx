@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { PawPrint, LayoutDashboard, Dog, CalendarPlus, CalendarDays, Pill, Receipt, LogOut } from "lucide-react";
+import { PawPrint, LayoutDashboard, Dog, CalendarPlus, CalendarDays, Pill, Receipt, UserRound, LogOut } from "lucide-react";
 import type { ReactNode } from "react";
 import { authStore, useAuth } from "@/lib/auth/store";
 import { RequireAuth } from "./RequireAuth";
@@ -11,6 +11,7 @@ const tabs = [
   { to: "/portal/my-appointments", label: "Visits", icon: CalendarDays },
   { to: "/portal/prescriptions", label: "Meds", icon: Pill },
   { to: "/portal/invoices", label: "Bills", icon: Receipt },
+  { to: "/portal/profile", label: "Profile", icon: UserRound },
 ] as const;
 
 export function PortalLayout({ title, children }: { title: string; children: ReactNode }) {
@@ -48,7 +49,7 @@ export function PortalLayout({ title, children }: { title: string; children: Rea
         <main className="mx-auto max-w-3xl px-5 py-6">{children}</main>
 
         <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card">
-          <div className="mx-auto grid max-w-3xl grid-cols-6">
+          <div className="mx-auto grid max-w-3xl grid-cols-4 sm:grid-cols-7">
             {tabs.map(({ to, label, icon: Icon }) => (
               <Link
                 key={to}
