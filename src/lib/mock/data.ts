@@ -385,3 +385,60 @@ for (const a of appointments) {
   a.source_channel ??= "WALK_IN";
   a.token_number ??= null;
 }
+
+const todayAt = (hour: number, minute = 0) => {
+  const d = new Date();
+  d.setHours(hour, minute, 0, 0);
+  return d.toISOString();
+};
+
+appointments.push(
+  {
+    id: "apt_6",
+    pet_id: "pet_2",
+    pet_name: "Luna",
+    owner_id: "own_1",
+    owner_name: "Sarah Johnson",
+    doctor_id: "doc_1",
+    doctor_name: "Dr. Amelia Reed",
+    service: "Consultation",
+    scheduled_at: todayAt(10, 30),
+    status: "CONFIRMED",
+    notes: "",
+    branch_id: "br_1",
+    source_channel: "ONLINE",
+    token_number: null,
+  },
+  {
+    id: "apt_7",
+    pet_id: "pet_3",
+    pet_name: "Biscuit",
+    owner_id: "own_2",
+    owner_name: "Ethan Brooks",
+    doctor_id: "doc_2",
+    doctor_name: "Dr. Noah Fletcher",
+    service: "Vaccination — Booster",
+    scheduled_at: todayAt(12, 0),
+    status: "SCHEDULED",
+    notes: "",
+    branch_id: "br_1",
+    source_channel: "PHONE",
+    token_number: null,
+  },
+  {
+    id: "apt_8",
+    pet_id: "pet_4",
+    pet_name: "Pepper",
+    owner_id: "own_3",
+    owner_name: "Maya Torres",
+    doctor_id: "doc_3",
+    doctor_name: "Dr. Isabella Parker",
+    service: "Dermatology Review",
+    scheduled_at: todayAt(15, 30),
+    status: "SCHEDULED",
+    notes: "",
+    branch_id: "br_1",
+    source_channel: "WALK_IN",
+    token_number: null,
+  },
+);
