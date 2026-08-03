@@ -60,28 +60,38 @@ export function StaffLayout({
   return (
     <RequireAuth permission={permission}>
       <div className="min-h-screen bg-sand lg:flex">
+        {open && (
+          <div
+            className="fixed inset-0 z-30 bg-black/40 backdrop-blur-xs lg:hidden"
+            onClick={() => setOpen(false)}
+            aria-hidden="true"
+          />
+        )}
         <aside
-          className={`${open ? "block" : "hidden"} fixed inset-y-0 left-0 z-40 w-64 overflow-y-auto bg-forest px-4 py-6 text-primary-foreground lg:sticky lg:top-0 lg:block lg:h-screen lg:shrink-0`}
+          data-lenis-prevent
+          className={`${open ? "block" : "hidden"} fixed inset-y-0 left-0 z-40 w-64 overflow-y-auto overscroll-contain no-scrollbar bg-forest px-4 py-6 text-primary-foreground lg:sticky lg:top-0 lg:block lg:h-screen lg:max-h-screen lg:shrink-0`}
         >
-          <span className="flex items-center px-2 text-xl font-bold">
-            Pet G<PawPrint className="inline size-4 -rotate-12 text-clay" />
-            od
-          </span>
-          <p className="mt-1 px-2 text-xs text-primary-foreground/60">Staff Console</p>
-          <nav className="mt-8 space-y-1">
-            {items.map(({ to, label, icon: Icon }) => (
-              <Link
-                key={to}
-                to={to}
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-3 rounded-full px-4 py-2.5 text-sm text-primary-foreground/75 transition-colors hover:bg-primary-foreground/10"
-                activeProps={{ className: "bg-primary-foreground/15 text-primary-foreground font-medium" }}
-              >
-                <Icon className="size-4" />
-                {label}
-              </Link>
-            ))}
-          </nav>
+          <div className="flex min-h-full flex-col">
+            <span className="flex items-center px-2 text-xl font-bold">
+              Pet G<PawPrint className="inline size-4 -rotate-12 text-clay" />
+              od
+            </span>
+            <p className="mt-1 px-2 text-xs text-primary-foreground/60">Staff Console</p>
+            <nav className="mt-8 flex-1 space-y-1 pb-10">
+              {items.map(({ to, label, icon: Icon }) => (
+                <Link
+                  key={to}
+                  to={to}
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-3 rounded-full px-4 py-2.5 text-sm text-primary-foreground/75 transition-colors hover:bg-primary-foreground/10"
+                  activeProps={{ className: "bg-primary-foreground/15 text-primary-foreground font-medium" }}
+                >
+                  <Icon className="size-4" />
+                  {label}
+                </Link>
+              ))}
+            </nav>
+          </div>
         </aside>
 
         <div className="min-w-0 flex-1">
