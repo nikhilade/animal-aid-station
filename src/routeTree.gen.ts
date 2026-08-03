@@ -25,6 +25,7 @@ import { Route as AppDoctorsRouteImport } from './routes/app.doctors'
 import { Route as AppGroomingRouteImport } from './routes/app.grooming'
 import { Route as AppInventoryRouteImport } from './routes/app.inventory'
 import { Route as AppLabRouteImport } from './routes/app.lab'
+import { Route as AppNowServingRouteImport } from './routes/app.now-serving'
 import { Route as AppPharmacyRouteImport } from './routes/app.pharmacy'
 import { Route as AppQueueRouteImport } from './routes/app.queue'
 import { Route as AppReportsRouteImport } from './routes/app.reports'
@@ -123,6 +124,11 @@ const AppInventoryRoute = AppInventoryRouteImport.update({
 const AppLabRoute = AppLabRouteImport.update({
   id: '/lab',
   path: '/lab',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppNowServingRoute = AppNowServingRouteImport.update({
+  id: '/now-serving',
+  path: '/now-serving',
   getParentRoute: () => AppRoute,
 } as any)
 const AppPharmacyRoute = AppPharmacyRouteImport.update({
@@ -237,6 +243,7 @@ export interface FileRoutesByFullPath {
   '/app/grooming': typeof AppGroomingRoute
   '/app/inventory': typeof AppInventoryRoute
   '/app/lab': typeof AppLabRoute
+  '/app/now-serving': typeof AppNowServingRoute
   '/app/pharmacy': typeof AppPharmacyRoute
   '/app/queue': typeof AppQueueRoute
   '/app/reports': typeof AppReportsRoute
@@ -272,6 +279,7 @@ export interface FileRoutesByTo {
   '/app/grooming': typeof AppGroomingRoute
   '/app/inventory': typeof AppInventoryRoute
   '/app/lab': typeof AppLabRoute
+  '/app/now-serving': typeof AppNowServingRoute
   '/app/pharmacy': typeof AppPharmacyRoute
   '/app/queue': typeof AppQueueRoute
   '/app/reports': typeof AppReportsRoute
@@ -310,6 +318,7 @@ export interface FileRoutesById {
   '/app/grooming': typeof AppGroomingRoute
   '/app/inventory': typeof AppInventoryRoute
   '/app/lab': typeof AppLabRoute
+  '/app/now-serving': typeof AppNowServingRoute
   '/app/pharmacy': typeof AppPharmacyRoute
   '/app/queue': typeof AppQueueRoute
   '/app/reports': typeof AppReportsRoute
@@ -349,6 +358,7 @@ export interface FileRouteTypes {
     | '/app/grooming'
     | '/app/inventory'
     | '/app/lab'
+    | '/app/now-serving'
     | '/app/pharmacy'
     | '/app/queue'
     | '/app/reports'
@@ -384,6 +394,7 @@ export interface FileRouteTypes {
     | '/app/grooming'
     | '/app/inventory'
     | '/app/lab'
+    | '/app/now-serving'
     | '/app/pharmacy'
     | '/app/queue'
     | '/app/reports'
@@ -421,6 +432,7 @@ export interface FileRouteTypes {
     | '/app/grooming'
     | '/app/inventory'
     | '/app/lab'
+    | '/app/now-serving'
     | '/app/pharmacy'
     | '/app/queue'
     | '/app/reports'
@@ -565,6 +577,13 @@ declare module '@tanstack/react-router' {
       path: '/lab'
       fullPath: '/app/lab'
       preLoaderRoute: typeof AppLabRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/now-serving': {
+      id: '/app/now-serving'
+      path: '/now-serving'
+      fullPath: '/app/now-serving'
+      preLoaderRoute: typeof AppNowServingRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/pharmacy': {
@@ -712,6 +731,7 @@ interface AppRouteChildren {
   AppGroomingRoute: typeof AppGroomingRoute
   AppInventoryRoute: typeof AppInventoryRoute
   AppLabRoute: typeof AppLabRoute
+  AppNowServingRoute: typeof AppNowServingRoute
   AppPharmacyRoute: typeof AppPharmacyRoute
   AppQueueRoute: typeof AppQueueRoute
   AppReportsRoute: typeof AppReportsRoute
@@ -735,6 +755,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppGroomingRoute: AppGroomingRoute,
   AppInventoryRoute: AppInventoryRoute,
   AppLabRoute: AppLabRoute,
+  AppNowServingRoute: AppNowServingRoute,
   AppPharmacyRoute: AppPharmacyRoute,
   AppQueueRoute: AppQueueRoute,
   AppReportsRoute: AppReportsRoute,
