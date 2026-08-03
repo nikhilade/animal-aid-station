@@ -3,6 +3,10 @@ import { ROLES } from "../api/types";
 import { endpoints } from "../api/endpoints";
 import {
   appointments,
+  communications,
+  medicalEvents,
+  ownerDocuments,
+  vaccines,
   doctors,
   inventory,
   invoices,
@@ -103,6 +107,161 @@ type Handler = (ctx: {
 }) => ApiResponse<unknown>;
 
 const routes: { pattern: RegExp; handler: Handler }[] = [
+  {
+    pattern: /^\/pet-owners\/lookup-or-create$/,
+    handler: ({ body }) => {
+      const phone = String(body.phone ?? "").trim();
+      const digits = phone.replace(/\D/g, "");
+      if (digits.length < 6) return failure("INVALID_PHONE", "A valid phone number is required.");
+      const existing = owners.find((o) => o.phone.replace(/\D/g, "") === digits);
+      if (existing) return envelope({ owner: existing, created: false });
+      if (body.lookup_only) return envelope({ owner: null, created: false });
+      const created = {
+        id: `own_${owners.length + 1}`,
+        name: String(body.name ?? "New Owner"),
+        email: String(body.email ?? ""),
+        phone,
+        address: String(body.address ?? ""),
+        pets_count: 0,
+        created_at: new Date().toISOString(),
+      };
+      owners.push(created);
+      return envelope({ owner: created, created: true });
+    },
+  },
+  {
+    pattern: /^\/pet-owners\/([^/]+)\/documents$/,
+    handler: ({ method, body, query }) => {
+      const ownerId = query.get("__p1")!;
+      if (method === "POST") {
+        const doc = {
+          id: `doc_${ownerDocuments.length + 1}`,
+          owner_id: ownerId,
+          name: String(body.name ?? "document.pdf"),
+          type: (body.type as "Other") ?? "Other",
+          size_kb: Number(body.size_kb ?? 120),
+          uploaded_at: new Date().toISOString(),
+        };
+        ownerDocuments.push(doc);
+        return envelope(doc);
+      }
+      return envelope(ownerDocuments.filter((d) => d.owner_id === ownerId));
+    },
+  },
+  {
+    pattern: /^\/pet-owners\/([^/]+)\/communications$/,
+    handler: ({ query }) =>
+      envelope(
+        communications
+          .filter((c) => c.owner_id === query.get("__p1"))
+          .sort((a, b) => b.sent_at.localeCompare(a.sent_at)),
+      ),
+  },
+  {
+    pattern: /^\/pets\/lookup-or-create$/,
+    handler: ({ body }) => {
+      const owner = owners.find((o) => o.id === body.owner_id) ?? owners[0];
+      const name = String(body.name ?? "").trim();
+      if (!name) return failure("INVALID_NAME", "Pet name is required.");
+      const existing = pets.find(
+        (p) => p.owner_id === owner.id && p.name.toLowerCase() === name.toLowerCase(),
+      );
+      if (existing) return envelope({ pet: existing, created: false });
+      const created = {
+        id: `pet_${pets.length + 1}`,
+        owner_id: owner.id,
+        owner_name: owner.name,
+        name,
+        species: (body.species as "Dog") ?? "Dog",
+        breed: String(body.breed ?? "Mixed"),
+        sex: (body.sex as "Male") ?? "Male",
+        age_years: Number(body.age_years ?? 1),
+        weight_kg: Number(body.weight_kg ?? 5),
+        photo_url: (body.photo_url as string | null) ?? null,
+        microchip_id: (body.microchip_id as string | null) || null,
+        allergies: String(body.allergies ?? ""),
+        color: String(body.color ?? ""),
+        notes: String(body.notes ?? ""),
+      };
+      pets.push(created);
+      owner.pets_count += 1;
+      return envelope({ pet: created, created: true });
+    },
+  },
+  {
+    pattern: /^\/pets\/history\/([^/]+)$/,
+    handler: ({ query }) =>
+      envelope(
+        medicalEvents
+          .filter((e) => e.pet_id === query.get("__p1"))
+          .sort((a, b) => b.occurred_at.localeCompare(a.occurred_at)),
+      ),
+  },
+  {
+    pattern: /^\/pets\/([^/]+)\/vaccines$/,
+    handler: ({ query }) => envelope(vaccines.filter((v) => v.pet_id === query.get("__p1"))),
+  },
+  {
+    pattern: /^\/vaccines\/due$/,
+    handler: ({ query }) => {
+      const withinDays = Number(query.get("within_days") ?? 30);
+      const cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() + withinDays);
+      const due = vaccines
+        .filter((v) => new Date(v.next_due_date) <= cutoff)
+        .sort((a, b) => a.next_due_date.localeCompare(b.next_due_date));
+      return paginate(due, query);
+    },
+  },
+  {
+    pattern: /^\/vaccines$/,
+    handler: ({ method, body, query }) => {
+      if (method === "POST") {
+        const pet = pets.find((p) => p.id === body.pet_id);
+        if (!pet) return failure("PET_REQUIRED", "Select a pet for this vaccination.");
+        const vaccinationDate = String(body.vaccination_date ?? "");
+        const nextDue = String(body.next_due_date ?? "");
+        if (!vaccinationDate || !nextDue) return failure("INVALID_DATES", "Both dates are required.");
+        if (new Date(nextDue) <= new Date(vaccinationDate)) {
+          return failure("INVALID_DATES", "Next due date must be after the vaccination date.");
+        }
+        const created = {
+          id: `vac_${vaccines.length + 1}`,
+          pet_id: pet.id,
+          pet_name: pet.name,
+          owner_id: pet.owner_id,
+          owner_name: pet.owner_name,
+          vaccine_name: String(body.vaccine_name ?? "Vaccine"),
+          batch_no: String(body.batch_no ?? ""),
+          vaccination_date: vaccinationDate,
+          next_due_date: nextDue,
+          administered_by: String(body.administered_by ?? "Clinic staff"),
+        };
+        vaccines.push(created);
+        return envelope(created);
+      }
+      return paginate(vaccines, query);
+    },
+  },
+  {
+    pattern: /^\/appointments\/([^/]+)\/reschedule$/,
+    handler: ({ body, query }) => {
+      const found = appointments.find((a) => a.id === query.get("__p1"));
+      if (!found) return failure("NOT_FOUND", "Appointment not found.");
+      found.scheduled_at = String(body.scheduled_at ?? found.scheduled_at);
+      found.status = "SCHEDULED";
+      return envelope(found);
+    },
+  },
+  {
+    pattern: /^\/appointments\/([^/]+)\/cancel$/,
+    handler: ({ query }) => {
+      const found = appointments.find((a) => a.id === query.get("__p1"));
+      if (!found) return failure("NOT_FOUND", "Appointment not found.");
+      found.status = "CANCELLED";
+      return envelope(found);
+    },
+  },
   { pattern: new RegExp(`^${endpoints.auth.login}$`), handler: ({ body }) => login(body) },
   { pattern: new RegExp(`^${endpoints.auth.signup}$`), handler: ({ body }) => login(body) },
   {
@@ -129,14 +288,23 @@ const routes: { pattern: RegExp; handler: Handler }[] = [
               o.name.toLowerCase().includes(q) ||
               o.email.toLowerCase().includes(q),
           );
-      return envelope(matches);
+      return paginate(matches, query);
     },
   },
   {
     pattern: /^\/pet-owners\/([^/]+)$/,
-    handler: ({ query }) => {
+    handler: ({ method, body, query }) => {
       const found = owners.find((o) => o.id === query.get("__p1"));
-      return found ? envelope(found) : failure("NOT_FOUND", "Pet owner not found.");
+      if (!found) return failure("NOT_FOUND", "Pet owner not found.");
+      if (method === "PATCH") {
+        Object.assign(found, {
+          name: String(body.name ?? found.name),
+          email: String(body.email ?? found.email),
+          phone: String(body.phone ?? found.phone),
+          address: String(body.address ?? found.address),
+        });
+      }
+      return envelope(found);
     },
   },
   {
@@ -163,9 +331,11 @@ const routes: { pattern: RegExp; handler: Handler }[] = [
   },
   {
     pattern: /^\/pets\/([^/]+)$/,
-    handler: ({ query }) => {
+    handler: ({ method, body, query }) => {
       const found = pets.find((p) => p.id === query.get("__p1"));
-      return found ? envelope(found) : failure("NOT_FOUND", "Pet not found.");
+      if (!found) return failure("NOT_FOUND", "Pet not found.");
+      if (method === "PATCH") Object.assign(found, body);
+      return envelope(found);
     },
   },
   {
@@ -191,7 +361,7 @@ const routes: { pattern: RegExp; handler: Handler }[] = [
         return envelope(created);
       }
       const ownerId = query.get("owner_id");
-      return envelope(ownerId ? pets.filter((p) => p.owner_id === ownerId) : pets);
+      return paginate(ownerId ? pets.filter((p) => p.owner_id === ownerId) : pets, query);
     },
   },
   {
