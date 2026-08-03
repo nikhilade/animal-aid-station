@@ -38,8 +38,25 @@ export function StatusPill({ status }: { status: string }) {
   );
 }
 
-export function EmptyState({ message }: { message: string }) {
-  return <p className="rounded-[1.25rem] bg-muted px-5 py-8 text-center text-sm text-foreground/60">{message}</p>;
+export function EmptyState({
+  message,
+  title,
+  action,
+  icon,
+}: {
+  message: string;
+  title?: string;
+  action?: ReactNode;
+  icon?: ReactNode;
+}) {
+  return (
+    <div className="flex flex-col items-center gap-3 rounded-[1.25rem] bg-muted px-5 py-10 text-center">
+      {icon ? <div className="text-clay">{icon}</div> : null}
+      {title ? <p className="text-lg font-medium text-forest">{title}</p> : null}
+      <p className="max-w-sm text-sm text-foreground/60">{message}</p>
+      {action}
+    </div>
+  );
 }
 
 export function Loading() {
