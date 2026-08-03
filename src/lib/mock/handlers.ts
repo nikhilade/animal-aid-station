@@ -433,16 +433,30 @@ const routes: { pattern: RegExp; handler: Handler }[] = [
       const date = query.get("date") ?? new Date().toISOString().slice(0, 10);
       const doctorId = query.get("doctor_id") ?? "doc_1";
       const branchId = query.get("branch_id") ?? "br_1";
+      const branch = branches.find((b) => b.id === branchId) ?? branches[0];
+      const { open_hour, close_hour, slot_minutes, closed_days } = branch.working_hours;
+      const dayDate = new Date(`${date}T00:00:00`);
+      // Branch closed that weekday, or the whole day is in the past → no slots at all.
+      if (closed_days.includes(dayDate.getDay())) return envelope([]);
+
       const seedBase = [...`${doctorId}${branchId}${date}`].reduce((a, c) => a + c.charCodeAt(0), 0);
       const slots: { start_at: string; available: boolean }[] = [];
-      for (let h = 9; h < 18; h++) {
-        for (const m of [0, 30]) {
-          const start = new Date(`${date}T00:00:00`);
-          start.setHours(h, m, 0, 0);
-          const idx = (h - 9) * 2 + (m === 30 ? 1 : 0);
-          const booked = (seedBase + idx * 7) % 4 === 0 || start.getTime() < Date.now();
-          slots.push({ start_at: start.toISOString(), available: !booked });
-        }
+      let idx = 0;
+      for (let minutes = open_hour * 60; minutes < close_hour * 60; minutes += slot_minutes) {
+        const start = new Date(`${date}T00:00:00`);
+        start.setHours(Math.floor(minutes / 60), minutes % 60, 0, 0);
+        const iso = start.toISOString();
+        const taken = appointments.some(
+          (a) =>
+            a.doctor_id === doctorId &&
+            (a.branch_id ?? "br_1") === branchId &&
+            a.scheduled_at === iso &&
+            !["CANCELLED", "NO_SHOW"].includes(a.status),
+        );
+        const past = start.getTime() < Date.now();
+        const seeded = (seedBase + idx * 7) % 5 === 0;
+        slots.push({ start_at: iso, available: !taken && !past && !seeded });
+        idx += 1;
       }
       return envelope(slots);
     },
@@ -460,6 +474,31 @@ const routes: { pattern: RegExp; handler: Handler }[] = [
       if (method === "POST") {
         const pet = pets.find((p) => p.id === body.pet_id) ?? pets[0];
         const doctor = doctors.find((d) => d.id === body.doctor_id) ?? doctors[0];
+        const scheduledAt = String(body.scheduled_at ?? new Date().toISOString());
+        const branchId = String(body.branch_id ?? "br_1");
+        const branch = branches.find((b) => b.id === branchId) ?? branches[0];
+        const when = new Date(scheduledAt);
+
+        if (when.getTime() < Date.now()) {
+          return failure("ERR_PAST_SLOT", "That time is in the past. Pick an upcoming slot.");
+        }
+        const { open_hour, close_hour, closed_days } = branch.working_hours;
+        if (closed_days.includes(when.getDay()) || when.getHours() < open_hour || when.getHours() >= close_hour) {
+          return failure("ERR_OUTSIDE_WORKING_HOURS", `${branch.name} is closed at that time.`);
+        }
+        // Transient slot lock: first attempt on a given slot fails, a retry succeeds.
+        if (!lockedSlots.has(`${doctor.id}|${scheduledAt}`) && shouldLock(doctor.id, scheduledAt)) {
+          lockedSlots.add(`${doctor.id}|${scheduledAt}`);
+          return failure("ERR_SLOT_LOCK_TIMEOUT", "Could not lock that slot in time. Retrying…");
+        }
+        const clash = appointments.some(
+          (a) =>
+            a.doctor_id === doctor.id &&
+            a.scheduled_at === scheduledAt &&
+            !["CANCELLED", "NO_SHOW"].includes(a.status),
+        );
+        if (clash) return failure("ERR_DOUBLE_BOOKING", "That slot was just taken. Pick another one.");
+
         const created = {
           id: `apt_${appointments.length + 1}`,
           pet_id: pet.id,
@@ -469,15 +508,20 @@ const routes: { pattern: RegExp; handler: Handler }[] = [
           doctor_id: doctor.id,
           doctor_name: doctor.name,
           service: String(body.service ?? "Consultation"),
-          scheduled_at: String(body.scheduled_at ?? new Date().toISOString()),
+          scheduled_at: scheduledAt,
           status: "SCHEDULED" as const,
           notes: String(body.notes ?? ""),
+          branch_id: branchId,
+          token_number: null,
+          checked_in_at: null,
+          source_channel: (body.source_channel as "WALK_IN" | "PHONE" | "ONLINE") ?? "WALK_IN",
         };
         appointments.push(created);
         return envelope(created);
       }
       return envelope(appointments);
     },
+
   },
   { pattern: /^\/prescriptions\/mine$/, handler: () => envelope(prescriptions.filter((p) => ["pet_1", "pet_2"].includes(p.pet_id))) },
   { pattern: /^\/prescriptions$/, handler: () => envelope(prescriptions) },
