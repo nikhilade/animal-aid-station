@@ -38,6 +38,7 @@ import { Route as AppOwnersIndexRouteImport } from './routes/app.owners.index'
 import { Route as AppOwnersIdRouteImport } from './routes/app.owners.$id'
 import { Route as AppOwnersNewRouteImport } from './routes/app.owners.new'
 import { Route as AppPetsIndexRouteImport } from './routes/app.pets.index'
+import { Route as AppPetsNewRouteImport } from './routes/app.pets.new'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -184,6 +185,11 @@ const AppPetsIndexRoute = AppPetsIndexRouteImport.update({
   path: '/pets/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppPetsNewRoute = AppPetsNewRouteImport.update({
+  id: '/pets/new',
+  path: '/pets/new',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -213,6 +219,7 @@ export interface FileRoutesByFullPath {
   '/portal/': typeof PortalIndexRoute
   '/app/owners/$id': typeof AppOwnersIdRoute
   '/app/owners/new': typeof AppOwnersNewRoute
+  '/app/pets/new': typeof AppPetsNewRoute
   '/app/owners/': typeof AppOwnersIndexRoute
   '/app/pets/': typeof AppPetsIndexRoute
 }
@@ -242,6 +249,7 @@ export interface FileRoutesByTo {
   '/portal': typeof PortalIndexRoute
   '/app/owners/$id': typeof AppOwnersIdRoute
   '/app/owners/new': typeof AppOwnersNewRoute
+  '/app/pets/new': typeof AppPetsNewRoute
   '/app/owners': typeof AppOwnersIndexRoute
   '/app/pets': typeof AppPetsIndexRoute
 }
@@ -274,6 +282,7 @@ export interface FileRoutesById {
   '/portal/': typeof PortalIndexRoute
   '/app/owners/$id': typeof AppOwnersIdRoute
   '/app/owners/new': typeof AppOwnersNewRoute
+  '/app/pets/new': typeof AppPetsNewRoute
   '/app/owners/': typeof AppOwnersIndexRoute
   '/app/pets/': typeof AppPetsIndexRoute
 }
@@ -307,6 +316,7 @@ export interface FileRouteTypes {
     | '/portal/'
     | '/app/owners/$id'
     | '/app/owners/new'
+    | '/app/pets/new'
     | '/app/owners/'
     | '/app/pets/'
   fileRoutesByTo: FileRoutesByTo
@@ -336,6 +346,7 @@ export interface FileRouteTypes {
     | '/portal'
     | '/app/owners/$id'
     | '/app/owners/new'
+    | '/app/pets/new'
     | '/app/owners'
     | '/app/pets'
   id:
@@ -367,6 +378,7 @@ export interface FileRouteTypes {
     | '/portal/'
     | '/app/owners/$id'
     | '/app/owners/new'
+    | '/app/pets/new'
     | '/app/owners/'
     | '/app/pets/'
   fileRoutesById: FileRoutesById
@@ -586,6 +598,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPetsIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/pets/new': {
+      id: '/app/pets/new'
+      path: '/pets/new'
+      fullPath: '/app/pets/new'
+      preLoaderRoute: typeof AppPetsNewRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
@@ -603,6 +622,7 @@ interface AppRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
   AppOwnersIdRoute: typeof AppOwnersIdRoute
   AppOwnersNewRoute: typeof AppOwnersNewRoute
+  AppPetsNewRoute: typeof AppPetsNewRoute
   AppOwnersIndexRoute: typeof AppOwnersIndexRoute
   AppPetsIndexRoute: typeof AppPetsIndexRoute
 }
@@ -621,6 +641,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppIndexRoute: AppIndexRoute,
   AppOwnersIdRoute: AppOwnersIdRoute,
   AppOwnersNewRoute: AppOwnersNewRoute,
+  AppPetsNewRoute: AppPetsNewRoute,
   AppOwnersIndexRoute: AppOwnersIndexRoute,
   AppPetsIndexRoute: AppPetsIndexRoute,
 }
