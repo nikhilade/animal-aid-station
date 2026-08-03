@@ -42,15 +42,22 @@ export const endpoints = {
     list: "/doctors",
     detail: (id: string) => `/doctors/${id}`,
   },
+  branches: {
+    list: "/branches",
+  },
   appointments: {
     list: "/appointments",
     detail: (id: string) => `/appointments/${id}`,
     create: "/appointments",
     mine: "/appointments/mine",
     availableSlots: "/appointments/slots/available",
+    queue: "/appointments/queue",
+    checkIn: (id: string) => `/appointments/${id}/check-in`,
+    status: (id: string) => `/appointments/${id}/status`,
     reschedule: (id: string) => `/appointments/${id}/reschedule`,
     cancel: (id: string) => `/appointments/${id}/cancel`,
   },
+
   prescriptions: {
     list: "/prescriptions",
     mine: "/prescriptions/mine",
