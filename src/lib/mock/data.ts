@@ -361,3 +361,84 @@ export const vaccines: import("../api/types").Vaccine[] = [
   { id: "vac_3", pet_id: "pet_3", pet_name: "Biscuit", owner_id: "own_2", owner_name: "Ethan Brooks", vaccine_name: "DHPP", batch_no: "DH-7741", vaccination_date: day(-340).slice(0, 10), next_due_date: day(21).slice(0, 10), administered_by: "Dr. Amelia Reyes" },
   { id: "vac_4", pet_id: "pet_5", pet_name: "Scout", owner_id: "own_4", owner_name: "Liam Carter", vaccine_name: "Leptospirosis", batch_no: "LP-3320", vaccination_date: day(-370).slice(0, 10), next_due_date: day(-14).slice(0, 10), administered_by: "Dr. Noah Patel" },
 ];
+
+export const branches: import("../api/types").Branch[] = [
+  {
+    id: "br_1",
+    name: "Pet Good — Downtown",
+    address: "24 Maple Street, Downtown",
+    working_hours: { open_hour: 9, close_hour: 18, slot_minutes: 30, closed_days: [0] },
+  },
+  {
+    id: "br_2",
+    name: "Pet Good — Riverside",
+    address: "8 Riverside Walk",
+    working_hours: { open_hour: 10, close_hour: 16, slot_minutes: 30, closed_days: [0, 6] },
+  },
+];
+
+/** Today's live token sequence, incremented on check-in. */
+export const tokenState = { last: 0 };
+
+for (const a of appointments) {
+  a.branch_id ??= "br_1";
+  a.source_channel ??= "WALK_IN";
+  a.token_number ??= null;
+}
+
+const todayAt = (hour: number, minute = 0) => {
+  const d = new Date();
+  d.setHours(hour, minute, 0, 0);
+  return d.toISOString();
+};
+
+appointments.push(
+  {
+    id: "apt_6",
+    pet_id: "pet_2",
+    pet_name: "Luna",
+    owner_id: "own_1",
+    owner_name: "Sarah Johnson",
+    doctor_id: "doc_1",
+    doctor_name: "Dr. Amelia Reed",
+    service: "Consultation",
+    scheduled_at: todayAt(10, 30),
+    status: "CONFIRMED",
+    notes: "",
+    branch_id: "br_1",
+    source_channel: "ONLINE",
+    token_number: null,
+  },
+  {
+    id: "apt_7",
+    pet_id: "pet_3",
+    pet_name: "Biscuit",
+    owner_id: "own_2",
+    owner_name: "Ethan Brooks",
+    doctor_id: "doc_2",
+    doctor_name: "Dr. Noah Fletcher",
+    service: "Vaccination — Booster",
+    scheduled_at: todayAt(12, 0),
+    status: "SCHEDULED",
+    notes: "",
+    branch_id: "br_1",
+    source_channel: "PHONE",
+    token_number: null,
+  },
+  {
+    id: "apt_8",
+    pet_id: "pet_4",
+    pet_name: "Pepper",
+    owner_id: "own_3",
+    owner_name: "Maya Torres",
+    doctor_id: "doc_3",
+    doctor_name: "Dr. Isabella Parker",
+    service: "Dermatology Review",
+    scheduled_at: todayAt(15, 30),
+    status: "SCHEDULED",
+    notes: "",
+    branch_id: "br_1",
+    source_channel: "WALK_IN",
+    token_number: null,
+  },
+);

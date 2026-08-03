@@ -28,6 +28,8 @@ const navItems: { to: string; label: string; icon: typeof Users; permission: Per
   { to: "/app/pets", label: "Pets", icon: Dog, permission: "pets:read" },
   { to: "/app/vaccinations", label: "Vaccinations", icon: Syringe, permission: "pets:read" },
   { to: "/app/appointments", label: "Appointments", icon: CalendarDays, permission: "appointments:read" },
+  { to: "/app/calendar", label: "Calendar", icon: CalendarDays, permission: "appointments:read" },
+  { to: "/app/queue", label: "Reception Queue", icon: Users, permission: "appointments:read" },
   { to: "/app/doctors", label: "Doctors", icon: Stethoscope, permission: "doctors:read" },
   { to: "/app/lab", label: "Laboratory", icon: FlaskConical, permission: "lab:read" },
   { to: "/app/pharmacy", label: "Pharmacy", icon: Pill, permission: "pharmacy:read" },
