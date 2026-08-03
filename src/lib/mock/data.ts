@@ -361,3 +361,27 @@ export const vaccines: import("../api/types").Vaccine[] = [
   { id: "vac_3", pet_id: "pet_3", pet_name: "Biscuit", owner_id: "own_2", owner_name: "Ethan Brooks", vaccine_name: "DHPP", batch_no: "DH-7741", vaccination_date: day(-340).slice(0, 10), next_due_date: day(21).slice(0, 10), administered_by: "Dr. Amelia Reyes" },
   { id: "vac_4", pet_id: "pet_5", pet_name: "Scout", owner_id: "own_4", owner_name: "Liam Carter", vaccine_name: "Leptospirosis", batch_no: "LP-3320", vaccination_date: day(-370).slice(0, 10), next_due_date: day(-14).slice(0, 10), administered_by: "Dr. Noah Patel" },
 ];
+
+export const branches: import("../api/types").Branch[] = [
+  {
+    id: "br_1",
+    name: "Pet Good — Downtown",
+    address: "24 Maple Street, Downtown",
+    working_hours: { open_hour: 9, close_hour: 18, slot_minutes: 30, closed_days: [0] },
+  },
+  {
+    id: "br_2",
+    name: "Pet Good — Riverside",
+    address: "8 Riverside Walk",
+    working_hours: { open_hour: 10, close_hour: 16, slot_minutes: 30, closed_days: [0, 6] },
+  },
+];
+
+/** Today's live token sequence, incremented on check-in. */
+export const tokenState = { last: 0 };
+
+for (const a of appointments) {
+  a.branch_id ??= "br_1";
+  a.source_channel ??= "WALK_IN";
+  a.token_number ??= null;
+}
