@@ -59,14 +59,14 @@ export function StaffLayout({
     <RequireAuth permission={permission}>
       <div className="min-h-screen bg-sand lg:flex">
         <aside
-          className={`${open ? "block" : "hidden"} fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-forest px-4 py-6 text-primary-foreground lg:sticky lg:top-0 lg:block lg:h-screen lg:shrink-0`}
+          className={`${open ? "block" : "hidden"} fixed inset-y-0 left-0 z-40 w-64 overflow-y-auto bg-forest px-4 py-6 text-primary-foreground lg:sticky lg:top-0 lg:block lg:h-screen lg:shrink-0`}
         >
           <span className="flex items-center px-2 text-xl font-bold">
             Pet G<PawPrint className="inline size-4 -rotate-12 text-clay" />
             od
           </span>
           <p className="mt-1 px-2 text-xs text-primary-foreground/60">Staff Console</p>
-          <nav className="mt-8 flex-1 overflow-y-auto space-y-1 pr-1">
+          <nav className="mt-8 space-y-1">
             {items.map(({ to, label, icon: Icon }) => (
               <Link
                 key={to}
