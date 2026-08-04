@@ -19,6 +19,17 @@ import {
   roleByEmailPrefix,
   staffDashboard,
 } from "./data";
+import {
+  consultations,
+  doctorAvailability,
+  doctorLeaves,
+  doctorProfiles,
+  medicines,
+  prescriptionItems,
+} from "./clinical";
+import { buildTextPdf } from "./pdf";
+import type { AvailabilityRule, PrescriptionItem } from "../api/types";
+
 
 /** Mock layer. Never import this from components — always go through api-client. */
 
