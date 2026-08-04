@@ -32,6 +32,7 @@ import { Route as AppPaymentsRouteImport } from './routes/app.payments'
 import { Route as AppPharmacyRouteImport } from './routes/app.pharmacy'
 import { Route as AppPrescriptionsRouteImport } from './routes/app.prescriptions'
 import { Route as AppQueueRouteImport } from './routes/app.queue'
+import { Route as AppRefundsRouteImport } from './routes/app.refunds'
 import { Route as AppReportsRouteImport } from './routes/app.reports'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
 import { Route as AppVaccinationsRouteImport } from './routes/app.vaccinations'
@@ -165,6 +166,11 @@ const AppQueueRoute = AppQueueRouteImport.update({
   path: '/queue',
   getParentRoute: () => AppRoute,
 } as any)
+const AppRefundsRoute = AppRefundsRouteImport.update({
+  id: '/refunds',
+  path: '/refunds',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppReportsRoute = AppReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
@@ -274,6 +280,7 @@ export interface FileRoutesByFullPath {
   '/app/pharmacy': typeof AppPharmacyRoute
   '/app/prescriptions': typeof AppPrescriptionsRoute
   '/app/queue': typeof AppQueueRoute
+  '/app/refunds': typeof AppRefundsRoute
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/vaccinations': typeof AppVaccinationsRoute
@@ -314,6 +321,7 @@ export interface FileRoutesByTo {
   '/app/pharmacy': typeof AppPharmacyRoute
   '/app/prescriptions': typeof AppPrescriptionsRoute
   '/app/queue': typeof AppQueueRoute
+  '/app/refunds': typeof AppRefundsRoute
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/vaccinations': typeof AppVaccinationsRoute
@@ -357,6 +365,7 @@ export interface FileRoutesById {
   '/app/pharmacy': typeof AppPharmacyRoute
   '/app/prescriptions': typeof AppPrescriptionsRoute
   '/app/queue': typeof AppQueueRoute
+  '/app/refunds': typeof AppRefundsRoute
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/vaccinations': typeof AppVaccinationsRoute
@@ -401,6 +410,7 @@ export interface FileRouteTypes {
     | '/app/pharmacy'
     | '/app/prescriptions'
     | '/app/queue'
+    | '/app/refunds'
     | '/app/reports'
     | '/app/settings'
     | '/app/vaccinations'
@@ -441,6 +451,7 @@ export interface FileRouteTypes {
     | '/app/pharmacy'
     | '/app/prescriptions'
     | '/app/queue'
+    | '/app/refunds'
     | '/app/reports'
     | '/app/settings'
     | '/app/vaccinations'
@@ -483,6 +494,7 @@ export interface FileRouteTypes {
     | '/app/pharmacy'
     | '/app/prescriptions'
     | '/app/queue'
+    | '/app/refunds'
     | '/app/reports'
     | '/app/settings'
     | '/app/vaccinations'
@@ -676,6 +688,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppQueueRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/refunds': {
+      id: '/app/refunds'
+      path: '/refunds'
+      fullPath: '/app/refunds'
+      preLoaderRoute: typeof AppRefundsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/reports': {
       id: '/app/reports'
       path: '/reports'
@@ -814,6 +833,7 @@ interface AppRouteChildren {
   AppPharmacyRoute: typeof AppPharmacyRoute
   AppPrescriptionsRoute: typeof AppPrescriptionsRoute
   AppQueueRoute: typeof AppQueueRoute
+  AppRefundsRoute: typeof AppRefundsRoute
   AppReportsRoute: typeof AppReportsRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppVaccinationsRoute: typeof AppVaccinationsRoute
@@ -842,6 +862,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppPharmacyRoute: AppPharmacyRoute,
   AppPrescriptionsRoute: AppPrescriptionsRoute,
   AppQueueRoute: AppQueueRoute,
+  AppRefundsRoute: AppRefundsRoute,
   AppReportsRoute: AppReportsRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppVaccinationsRoute: AppVaccinationsRoute,
