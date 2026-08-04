@@ -716,8 +716,93 @@ const routes: { pattern: RegExp; handler: Handler }[] = [
     },
 
   },
-  { pattern: /^\/prescriptions\/mine$/, handler: () => envelope(prescriptions.filter((p) => ["pet_1", "pet_2"].includes(p.pet_id))) },
-  { pattern: /^\/prescriptions$/, handler: () => envelope(prescriptions) },
+  {
+    pattern: /^\/prescriptions\/mine$/,
+    handler: () => envelope(prescriptions.filter((p) => ownerOf(p.pet_id) === currentOwnerId).map(withItems)),
+  },
+  {
+    pattern: /^\/prescriptions\/([^/]+)\/pdf$/,
+    handler: ({ query }) => {
+      const found = prescriptions.find((p) => p.id === query.get("__p1"));
+      if (!found) return failure("NOT_FOUND", "Prescription not found.");
+      const full = withItems(found);
+      const pet = pets.find((p) => p.id === full.pet_id);
+      const lines = [
+        { text: "PET GOOD VETERINARY HOSPITAL", size: 16, bold: true, gap: 4 },
+        { text: "9400 S Normandie Ave, Los Angeles, CA - (310) 555-0100", size: 9, gap: 16 },
+        { text: "PRESCRIPTION", size: 13, bold: true, gap: 12 },
+        { text: `Rx No: ${full.id}`, size: 10 },
+        { text: `Issued: ${new Date(full.issued_at).toLocaleString()}`, size: 10 },
+        { text: `Patient: ${full.pet_name}${pet ? ` (${pet.species}, ${pet.breed}, ${pet.weight_kg} kg)` : ""}`, size: 10 },
+        { text: `Owner: ${full.owner_name}`, size: 10 },
+        { text: `Prescriber: ${full.doctor_name}`, size: 10, gap: 16 },
+        { text: "MEDICATIONS", size: 11, bold: true, gap: 10 },
+        ...full.items.flatMap((item, i) => [
+          { text: `${i + 1}. ${item.name} ${item.strength} (${item.form})`, size: 11, bold: true, gap: 4 },
+          {
+            text: `    ${item.dosage} - ${item.frequency} - ${item.duration_days} day(s)`,
+            size: 10,
+            gap: item.notes ? 4 : 10,
+          },
+          ...(item.notes ? [{ text: `    Note: ${item.notes}`, size: 9, gap: 10 }] : []),
+        ]),
+        { text: `Refills left: ${full.refills_left}`, size: 10, gap: 24 },
+        { text: "_______________________", size: 10, gap: 4 },
+        { text: `${full.doctor_name} - Signature`, size: 9 },
+      ];
+      return envelope({
+        filename: `prescription-${full.id}.pdf`,
+        mime_type: "application/pdf",
+        content_base64: buildTextPdf(lines),
+      });
+    },
+  },
+  {
+    pattern: /^\/prescriptions\/([^/]+)$/,
+    handler: ({ query }) => {
+      const found = prescriptions.find((p) => p.id === query.get("__p1"));
+      return found ? envelope(withItems(found)) : failure("NOT_FOUND", "Prescription not found.");
+    },
+  },
+  {
+    pattern: /^\/prescriptions$/,
+    handler: ({ method, body }) => {
+      if (method === "POST") {
+        const pet = pets.find((p) => p.id === body.pet_id);
+        if (!pet) return failure("ERR_PET_REQUIRED", "Select a patient for this prescription.");
+        const items = (body.items as PrescriptionItem[] | undefined) ?? [];
+        if (!items.length) return failure("ERR_NO_ITEMS", "Add at least one medicine line item.");
+        const bad = items.find((i) => !i.name?.trim() || !i.dosage?.trim() || !i.duration_days);
+        if (bad) return failure("ERR_INVALID_ITEM", `Complete dosage and duration for ${bad.name || "each line item"}.`);
+        const id = `rx_${prescriptions.length + 1}`;
+        const created = {
+          id,
+          pet_id: pet.id,
+          pet_name: pet.name,
+          doctor_name: String(body.doctor_name ?? "Clinic doctor"),
+          medication: items.map((i) => `${i.name} ${i.strength}`.trim()).join(", "),
+          dosage: items.map((i) => `${i.dosage} ${i.frequency}`.trim()).join("; "),
+          instructions: String(body.instructions ?? items.map((i) => i.notes).filter(Boolean).join(" ")),
+          issued_at: new Date().toISOString(),
+          refills_left: Number(body.refills_left ?? 0),
+        };
+        prescriptions.push(created);
+        prescriptionItems[id] = items;
+        medicalEvents.push({
+          id: `evt_${medicalEvents.length + 1}`,
+          pet_id: pet.id,
+          type: "PRESCRIPTION",
+          title: created.medication,
+          detail: created.dosage,
+          doctor_name: created.doctor_name,
+          occurred_at: created.issued_at,
+        });
+        return envelope(withItems(created));
+      }
+      return envelope(prescriptions.map(withItems));
+    },
+  },
+
   { pattern: /^\/invoices\/mine$/, handler: () => envelope(invoices.filter((i) => i.owner_id === currentOwnerId)) },
   {
     pattern: /^\/invoices\/([^/]+)$/,
