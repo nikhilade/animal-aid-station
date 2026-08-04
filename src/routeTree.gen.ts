@@ -21,6 +21,7 @@ import { Route as AppAppointmentsRouteImport } from './routes/app.appointments'
 import { Route as AppBillingRouteImport } from './routes/app.billing'
 import { Route as AppCalendarRouteImport } from './routes/app.calendar'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
+import { Route as AppDoctorScheduleRouteImport } from './routes/app.doctor-schedule'
 import { Route as AppDoctorsRouteImport } from './routes/app.doctors'
 import { Route as AppGroomingRouteImport } from './routes/app.grooming'
 import { Route as AppInventoryRouteImport } from './routes/app.inventory'
@@ -104,6 +105,11 @@ const AppCalendarRoute = AppCalendarRouteImport.update({
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDoctorScheduleRoute = AppDoctorScheduleRouteImport.update({
+  id: '/doctor-schedule',
+  path: '/doctor-schedule',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDoctorsRoute = AppDoctorsRouteImport.update({
@@ -239,6 +245,7 @@ export interface FileRoutesByFullPath {
   '/app/billing': typeof AppBillingRoute
   '/app/calendar': typeof AppCalendarRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/doctor-schedule': typeof AppDoctorScheduleRoute
   '/app/doctors': typeof AppDoctorsRoute
   '/app/grooming': typeof AppGroomingRoute
   '/app/inventory': typeof AppInventoryRoute
@@ -275,6 +282,7 @@ export interface FileRoutesByTo {
   '/app/billing': typeof AppBillingRoute
   '/app/calendar': typeof AppCalendarRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/doctor-schedule': typeof AppDoctorScheduleRoute
   '/app/doctors': typeof AppDoctorsRoute
   '/app/grooming': typeof AppGroomingRoute
   '/app/inventory': typeof AppInventoryRoute
@@ -314,6 +322,7 @@ export interface FileRoutesById {
   '/app/billing': typeof AppBillingRoute
   '/app/calendar': typeof AppCalendarRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/doctor-schedule': typeof AppDoctorScheduleRoute
   '/app/doctors': typeof AppDoctorsRoute
   '/app/grooming': typeof AppGroomingRoute
   '/app/inventory': typeof AppInventoryRoute
@@ -354,6 +363,7 @@ export interface FileRouteTypes {
     | '/app/billing'
     | '/app/calendar'
     | '/app/dashboard'
+    | '/app/doctor-schedule'
     | '/app/doctors'
     | '/app/grooming'
     | '/app/inventory'
@@ -390,6 +400,7 @@ export interface FileRouteTypes {
     | '/app/billing'
     | '/app/calendar'
     | '/app/dashboard'
+    | '/app/doctor-schedule'
     | '/app/doctors'
     | '/app/grooming'
     | '/app/inventory'
@@ -428,6 +439,7 @@ export interface FileRouteTypes {
     | '/app/billing'
     | '/app/calendar'
     | '/app/dashboard'
+    | '/app/doctor-schedule'
     | '/app/doctors'
     | '/app/grooming'
     | '/app/inventory'
@@ -549,6 +561,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/app/dashboard'
       preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/doctor-schedule': {
+      id: '/app/doctor-schedule'
+      path: '/doctor-schedule'
+      fullPath: '/app/doctor-schedule'
+      preLoaderRoute: typeof AppDoctorScheduleRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/doctors': {
@@ -727,6 +746,7 @@ interface AppRouteChildren {
   AppBillingRoute: typeof AppBillingRoute
   AppCalendarRoute: typeof AppCalendarRoute
   AppDashboardRoute: typeof AppDashboardRoute
+  AppDoctorScheduleRoute: typeof AppDoctorScheduleRoute
   AppDoctorsRoute: typeof AppDoctorsRoute
   AppGroomingRoute: typeof AppGroomingRoute
   AppInventoryRoute: typeof AppInventoryRoute
@@ -751,6 +771,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppBillingRoute: AppBillingRoute,
   AppCalendarRoute: AppCalendarRoute,
   AppDashboardRoute: AppDashboardRoute,
+  AppDoctorScheduleRoute: AppDoctorScheduleRoute,
   AppDoctorsRoute: AppDoctorsRoute,
   AppGroomingRoute: AppGroomingRoute,
   AppInventoryRoute: AppInventoryRoute,
