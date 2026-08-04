@@ -70,10 +70,11 @@ function InventoryPage() {
             <StatCard label="Stock value" value={INR(stockValue)} hint="Quantity × unit price" />
           </div>
 
-          <div className="grid gap-5 lg:grid-cols-[1.6fr_1fr]">
+          <div className="space-y-5">
             <Panel title={`${items.length} items`}>
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[720px] text-left text-sm">
+              <div className="-mx-1 overflow-x-auto px-1">
+                <table className="w-full min-w-[860px] text-left text-sm">
+
                   <thead className="text-xs uppercase text-foreground/50">
                     <tr>
                       <th className="pb-3">Item</th>
@@ -125,7 +126,8 @@ function InventoryPage() {
               </div>
             </Panel>
 
-            <div className="space-y-5">
+            <div className="grid gap-5 lg:grid-cols-2">
+
               {canWrite ? (
                 <Panel title="Stock movement">
                   <div className="mb-4 flex gap-2">
