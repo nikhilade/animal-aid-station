@@ -80,7 +80,7 @@ export function PrescriptionPdfButton({
               <button
                 type="button"
                 aria-label="Close preview"
-                onClick={() => setPdf(null)}
+                onClick={close}
                 className="inline-flex size-8 items-center justify-center rounded-full border border-border"
               >
                 <X className="size-3.5" />
@@ -88,8 +88,15 @@ export function PrescriptionPdfButton({
             </div>
           </div>
           <object data={href} type="application/pdf" className="h-[28rem] w-full rounded-[1rem]" aria-label="Prescription preview">
-            <iframe src={href} title="Prescription preview" className="h-[28rem] w-full rounded-[1rem]" />
+            <p className="p-4 text-sm text-foreground/60">
+              Inline preview isn’t supported here —{" "}
+              <a href={href} download={pdf.filename} className="underline">
+                download the PDF
+              </a>
+              .
+            </p>
           </object>
+
         </div>
       ) : null}
     </div>
