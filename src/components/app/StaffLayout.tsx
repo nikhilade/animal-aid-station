@@ -13,6 +13,8 @@ import {
   Pill,
   Scissors,
   Syringe,
+  ClipboardList,
+
   Settings,
   LogOut,
   Menu,
@@ -31,8 +33,12 @@ const navItems: { to: string; label: string; icon: typeof Users; permission: Per
   { to: "/app/calendar", label: "Calendar", icon: CalendarDays, permission: "appointments:read" },
   { to: "/app/queue", label: "Reception Queue", icon: Users, permission: "appointments:read" },
   { to: "/app/doctors", label: "Doctors", icon: Stethoscope, permission: "doctors:read" },
+  { to: "/app/doctor-schedule", label: "Availability", icon: CalendarDays, permission: "doctors:read" },
+  { to: "/app/consultations", label: "Consultations", icon: ClipboardList, permission: "consultations:read" },
+  { to: "/app/prescriptions", label: "Prescriptions", icon: Pill, permission: "prescriptions:write" },
   { to: "/app/lab", label: "Laboratory", icon: FlaskConical, permission: "lab:read" },
   { to: "/app/pharmacy", label: "Pharmacy", icon: Pill, permission: "pharmacy:read" },
+
   { to: "/app/grooming", label: "Grooming", icon: Scissors, permission: "grooming:read" },
   { to: "/app/billing", label: "Billing", icon: Receipt, permission: "billing:read" },
   { to: "/app/inventory", label: "Inventory", icon: Boxes, permission: "inventory:read" },
