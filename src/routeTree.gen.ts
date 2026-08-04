@@ -28,11 +28,14 @@ import { Route as AppGroomingRouteImport } from './routes/app.grooming'
 import { Route as AppInventoryRouteImport } from './routes/app.inventory'
 import { Route as AppLabRouteImport } from './routes/app.lab'
 import { Route as AppNowServingRouteImport } from './routes/app.now-serving'
+import { Route as AppPaymentsRouteImport } from './routes/app.payments'
 import { Route as AppPharmacyRouteImport } from './routes/app.pharmacy'
 import { Route as AppPrescriptionsRouteImport } from './routes/app.prescriptions'
 import { Route as AppQueueRouteImport } from './routes/app.queue'
+import { Route as AppRefundsRouteImport } from './routes/app.refunds'
 import { Route as AppReportsRouteImport } from './routes/app.reports'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
+import { Route as AppSuppliersRouteImport } from './routes/app.suppliers'
 import { Route as AppVaccinationsRouteImport } from './routes/app.vaccinations'
 import { Route as PortalIndexRouteImport } from './routes/portal.index'
 import { Route as PortalBookAppointmentRouteImport } from './routes/portal.book-appointment'
@@ -144,6 +147,11 @@ const AppNowServingRoute = AppNowServingRouteImport.update({
   path: '/now-serving',
   getParentRoute: () => AppRoute,
 } as any)
+const AppPaymentsRoute = AppPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppPharmacyRoute = AppPharmacyRouteImport.update({
   id: '/pharmacy',
   path: '/pharmacy',
@@ -159,6 +167,11 @@ const AppQueueRoute = AppQueueRouteImport.update({
   path: '/queue',
   getParentRoute: () => AppRoute,
 } as any)
+const AppRefundsRoute = AppRefundsRouteImport.update({
+  id: '/refunds',
+  path: '/refunds',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppReportsRoute = AppReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
@@ -167,6 +180,11 @@ const AppReportsRoute = AppReportsRouteImport.update({
 const AppSettingsRoute = AppSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSuppliersRoute = AppSuppliersRouteImport.update({
+  id: '/suppliers',
+  path: '/suppliers',
   getParentRoute: () => AppRoute,
 } as any)
 const AppVaccinationsRoute = AppVaccinationsRouteImport.update({
@@ -264,11 +282,14 @@ export interface FileRoutesByFullPath {
   '/app/inventory': typeof AppInventoryRoute
   '/app/lab': typeof AppLabRoute
   '/app/now-serving': typeof AppNowServingRoute
+  '/app/payments': typeof AppPaymentsRoute
   '/app/pharmacy': typeof AppPharmacyRoute
   '/app/prescriptions': typeof AppPrescriptionsRoute
   '/app/queue': typeof AppQueueRoute
+  '/app/refunds': typeof AppRefundsRoute
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/suppliers': typeof AppSuppliersRoute
   '/app/vaccinations': typeof AppVaccinationsRoute
   '/portal/book-appointment': typeof PortalBookAppointmentRoute
   '/portal/dashboard': typeof PortalDashboardRoute
@@ -303,11 +324,14 @@ export interface FileRoutesByTo {
   '/app/inventory': typeof AppInventoryRoute
   '/app/lab': typeof AppLabRoute
   '/app/now-serving': typeof AppNowServingRoute
+  '/app/payments': typeof AppPaymentsRoute
   '/app/pharmacy': typeof AppPharmacyRoute
   '/app/prescriptions': typeof AppPrescriptionsRoute
   '/app/queue': typeof AppQueueRoute
+  '/app/refunds': typeof AppRefundsRoute
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/suppliers': typeof AppSuppliersRoute
   '/app/vaccinations': typeof AppVaccinationsRoute
   '/portal/book-appointment': typeof PortalBookAppointmentRoute
   '/portal/dashboard': typeof PortalDashboardRoute
@@ -345,11 +369,14 @@ export interface FileRoutesById {
   '/app/inventory': typeof AppInventoryRoute
   '/app/lab': typeof AppLabRoute
   '/app/now-serving': typeof AppNowServingRoute
+  '/app/payments': typeof AppPaymentsRoute
   '/app/pharmacy': typeof AppPharmacyRoute
   '/app/prescriptions': typeof AppPrescriptionsRoute
   '/app/queue': typeof AppQueueRoute
+  '/app/refunds': typeof AppRefundsRoute
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/suppliers': typeof AppSuppliersRoute
   '/app/vaccinations': typeof AppVaccinationsRoute
   '/portal/book-appointment': typeof PortalBookAppointmentRoute
   '/portal/dashboard': typeof PortalDashboardRoute
@@ -388,11 +415,14 @@ export interface FileRouteTypes {
     | '/app/inventory'
     | '/app/lab'
     | '/app/now-serving'
+    | '/app/payments'
     | '/app/pharmacy'
     | '/app/prescriptions'
     | '/app/queue'
+    | '/app/refunds'
     | '/app/reports'
     | '/app/settings'
+    | '/app/suppliers'
     | '/app/vaccinations'
     | '/portal/book-appointment'
     | '/portal/dashboard'
@@ -427,11 +457,14 @@ export interface FileRouteTypes {
     | '/app/inventory'
     | '/app/lab'
     | '/app/now-serving'
+    | '/app/payments'
     | '/app/pharmacy'
     | '/app/prescriptions'
     | '/app/queue'
+    | '/app/refunds'
     | '/app/reports'
     | '/app/settings'
+    | '/app/suppliers'
     | '/app/vaccinations'
     | '/portal/book-appointment'
     | '/portal/dashboard'
@@ -468,11 +501,14 @@ export interface FileRouteTypes {
     | '/app/inventory'
     | '/app/lab'
     | '/app/now-serving'
+    | '/app/payments'
     | '/app/pharmacy'
     | '/app/prescriptions'
     | '/app/queue'
+    | '/app/refunds'
     | '/app/reports'
     | '/app/settings'
+    | '/app/suppliers'
     | '/app/vaccinations'
     | '/portal/book-appointment'
     | '/portal/dashboard'
@@ -636,6 +672,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppNowServingRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/payments': {
+      id: '/app/payments'
+      path: '/payments'
+      fullPath: '/app/payments'
+      preLoaderRoute: typeof AppPaymentsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/pharmacy': {
       id: '/app/pharmacy'
       path: '/pharmacy'
@@ -657,6 +700,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppQueueRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/refunds': {
+      id: '/app/refunds'
+      path: '/refunds'
+      fullPath: '/app/refunds'
+      preLoaderRoute: typeof AppRefundsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/reports': {
       id: '/app/reports'
       path: '/reports'
@@ -669,6 +719,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/app/settings'
       preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/suppliers': {
+      id: '/app/suppliers'
+      path: '/suppliers'
+      fullPath: '/app/suppliers'
+      preLoaderRoute: typeof AppSuppliersRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/vaccinations': {
@@ -791,11 +848,14 @@ interface AppRouteChildren {
   AppInventoryRoute: typeof AppInventoryRoute
   AppLabRoute: typeof AppLabRoute
   AppNowServingRoute: typeof AppNowServingRoute
+  AppPaymentsRoute: typeof AppPaymentsRoute
   AppPharmacyRoute: typeof AppPharmacyRoute
   AppPrescriptionsRoute: typeof AppPrescriptionsRoute
   AppQueueRoute: typeof AppQueueRoute
+  AppRefundsRoute: typeof AppRefundsRoute
   AppReportsRoute: typeof AppReportsRoute
   AppSettingsRoute: typeof AppSettingsRoute
+  AppSuppliersRoute: typeof AppSuppliersRoute
   AppVaccinationsRoute: typeof AppVaccinationsRoute
   AppIndexRoute: typeof AppIndexRoute
   AppOwnersIdRoute: typeof AppOwnersIdRoute
@@ -818,11 +878,14 @@ const AppRouteChildren: AppRouteChildren = {
   AppInventoryRoute: AppInventoryRoute,
   AppLabRoute: AppLabRoute,
   AppNowServingRoute: AppNowServingRoute,
+  AppPaymentsRoute: AppPaymentsRoute,
   AppPharmacyRoute: AppPharmacyRoute,
   AppPrescriptionsRoute: AppPrescriptionsRoute,
   AppQueueRoute: AppQueueRoute,
+  AppRefundsRoute: AppRefundsRoute,
   AppReportsRoute: AppReportsRoute,
   AppSettingsRoute: AppSettingsRoute,
+  AppSuppliersRoute: AppSuppliersRoute,
   AppVaccinationsRoute: AppVaccinationsRoute,
   AppIndexRoute: AppIndexRoute,
   AppOwnersIdRoute: AppOwnersIdRoute,

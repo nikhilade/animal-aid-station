@@ -28,6 +28,8 @@ import {
   prescriptionItems,
 } from "./clinical";
 import { buildTextPdf } from "./pdf";
+import { billingRoutes } from "./billing-handlers";
+
 import type { AvailabilityRule, Prescription, PrescriptionDetail, PrescriptionItem } from "../api/types";
 
 
@@ -151,6 +153,8 @@ type Handler = (ctx: {
 }) => ApiResponse<unknown>;
 
 const routes: { pattern: RegExp; handler: Handler }[] = [
+  ...billingRoutes,
+
   {
     pattern: /^\/pet-owners\/lookup-or-create$/,
     handler: ({ body }) => {
