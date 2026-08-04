@@ -4,27 +4,37 @@ import kuttoGif from "@/assets/kutto.gif";
 export function LoadingScreen() {
   const [isVisible, setIsVisible] = useState(true);
   const [isFading, setIsFading] = useState(false);
+  const [gifLoaded, setGifLoaded] = useState(false);
 
   const dismiss = () => {
     setIsFading(true);
     setTimeout(() => {
       setIsVisible(false);
-    }, 700);
+    }, 400);
   };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    // Dismiss as soon as the gif renders OR after a short safety timeout,
+    // whichever comes first — never block the page longer than 1.2s.
+    const safetyTimer = setTimeout(() => {
       dismiss();
-    }, 3000);
+    }, 1200);
 
-    return () => clearTimeout(timer);
+    return () => clearTimeout(safetyTimer);
   }, []);
+
+  // If the image finishes decoding earlier we can fade out immediately.
+  useEffect(() => {
+    if (gifLoaded && !isFading) {
+      dismiss();
+    }
+  }, [gifLoaded, isFading]);
 
   if (!isVisible) return null;
 
   return (
     <div
-      className={`fixed inset-0 z-[9999] flex items-center justify-center bg-[#fff] transition-opacity duration-700 ease-in-out ${
+      className={`fixed inset-0 z-[9999] flex items-center justify-center bg-[#fff] transition-opacity duration-500 ease-out ${
         isFading ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}
     >
@@ -32,9 +42,14 @@ export function LoadingScreen() {
         <img
           src={kuttoGif}
           alt="Loading..."
-          className="h-20 w-auto max-w-[160px] object-contain sm:h-24 md:h-28"
+          onLoad={() => setGifLoaded(true)}
+          className="h-16 w-auto max-w-[120px] object-contain sm:h-20"
         />
+        <div className="mt-3 h-1 w-24 overflow-hidden rounded-full bg-forest/15">
+          <div className="h-full w-full animate-scale-x bg-forest" />
+        </div>
       </div>
     </div>
   );
 }
+
