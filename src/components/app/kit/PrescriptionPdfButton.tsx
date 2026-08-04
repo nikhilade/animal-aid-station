@@ -1,8 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FileText, Download, Loader2, X } from "lucide-react";
 import { apiClient } from "@/lib/api-client";
 import { endpoints } from "@/lib/api/endpoints";
 import type { PrescriptionPdf } from "@/lib/api/types";
+
+function base64ToBlobUrl(base64: string, mime: string) {
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
+  return URL.createObjectURL(new Blob([bytes], { type: mime }));
+}
 
 /** Fetches GET /prescriptions/{id}/pdf, shows an inline preview, then downloads. */
 export function PrescriptionPdfButton({
@@ -15,22 +22,34 @@ export function PrescriptionPdfButton({
   className?: string;
 }) {
   const [pdf, setPdf] = useState<PrescriptionPdf | null>(null);
+  const [href, setHref] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const href = pdf ? `data:${pdf.mime_type};base64,${pdf.content_base64}` : "";
+  useEffect(() => () => {
+    if (href) URL.revokeObjectURL(href);
+  }, [href]);
 
   async function generate() {
     setLoading(true);
     setError("");
     try {
-      setPdf(await apiClient.get<PrescriptionPdf>(endpoints.prescriptions.pdf(prescriptionId)));
+      const result = await apiClient.get<PrescriptionPdf>(endpoints.prescriptions.pdf(prescriptionId));
+      setPdf(result);
+      setHref(base64ToBlobUrl(result.content_base64, result.mime_type));
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not generate the PDF.");
     } finally {
       setLoading(false);
     }
   }
+
+  function close() {
+    if (href) URL.revokeObjectURL(href);
+    setHref("");
+    setPdf(null);
+  }
+
 
   return (
     <div className={className}>
