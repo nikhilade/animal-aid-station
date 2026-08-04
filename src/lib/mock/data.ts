@@ -331,3 +331,114 @@ export const roleByEmailPrefix: Record<string, Role> = {
   billing: "BILLING_STAFF",
   owner: "PET_OWNER",
 };
+
+export const ownerDocuments: import("../api/types").OwnerDocument[] = [
+  { id: "doc_1", owner_id: "own_1", name: "Aadhaar-card.pdf", type: "ID Proof", size_kb: 248, uploaded_at: day(-210) },
+  { id: "doc_2", owner_id: "own_1", name: "Surgery-consent.pdf", type: "Consent Form", size_kb: 96, uploaded_at: day(-42) },
+  { id: "doc_3", owner_id: "own_2", name: "Pet-insurance.pdf", type: "Insurance", size_kb: 512, uploaded_at: day(-100) },
+];
+
+export const communications: import("../api/types").CommunicationLog[] = [
+  { id: "com_1", owner_id: "own_1", channel: "SMS", subject: "Appointment reminder", body: "Max's check-up is tomorrow at 10:00 AM.", direction: "OUTBOUND", sent_at: day(-3, 9) },
+  { id: "com_2", owner_id: "own_1", channel: "Email", subject: "Invoice INV-1042", body: "Your invoice is ready to view.", direction: "OUTBOUND", sent_at: day(-12, 15) },
+  { id: "com_3", owner_id: "own_1", channel: "Call", subject: "Vaccination follow-up", body: "Owner confirmed booster shot for Luna.", direction: "INBOUND", sent_at: day(-25, 11) },
+  { id: "com_4", owner_id: "own_2", channel: "WhatsApp", subject: "Grooming slot", body: "Sent available grooming slots for Biscuit.", direction: "OUTBOUND", sent_at: day(-6, 17) },
+];
+
+export const medicalEvents: import("../api/types").MedicalEvent[] = [
+  { id: "me_1", pet_id: "pet_1", type: "VISIT", title: "Annual wellness exam", detail: "Weight stable at 31.2 kg. Dental scaling advised.", doctor_name: "Dr. Amelia Reyes", occurred_at: day(-30, 10) },
+  { id: "me_2", pet_id: "pet_1", type: "VACCINE", title: "Rabies booster", detail: "Batch RB-2291, 1 ml subcutaneous.", doctor_name: "Dr. Amelia Reyes", occurred_at: day(-120, 12) },
+  { id: "me_3", pet_id: "pet_1", type: "LAB", title: "CBC panel", detail: "All values within normal range.", doctor_name: "Dr. Noah Patel", occurred_at: day(-118, 13) },
+  { id: "me_4", pet_id: "pet_1", type: "PRESCRIPTION", title: "Apoquel 16 mg", detail: "1 tablet twice daily for 7 days.", doctor_name: "Dr. Amelia Reyes", occurred_at: day(-29, 11) },
+  { id: "me_5", pet_id: "pet_2", type: "SURGERY", title: "Spay procedure", detail: "Uneventful recovery, sutures removed after 10 days.", doctor_name: "Dr. Noah Patel", occurred_at: day(-200, 9) },
+  { id: "me_6", pet_id: "pet_2", type: "GROOMING", title: "Full groom", detail: "Nail trim and de-shedding treatment.", doctor_name: "Iris Kim", occurred_at: day(-15, 16) },
+  { id: "me_7", pet_id: "pet_3", type: "VISIT", title: "Breathing check", detail: "Mild brachycephalic symptoms, monitor in summer.", doctor_name: "Dr. Amelia Reyes", occurred_at: day(-8, 14) },
+];
+
+export const vaccines: import("../api/types").Vaccine[] = [
+  { id: "vac_1", pet_id: "pet_1", pet_name: "Max", owner_id: "own_1", owner_name: "Sarah Johnson", vaccine_name: "Rabies", batch_no: "RB-2291", vaccination_date: day(-120).slice(0, 10), next_due_date: day(-5).slice(0, 10), administered_by: "Dr. Amelia Reyes" },
+  { id: "vac_2", pet_id: "pet_2", pet_name: "Luna", owner_id: "own_1", owner_name: "Sarah Johnson", vaccine_name: "FVRCP", batch_no: "FV-1180", vaccination_date: day(-330).slice(0, 10), next_due_date: day(9).slice(0, 10), administered_by: "Dr. Noah Patel" },
+  { id: "vac_3", pet_id: "pet_3", pet_name: "Biscuit", owner_id: "own_2", owner_name: "Ethan Brooks", vaccine_name: "DHPP", batch_no: "DH-7741", vaccination_date: day(-340).slice(0, 10), next_due_date: day(21).slice(0, 10), administered_by: "Dr. Amelia Reyes" },
+  { id: "vac_4", pet_id: "pet_5", pet_name: "Scout", owner_id: "own_4", owner_name: "Liam Carter", vaccine_name: "Leptospirosis", batch_no: "LP-3320", vaccination_date: day(-370).slice(0, 10), next_due_date: day(-14).slice(0, 10), administered_by: "Dr. Noah Patel" },
+];
+
+export const branches: import("../api/types").Branch[] = [
+  {
+    id: "br_1",
+    name: "Pet Good — Downtown",
+    address: "24 Maple Street, Downtown",
+    working_hours: { open_hour: 9, close_hour: 18, slot_minutes: 30, closed_days: [0] },
+  },
+  {
+    id: "br_2",
+    name: "Pet Good — Riverside",
+    address: "8 Riverside Walk",
+    working_hours: { open_hour: 10, close_hour: 16, slot_minutes: 30, closed_days: [0, 6] },
+  },
+];
+
+/** Today's live token sequence, incremented on check-in. */
+export const tokenState = { last: 0 };
+
+for (const a of appointments) {
+  a.branch_id ??= "br_1";
+  a.source_channel ??= "WALK_IN";
+  a.token_number ??= null;
+}
+
+const todayAt = (hour: number, minute = 0) => {
+  const d = new Date();
+  d.setHours(hour, minute, 0, 0);
+  return d.toISOString();
+};
+
+appointments.push(
+  {
+    id: "apt_6",
+    pet_id: "pet_2",
+    pet_name: "Luna",
+    owner_id: "own_1",
+    owner_name: "Sarah Johnson",
+    doctor_id: "doc_1",
+    doctor_name: "Dr. Amelia Reed",
+    service: "Consultation",
+    scheduled_at: todayAt(10, 30),
+    status: "CONFIRMED",
+    notes: "",
+    branch_id: "br_1",
+    source_channel: "ONLINE",
+    token_number: null,
+  },
+  {
+    id: "apt_7",
+    pet_id: "pet_3",
+    pet_name: "Biscuit",
+    owner_id: "own_2",
+    owner_name: "Ethan Brooks",
+    doctor_id: "doc_2",
+    doctor_name: "Dr. Noah Fletcher",
+    service: "Vaccination — Booster",
+    scheduled_at: todayAt(12, 0),
+    status: "SCHEDULED",
+    notes: "",
+    branch_id: "br_1",
+    source_channel: "PHONE",
+    token_number: null,
+  },
+  {
+    id: "apt_8",
+    pet_id: "pet_4",
+    pet_name: "Pepper",
+    owner_id: "own_3",
+    owner_name: "Maya Torres",
+    doctor_id: "doc_3",
+    doctor_name: "Dr. Isabella Parker",
+    service: "Dermatology Review",
+    scheduled_at: todayAt(15, 30),
+    status: "SCHEDULED",
+    notes: "",
+    branch_id: "br_1",
+    source_channel: "WALK_IN",
+    token_number: null,
+  },
+);

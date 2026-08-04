@@ -12,6 +12,13 @@ import {
   FlaskConical,
   Pill,
   Scissors,
+  Syringe,
+  ClipboardList,
+  Banknote,
+  RotateCcw,
+  Truck,
+
+
   Settings,
   LogOut,
   Menu,
@@ -25,14 +32,25 @@ const navItems: { to: string; label: string; icon: typeof Users; permission: Per
   { to: "/app/dashboard", label: "Dashboard", icon: LayoutDashboard, permission: "staff:access" },
   { to: "/app/owners", label: "Pet Owners", icon: Users, permission: "owners:read" },
   { to: "/app/pets", label: "Pets", icon: Dog, permission: "pets:read" },
+  { to: "/app/vaccinations", label: "Vaccinations", icon: Syringe, permission: "pets:read" },
   { to: "/app/appointments", label: "Appointments", icon: CalendarDays, permission: "appointments:read" },
+  { to: "/app/calendar", label: "Calendar", icon: CalendarDays, permission: "appointments:read" },
+  { to: "/app/queue", label: "Reception Queue", icon: Users, permission: "appointments:read" },
   { to: "/app/doctors", label: "Doctors", icon: Stethoscope, permission: "doctors:read" },
+  { to: "/app/doctor-schedule", label: "Availability", icon: CalendarDays, permission: "doctors:read" },
+  { to: "/app/consultations", label: "Consultations", icon: ClipboardList, permission: "consultations:read" },
+  { to: "/app/prescriptions", label: "Prescriptions", icon: Pill, permission: "prescriptions:write" },
   { to: "/app/lab", label: "Laboratory", icon: FlaskConical, permission: "lab:read" },
   { to: "/app/pharmacy", label: "Pharmacy", icon: Pill, permission: "pharmacy:read" },
+
   { to: "/app/grooming", label: "Grooming", icon: Scissors, permission: "grooming:read" },
   { to: "/app/billing", label: "Billing", icon: Receipt, permission: "billing:read" },
+  { to: "/app/payments", label: "Payments", icon: Banknote, permission: "payments:write" },
+  { to: "/app/refunds", label: "Refunds", icon: RotateCcw, permission: "billing:read" },
   { to: "/app/inventory", label: "Inventory", icon: Boxes, permission: "inventory:read" },
+  { to: "/app/suppliers", label: "Suppliers", icon: Truck, permission: "suppliers:read" },
   { to: "/app/reports", label: "Reports", icon: BarChart3, permission: "reports:read" },
+
   { to: "/app/settings", label: "Settings", icon: Settings, permission: "settings:write" },
 ];
 
@@ -56,28 +74,38 @@ export function StaffLayout({
   return (
     <RequireAuth permission={permission}>
       <div className="min-h-screen bg-sand lg:flex">
+        {open && (
+          <div
+            className="fixed inset-0 z-30 bg-black/40 backdrop-blur-xs lg:hidden"
+            onClick={() => setOpen(false)}
+            aria-hidden="true"
+          />
+        )}
         <aside
-          className={`${open ? "block" : "hidden"} fixed inset-y-0 left-0 z-40 w-64 overflow-y-auto bg-forest px-4 py-6 text-primary-foreground lg:sticky lg:top-0 lg:block lg:h-screen lg:shrink-0`}
+          data-lenis-prevent
+          className={`${open ? "block" : "hidden"} fixed inset-y-0 left-0 z-40 w-64 overflow-y-auto overscroll-contain no-scrollbar bg-forest px-4 py-6 text-primary-foreground lg:sticky lg:top-0 lg:block lg:h-screen lg:max-h-screen lg:shrink-0`}
         >
-          <span className="flex items-center px-2 text-xl font-bold">
-            Pet G<PawPrint className="inline size-4 -rotate-12 text-clay" />
-            od
-          </span>
-          <p className="mt-1 px-2 text-xs text-primary-foreground/60">Staff Console</p>
-          <nav className="mt-8 space-y-1">
-            {items.map(({ to, label, icon: Icon }) => (
-              <Link
-                key={to}
-                to={to}
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-3 rounded-full px-4 py-2.5 text-sm text-primary-foreground/75 transition-colors hover:bg-primary-foreground/10"
-                activeProps={{ className: "bg-primary-foreground/15 text-primary-foreground font-medium" }}
-              >
-                <Icon className="size-4" />
-                {label}
-              </Link>
-            ))}
-          </nav>
+          <div className="flex min-h-full flex-col">
+            <span className="flex items-center px-2 text-xl font-bold">
+              Pet G<PawPrint className="inline size-4 -rotate-12 text-clay" />
+              od
+            </span>
+            <p className="mt-1 px-2 text-xs text-primary-foreground/60">Staff Console</p>
+            <nav className="mt-8 flex-1 space-y-1 pb-10">
+              {items.map(({ to, label, icon: Icon }) => (
+                <Link
+                  key={to}
+                  to={to}
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-3 rounded-full px-4 py-2.5 text-sm text-primary-foreground/75 transition-colors hover:bg-primary-foreground/10"
+                  activeProps={{ className: "bg-primary-foreground/15 text-primary-foreground font-medium" }}
+                >
+                  <Icon className="size-4" />
+                  {label}
+                </Link>
+              ))}
+            </nav>
+          </div>
         </aside>
 
         <div className="min-w-0 flex-1">

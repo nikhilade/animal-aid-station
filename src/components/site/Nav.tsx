@@ -15,7 +15,7 @@ export function Nav() {
     <header className="relative z-20">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
         <a href="#home" className="flex items-center gap-2 text-2xl font-bold text-forest">
-          pet g<PawPrint className="inline size-5 -rotate-12 text-clay" />od
+          PawCareOS<PawPrint className="inline size-5 -rotate-12 text-clay ml-1" />
         </a>
 
         <nav className="hidden items-center gap-10 md:flex">

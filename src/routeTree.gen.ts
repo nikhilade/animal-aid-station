@@ -13,21 +13,30 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as BookAppointmentRouteImport } from './routes/book-appointment'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as PlaygroundRouteImport } from './routes/playground'
 import { Route as PortalRouteImport } from './routes/portal'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppAppointmentsRouteImport } from './routes/app.appointments'
 import { Route as AppBillingRouteImport } from './routes/app.billing'
+import { Route as AppCalendarRouteImport } from './routes/app.calendar'
+import { Route as AppConsultationsRouteImport } from './routes/app.consultations'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
+import { Route as AppDoctorScheduleRouteImport } from './routes/app.doctor-schedule'
 import { Route as AppDoctorsRouteImport } from './routes/app.doctors'
 import { Route as AppGroomingRouteImport } from './routes/app.grooming'
 import { Route as AppInventoryRouteImport } from './routes/app.inventory'
 import { Route as AppLabRouteImport } from './routes/app.lab'
-import { Route as AppOwnersRouteImport } from './routes/app.owners'
-import { Route as AppPetsRouteImport } from './routes/app.pets'
+import { Route as AppNowServingRouteImport } from './routes/app.now-serving'
+import { Route as AppPaymentsRouteImport } from './routes/app.payments'
 import { Route as AppPharmacyRouteImport } from './routes/app.pharmacy'
+import { Route as AppPrescriptionsRouteImport } from './routes/app.prescriptions'
+import { Route as AppQueueRouteImport } from './routes/app.queue'
+import { Route as AppRefundsRouteImport } from './routes/app.refunds'
 import { Route as AppReportsRouteImport } from './routes/app.reports'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
+import { Route as AppSuppliersRouteImport } from './routes/app.suppliers'
+import { Route as AppVaccinationsRouteImport } from './routes/app.vaccinations'
 import { Route as PortalIndexRouteImport } from './routes/portal.index'
 import { Route as PortalBookAppointmentRouteImport } from './routes/portal.book-appointment'
 import { Route as PortalDashboardRouteImport } from './routes/portal.dashboard'
@@ -35,6 +44,13 @@ import { Route as PortalInvoicesRouteImport } from './routes/portal.invoices'
 import { Route as PortalMyAppointmentsRouteImport } from './routes/portal.my-appointments'
 import { Route as PortalMyPetsRouteImport } from './routes/portal.my-pets'
 import { Route as PortalPrescriptionsRouteImport } from './routes/portal.prescriptions'
+import { Route as PortalProfileRouteImport } from './routes/portal.profile'
+import { Route as AppOwnersIndexRouteImport } from './routes/app.owners.index'
+import { Route as AppOwnersIdRouteImport } from './routes/app.owners.$id'
+import { Route as AppOwnersNewRouteImport } from './routes/app.owners.new'
+import { Route as AppPetsIndexRouteImport } from './routes/app.pets.index'
+import { Route as AppPetsIdRouteImport } from './routes/app.pets.$id'
+import { Route as AppPetsNewRouteImport } from './routes/app.pets.new'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -54,6 +70,11 @@ const BookAppointmentRoute = BookAppointmentRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlaygroundRoute = PlaygroundRouteImport.update({
+  id: '/playground',
+  path: '/playground',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PortalRoute = PortalRouteImport.update({
@@ -81,9 +102,24 @@ const AppBillingRoute = AppBillingRouteImport.update({
   path: '/billing',
   getParentRoute: () => AppRoute,
 } as any)
+const AppCalendarRoute = AppCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppConsultationsRoute = AppConsultationsRouteImport.update({
+  id: '/consultations',
+  path: '/consultations',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDoctorScheduleRoute = AppDoctorScheduleRouteImport.update({
+  id: '/doctor-schedule',
+  path: '/doctor-schedule',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDoctorsRoute = AppDoctorsRouteImport.update({
@@ -106,19 +142,34 @@ const AppLabRoute = AppLabRouteImport.update({
   path: '/lab',
   getParentRoute: () => AppRoute,
 } as any)
-const AppOwnersRoute = AppOwnersRouteImport.update({
-  id: '/owners',
-  path: '/owners',
+const AppNowServingRoute = AppNowServingRouteImport.update({
+  id: '/now-serving',
+  path: '/now-serving',
   getParentRoute: () => AppRoute,
 } as any)
-const AppPetsRoute = AppPetsRouteImport.update({
-  id: '/pets',
-  path: '/pets',
+const AppPaymentsRoute = AppPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
   getParentRoute: () => AppRoute,
 } as any)
 const AppPharmacyRoute = AppPharmacyRouteImport.update({
   id: '/pharmacy',
   path: '/pharmacy',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPrescriptionsRoute = AppPrescriptionsRouteImport.update({
+  id: '/prescriptions',
+  path: '/prescriptions',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppQueueRoute = AppQueueRouteImport.update({
+  id: '/queue',
+  path: '/queue',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRefundsRoute = AppRefundsRouteImport.update({
+  id: '/refunds',
+  path: '/refunds',
   getParentRoute: () => AppRoute,
 } as any)
 const AppReportsRoute = AppReportsRouteImport.update({
@@ -129,6 +180,16 @@ const AppReportsRoute = AppReportsRouteImport.update({
 const AppSettingsRoute = AppSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSuppliersRoute = AppSuppliersRouteImport.update({
+  id: '/suppliers',
+  path: '/suppliers',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppVaccinationsRoute = AppVaccinationsRouteImport.update({
+  id: '/vaccinations',
+  path: '/vaccinations',
   getParentRoute: () => AppRoute,
 } as any)
 const PortalIndexRoute = PortalIndexRouteImport.update({
@@ -166,60 +227,127 @@ const PortalPrescriptionsRoute = PortalPrescriptionsRouteImport.update({
   path: '/prescriptions',
   getParentRoute: () => PortalRoute,
 } as any)
+const PortalProfileRoute = PortalProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => PortalRoute,
+} as any)
+const AppOwnersIndexRoute = AppOwnersIndexRouteImport.update({
+  id: '/owners/',
+  path: '/owners/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppOwnersIdRoute = AppOwnersIdRouteImport.update({
+  id: '/owners/$id',
+  path: '/owners/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppOwnersNewRoute = AppOwnersNewRouteImport.update({
+  id: '/owners/new',
+  path: '/owners/new',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPetsIndexRoute = AppPetsIndexRouteImport.update({
+  id: '/pets/',
+  path: '/pets/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPetsIdRoute = AppPetsIdRouteImport.update({
+  id: '/pets/$id',
+  path: '/pets/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPetsNewRoute = AppPetsNewRouteImport.update({
+  id: '/pets/new',
+  path: '/pets/new',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteWithChildren
   '/book-appointment': typeof BookAppointmentRoute
   '/login': typeof LoginRoute
+  '/playground': typeof PlaygroundRoute
   '/portal': typeof PortalRouteWithChildren
   '/signup': typeof SignupRoute
   '/app/appointments': typeof AppAppointmentsRoute
   '/app/billing': typeof AppBillingRoute
+  '/app/calendar': typeof AppCalendarRoute
+  '/app/consultations': typeof AppConsultationsRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/doctor-schedule': typeof AppDoctorScheduleRoute
   '/app/doctors': typeof AppDoctorsRoute
   '/app/grooming': typeof AppGroomingRoute
   '/app/inventory': typeof AppInventoryRoute
   '/app/lab': typeof AppLabRoute
-  '/app/owners': typeof AppOwnersRoute
-  '/app/pets': typeof AppPetsRoute
+  '/app/now-serving': typeof AppNowServingRoute
+  '/app/payments': typeof AppPaymentsRoute
   '/app/pharmacy': typeof AppPharmacyRoute
+  '/app/prescriptions': typeof AppPrescriptionsRoute
+  '/app/queue': typeof AppQueueRoute
+  '/app/refunds': typeof AppRefundsRoute
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/suppliers': typeof AppSuppliersRoute
+  '/app/vaccinations': typeof AppVaccinationsRoute
   '/portal/book-appointment': typeof PortalBookAppointmentRoute
   '/portal/dashboard': typeof PortalDashboardRoute
   '/portal/invoices': typeof PortalInvoicesRoute
   '/portal/my-appointments': typeof PortalMyAppointmentsRoute
   '/portal/my-pets': typeof PortalMyPetsRoute
   '/portal/prescriptions': typeof PortalPrescriptionsRoute
+  '/portal/profile': typeof PortalProfileRoute
   '/app/': typeof AppIndexRoute
   '/portal/': typeof PortalIndexRoute
+  '/app/owners/$id': typeof AppOwnersIdRoute
+  '/app/owners/new': typeof AppOwnersNewRoute
+  '/app/pets/$id': typeof AppPetsIdRoute
+  '/app/pets/new': typeof AppPetsNewRoute
+  '/app/owners/': typeof AppOwnersIndexRoute
+  '/app/pets/': typeof AppPetsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/book-appointment': typeof BookAppointmentRoute
   '/login': typeof LoginRoute
+  '/playground': typeof PlaygroundRoute
   '/signup': typeof SignupRoute
   '/app/appointments': typeof AppAppointmentsRoute
   '/app/billing': typeof AppBillingRoute
+  '/app/calendar': typeof AppCalendarRoute
+  '/app/consultations': typeof AppConsultationsRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/doctor-schedule': typeof AppDoctorScheduleRoute
   '/app/doctors': typeof AppDoctorsRoute
   '/app/grooming': typeof AppGroomingRoute
   '/app/inventory': typeof AppInventoryRoute
   '/app/lab': typeof AppLabRoute
-  '/app/owners': typeof AppOwnersRoute
-  '/app/pets': typeof AppPetsRoute
+  '/app/now-serving': typeof AppNowServingRoute
+  '/app/payments': typeof AppPaymentsRoute
   '/app/pharmacy': typeof AppPharmacyRoute
+  '/app/prescriptions': typeof AppPrescriptionsRoute
+  '/app/queue': typeof AppQueueRoute
+  '/app/refunds': typeof AppRefundsRoute
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/suppliers': typeof AppSuppliersRoute
+  '/app/vaccinations': typeof AppVaccinationsRoute
   '/portal/book-appointment': typeof PortalBookAppointmentRoute
   '/portal/dashboard': typeof PortalDashboardRoute
   '/portal/invoices': typeof PortalInvoicesRoute
   '/portal/my-appointments': typeof PortalMyAppointmentsRoute
   '/portal/my-pets': typeof PortalMyPetsRoute
   '/portal/prescriptions': typeof PortalPrescriptionsRoute
+  '/portal/profile': typeof PortalProfileRoute
   '/app': typeof AppIndexRoute
   '/portal': typeof PortalIndexRoute
+  '/app/owners/$id': typeof AppOwnersIdRoute
+  '/app/owners/new': typeof AppOwnersNewRoute
+  '/app/pets/$id': typeof AppPetsIdRoute
+  '/app/pets/new': typeof AppPetsNewRoute
+  '/app/owners': typeof AppOwnersIndexRoute
+  '/app/pets': typeof AppPetsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -227,28 +355,44 @@ export interface FileRoutesById {
   '/app': typeof AppRouteWithChildren
   '/book-appointment': typeof BookAppointmentRoute
   '/login': typeof LoginRoute
+  '/playground': typeof PlaygroundRoute
   '/portal': typeof PortalRouteWithChildren
   '/signup': typeof SignupRoute
   '/app/appointments': typeof AppAppointmentsRoute
   '/app/billing': typeof AppBillingRoute
+  '/app/calendar': typeof AppCalendarRoute
+  '/app/consultations': typeof AppConsultationsRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/doctor-schedule': typeof AppDoctorScheduleRoute
   '/app/doctors': typeof AppDoctorsRoute
   '/app/grooming': typeof AppGroomingRoute
   '/app/inventory': typeof AppInventoryRoute
   '/app/lab': typeof AppLabRoute
-  '/app/owners': typeof AppOwnersRoute
-  '/app/pets': typeof AppPetsRoute
+  '/app/now-serving': typeof AppNowServingRoute
+  '/app/payments': typeof AppPaymentsRoute
   '/app/pharmacy': typeof AppPharmacyRoute
+  '/app/prescriptions': typeof AppPrescriptionsRoute
+  '/app/queue': typeof AppQueueRoute
+  '/app/refunds': typeof AppRefundsRoute
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/suppliers': typeof AppSuppliersRoute
+  '/app/vaccinations': typeof AppVaccinationsRoute
   '/portal/book-appointment': typeof PortalBookAppointmentRoute
   '/portal/dashboard': typeof PortalDashboardRoute
   '/portal/invoices': typeof PortalInvoicesRoute
   '/portal/my-appointments': typeof PortalMyAppointmentsRoute
   '/portal/my-pets': typeof PortalMyPetsRoute
   '/portal/prescriptions': typeof PortalPrescriptionsRoute
+  '/portal/profile': typeof PortalProfileRoute
   '/app/': typeof AppIndexRoute
   '/portal/': typeof PortalIndexRoute
+  '/app/owners/$id': typeof AppOwnersIdRoute
+  '/app/owners/new': typeof AppOwnersNewRoute
+  '/app/pets/$id': typeof AppPetsIdRoute
+  '/app/pets/new': typeof AppPetsNewRoute
+  '/app/owners/': typeof AppOwnersIndexRoute
+  '/app/pets/': typeof AppPetsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -257,82 +401,130 @@ export interface FileRouteTypes {
     | '/app'
     | '/book-appointment'
     | '/login'
+    | '/playground'
     | '/portal'
     | '/signup'
     | '/app/appointments'
     | '/app/billing'
+    | '/app/calendar'
+    | '/app/consultations'
     | '/app/dashboard'
+    | '/app/doctor-schedule'
     | '/app/doctors'
     | '/app/grooming'
     | '/app/inventory'
     | '/app/lab'
-    | '/app/owners'
-    | '/app/pets'
+    | '/app/now-serving'
+    | '/app/payments'
     | '/app/pharmacy'
+    | '/app/prescriptions'
+    | '/app/queue'
+    | '/app/refunds'
     | '/app/reports'
     | '/app/settings'
+    | '/app/suppliers'
+    | '/app/vaccinations'
     | '/portal/book-appointment'
     | '/portal/dashboard'
     | '/portal/invoices'
     | '/portal/my-appointments'
     | '/portal/my-pets'
     | '/portal/prescriptions'
+    | '/portal/profile'
     | '/app/'
     | '/portal/'
+    | '/app/owners/$id'
+    | '/app/owners/new'
+    | '/app/pets/$id'
+    | '/app/pets/new'
+    | '/app/owners/'
+    | '/app/pets/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/book-appointment'
     | '/login'
+    | '/playground'
     | '/signup'
     | '/app/appointments'
     | '/app/billing'
+    | '/app/calendar'
+    | '/app/consultations'
     | '/app/dashboard'
+    | '/app/doctor-schedule'
     | '/app/doctors'
     | '/app/grooming'
     | '/app/inventory'
     | '/app/lab'
-    | '/app/owners'
-    | '/app/pets'
+    | '/app/now-serving'
+    | '/app/payments'
     | '/app/pharmacy'
+    | '/app/prescriptions'
+    | '/app/queue'
+    | '/app/refunds'
     | '/app/reports'
     | '/app/settings'
+    | '/app/suppliers'
+    | '/app/vaccinations'
     | '/portal/book-appointment'
     | '/portal/dashboard'
     | '/portal/invoices'
     | '/portal/my-appointments'
     | '/portal/my-pets'
     | '/portal/prescriptions'
+    | '/portal/profile'
     | '/app'
     | '/portal'
+    | '/app/owners/$id'
+    | '/app/owners/new'
+    | '/app/pets/$id'
+    | '/app/pets/new'
+    | '/app/owners'
+    | '/app/pets'
   id:
     | '__root__'
     | '/'
     | '/app'
     | '/book-appointment'
     | '/login'
+    | '/playground'
     | '/portal'
     | '/signup'
     | '/app/appointments'
     | '/app/billing'
+    | '/app/calendar'
+    | '/app/consultations'
     | '/app/dashboard'
+    | '/app/doctor-schedule'
     | '/app/doctors'
     | '/app/grooming'
     | '/app/inventory'
     | '/app/lab'
-    | '/app/owners'
-    | '/app/pets'
+    | '/app/now-serving'
+    | '/app/payments'
     | '/app/pharmacy'
+    | '/app/prescriptions'
+    | '/app/queue'
+    | '/app/refunds'
     | '/app/reports'
     | '/app/settings'
+    | '/app/suppliers'
+    | '/app/vaccinations'
     | '/portal/book-appointment'
     | '/portal/dashboard'
     | '/portal/invoices'
     | '/portal/my-appointments'
     | '/portal/my-pets'
     | '/portal/prescriptions'
+    | '/portal/profile'
     | '/app/'
     | '/portal/'
+    | '/app/owners/$id'
+    | '/app/owners/new'
+    | '/app/pets/$id'
+    | '/app/pets/new'
+    | '/app/owners/'
+    | '/app/pets/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -340,6 +532,7 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   BookAppointmentRoute: typeof BookAppointmentRoute
   LoginRoute: typeof LoginRoute
+  PlaygroundRoute: typeof PlaygroundRoute
   PortalRoute: typeof PortalRouteWithChildren
   SignupRoute: typeof SignupRoute
 }
@@ -372,6 +565,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/playground': {
+      id: '/playground'
+      path: '/playground'
+      fullPath: '/playground'
+      preLoaderRoute: typeof PlaygroundRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/portal': {
@@ -409,11 +609,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppBillingRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/calendar': {
+      id: '/app/calendar'
+      path: '/calendar'
+      fullPath: '/app/calendar'
+      preLoaderRoute: typeof AppCalendarRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/consultations': {
+      id: '/app/consultations'
+      path: '/consultations'
+      fullPath: '/app/consultations'
+      preLoaderRoute: typeof AppConsultationsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/dashboard': {
       id: '/app/dashboard'
       path: '/dashboard'
       fullPath: '/app/dashboard'
       preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/doctor-schedule': {
+      id: '/app/doctor-schedule'
+      path: '/doctor-schedule'
+      fullPath: '/app/doctor-schedule'
+      preLoaderRoute: typeof AppDoctorScheduleRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/doctors': {
@@ -444,18 +665,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLabRouteImport
       parentRoute: typeof AppRoute
     }
-    '/app/owners': {
-      id: '/app/owners'
-      path: '/owners'
-      fullPath: '/app/owners'
-      preLoaderRoute: typeof AppOwnersRouteImport
+    '/app/now-serving': {
+      id: '/app/now-serving'
+      path: '/now-serving'
+      fullPath: '/app/now-serving'
+      preLoaderRoute: typeof AppNowServingRouteImport
       parentRoute: typeof AppRoute
     }
-    '/app/pets': {
-      id: '/app/pets'
-      path: '/pets'
-      fullPath: '/app/pets'
-      preLoaderRoute: typeof AppPetsRouteImport
+    '/app/payments': {
+      id: '/app/payments'
+      path: '/payments'
+      fullPath: '/app/payments'
+      preLoaderRoute: typeof AppPaymentsRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/pharmacy': {
@@ -463,6 +684,27 @@ declare module '@tanstack/react-router' {
       path: '/pharmacy'
       fullPath: '/app/pharmacy'
       preLoaderRoute: typeof AppPharmacyRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/prescriptions': {
+      id: '/app/prescriptions'
+      path: '/prescriptions'
+      fullPath: '/app/prescriptions'
+      preLoaderRoute: typeof AppPrescriptionsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/queue': {
+      id: '/app/queue'
+      path: '/queue'
+      fullPath: '/app/queue'
+      preLoaderRoute: typeof AppQueueRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/refunds': {
+      id: '/app/refunds'
+      path: '/refunds'
+      fullPath: '/app/refunds'
+      preLoaderRoute: typeof AppRefundsRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/reports': {
@@ -477,6 +719,20 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/app/settings'
       preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/suppliers': {
+      id: '/app/suppliers'
+      path: '/suppliers'
+      fullPath: '/app/suppliers'
+      preLoaderRoute: typeof AppSuppliersRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/vaccinations': {
+      id: '/app/vaccinations'
+      path: '/vaccinations'
+      fullPath: '/app/vaccinations'
+      preLoaderRoute: typeof AppVaccinationsRouteImport
       parentRoute: typeof AppRoute
     }
     '/portal/': {
@@ -528,39 +784,116 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalPrescriptionsRouteImport
       parentRoute: typeof PortalRoute
     }
+    '/portal/profile': {
+      id: '/portal/profile'
+      path: '/profile'
+      fullPath: '/portal/profile'
+      preLoaderRoute: typeof PortalProfileRouteImport
+      parentRoute: typeof PortalRoute
+    }
+    '/app/owners/': {
+      id: '/app/owners/'
+      path: '/owners'
+      fullPath: '/app/owners/'
+      preLoaderRoute: typeof AppOwnersIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/owners/$id': {
+      id: '/app/owners/$id'
+      path: '/owners/$id'
+      fullPath: '/app/owners/$id'
+      preLoaderRoute: typeof AppOwnersIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/owners/new': {
+      id: '/app/owners/new'
+      path: '/owners/new'
+      fullPath: '/app/owners/new'
+      preLoaderRoute: typeof AppOwnersNewRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/pets/': {
+      id: '/app/pets/'
+      path: '/pets'
+      fullPath: '/app/pets/'
+      preLoaderRoute: typeof AppPetsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/pets/$id': {
+      id: '/app/pets/$id'
+      path: '/pets/$id'
+      fullPath: '/app/pets/$id'
+      preLoaderRoute: typeof AppPetsIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/pets/new': {
+      id: '/app/pets/new'
+      path: '/pets/new'
+      fullPath: '/app/pets/new'
+      preLoaderRoute: typeof AppPetsNewRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
   AppAppointmentsRoute: typeof AppAppointmentsRoute
   AppBillingRoute: typeof AppBillingRoute
+  AppCalendarRoute: typeof AppCalendarRoute
+  AppConsultationsRoute: typeof AppConsultationsRoute
   AppDashboardRoute: typeof AppDashboardRoute
+  AppDoctorScheduleRoute: typeof AppDoctorScheduleRoute
   AppDoctorsRoute: typeof AppDoctorsRoute
   AppGroomingRoute: typeof AppGroomingRoute
   AppInventoryRoute: typeof AppInventoryRoute
   AppLabRoute: typeof AppLabRoute
-  AppOwnersRoute: typeof AppOwnersRoute
-  AppPetsRoute: typeof AppPetsRoute
+  AppNowServingRoute: typeof AppNowServingRoute
+  AppPaymentsRoute: typeof AppPaymentsRoute
   AppPharmacyRoute: typeof AppPharmacyRoute
+  AppPrescriptionsRoute: typeof AppPrescriptionsRoute
+  AppQueueRoute: typeof AppQueueRoute
+  AppRefundsRoute: typeof AppRefundsRoute
   AppReportsRoute: typeof AppReportsRoute
   AppSettingsRoute: typeof AppSettingsRoute
+  AppSuppliersRoute: typeof AppSuppliersRoute
+  AppVaccinationsRoute: typeof AppVaccinationsRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppOwnersIdRoute: typeof AppOwnersIdRoute
+  AppOwnersNewRoute: typeof AppOwnersNewRoute
+  AppPetsIdRoute: typeof AppPetsIdRoute
+  AppPetsNewRoute: typeof AppPetsNewRoute
+  AppOwnersIndexRoute: typeof AppOwnersIndexRoute
+  AppPetsIndexRoute: typeof AppPetsIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppAppointmentsRoute: AppAppointmentsRoute,
   AppBillingRoute: AppBillingRoute,
+  AppCalendarRoute: AppCalendarRoute,
+  AppConsultationsRoute: AppConsultationsRoute,
   AppDashboardRoute: AppDashboardRoute,
+  AppDoctorScheduleRoute: AppDoctorScheduleRoute,
   AppDoctorsRoute: AppDoctorsRoute,
   AppGroomingRoute: AppGroomingRoute,
   AppInventoryRoute: AppInventoryRoute,
   AppLabRoute: AppLabRoute,
-  AppOwnersRoute: AppOwnersRoute,
-  AppPetsRoute: AppPetsRoute,
+  AppNowServingRoute: AppNowServingRoute,
+  AppPaymentsRoute: AppPaymentsRoute,
   AppPharmacyRoute: AppPharmacyRoute,
+  AppPrescriptionsRoute: AppPrescriptionsRoute,
+  AppQueueRoute: AppQueueRoute,
+  AppRefundsRoute: AppRefundsRoute,
   AppReportsRoute: AppReportsRoute,
   AppSettingsRoute: AppSettingsRoute,
+  AppSuppliersRoute: AppSuppliersRoute,
+  AppVaccinationsRoute: AppVaccinationsRoute,
   AppIndexRoute: AppIndexRoute,
+  AppOwnersIdRoute: AppOwnersIdRoute,
+  AppOwnersNewRoute: AppOwnersNewRoute,
+  AppPetsIdRoute: AppPetsIdRoute,
+  AppPetsNewRoute: AppPetsNewRoute,
+  AppOwnersIndexRoute: AppOwnersIndexRoute,
+  AppPetsIndexRoute: AppPetsIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
@@ -572,6 +905,7 @@ interface PortalRouteChildren {
   PortalMyAppointmentsRoute: typeof PortalMyAppointmentsRoute
   PortalMyPetsRoute: typeof PortalMyPetsRoute
   PortalPrescriptionsRoute: typeof PortalPrescriptionsRoute
+  PortalProfileRoute: typeof PortalProfileRoute
   PortalIndexRoute: typeof PortalIndexRoute
 }
 
@@ -582,6 +916,7 @@ const PortalRouteChildren: PortalRouteChildren = {
   PortalMyAppointmentsRoute: PortalMyAppointmentsRoute,
   PortalMyPetsRoute: PortalMyPetsRoute,
   PortalPrescriptionsRoute: PortalPrescriptionsRoute,
+  PortalProfileRoute: PortalProfileRoute,
   PortalIndexRoute: PortalIndexRoute,
 }
 
@@ -593,19 +928,10 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   BookAppointmentRoute: BookAppointmentRoute,
   LoginRoute: LoginRoute,
+  PlaygroundRoute: PlaygroundRoute,
   PortalRoute: PortalRouteWithChildren,
   SignupRoute: SignupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
