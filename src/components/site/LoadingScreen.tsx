@@ -46,7 +46,7 @@ export function LoadingScreen() {
           className="h-16 w-auto max-w-[120px] object-contain sm:h-20"
         />
         <div className="mt-3 h-1 w-24 overflow-hidden rounded-full bg-forest/15">
-          <div className="h-full w-full origin-left animate-[scale-x_1s_ease-in-out_infinite] bg-forest" />
+          <div className="h-full w-full animate-scale-x bg-forest" />
         </div>
       </div>
     </div>
