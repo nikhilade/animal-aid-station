@@ -84,12 +84,42 @@ export const endpoints = {
     detail: (id: string) => `/invoices/${id}`,
     mine: "/invoices/mine",
   },
+  billing: {
+    chargeableItems: "/billing/chargeable-items",
+    invoices: "/billing/invoices",
+    invoice: (id: string) => `/billing/invoices/${id}`,
+  },
+  payments: {
+    list: "/payments",
+    create: "/payments",
+    reconcile: "/payments/reconcile",
+  },
+  refunds: {
+    list: "/refunds",
+    create: "/refunds",
+    approve: (id: string) => `/refunds/${id}/approve`,
+    reject: (id: string) => `/refunds/${id}/reject`,
+  },
+  creditNotes: {
+    list: "/credit-notes",
+  },
   inventory: {
     list: "/inventory",
+    lowStock: "/inventory/low-stock",
+    expiry: "/inventory/expiry",
+    stockEntry: "/inventory/stock/entry",
+    stockAdjust: "/inventory/stock/adjust",
+    movements: "/inventory/movements",
+  },
+  suppliers: {
+    list: "/suppliers",
+    create: "/suppliers",
+    detail: (id: string) => `/suppliers/${id}`,
   },
   reports: {
     overview: "/reports/overview",
   },
+
   dashboard: {
     staff: "/dashboard/staff",
     portal: "/dashboard/portal",
