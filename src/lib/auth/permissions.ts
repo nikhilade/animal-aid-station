@@ -77,6 +77,7 @@ export const rolePermissions: Record<Role, Permission[]> = {
     "appointments:write",
     "doctors:read",
     "billing:read",
+    "payments:write",
   ],
   DOCTOR: [
     "staff:access",
@@ -93,9 +94,27 @@ export const rolePermissions: Record<Role, Permission[]> = {
     "pharmacy:read",
   ],
   LAB_TECH: ["staff:access", "pets:read", "appointments:read", "lab:read", "lab:write"],
-  PHARMACIST: ["staff:access", "pets:read", "pharmacy:read", "pharmacy:write", "prescriptions:write", "inventory:read"],
+  PHARMACIST: [
+    "staff:access",
+    "pets:read",
+    "pharmacy:read",
+    "pharmacy:write",
+    "prescriptions:write",
+    "inventory:read",
+    "inventory:write",
+    "suppliers:read",
+  ],
   GROOMER: ["staff:access", "pets:read", "appointments:read", "grooming:read"],
-  BILLING_STAFF: ["staff:access", "owners:read", "billing:read", "billing:write", "reports:read"],
+  BILLING_STAFF: [
+    "staff:access",
+    "owners:read",
+    "billing:read",
+    "billing:write",
+    "payments:write",
+    "refunds:request",
+    "reports:read",
+  ],
+
   PET_OWNER: ["portal:access"],
 };
 
