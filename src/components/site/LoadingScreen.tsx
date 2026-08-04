@@ -15,7 +15,7 @@ export function LoadingScreen() {
   useEffect(() => {
     const timer = setTimeout(() => {
       dismiss();
-    }, 3000);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
