@@ -20,13 +20,16 @@ import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppAppointmentsRouteImport } from './routes/app.appointments'
 import { Route as AppBillingRouteImport } from './routes/app.billing'
 import { Route as AppCalendarRouteImport } from './routes/app.calendar'
+import { Route as AppConsultationsRouteImport } from './routes/app.consultations'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
+import { Route as AppDoctorScheduleRouteImport } from './routes/app.doctor-schedule'
 import { Route as AppDoctorsRouteImport } from './routes/app.doctors'
 import { Route as AppGroomingRouteImport } from './routes/app.grooming'
 import { Route as AppInventoryRouteImport } from './routes/app.inventory'
 import { Route as AppLabRouteImport } from './routes/app.lab'
 import { Route as AppNowServingRouteImport } from './routes/app.now-serving'
 import { Route as AppPharmacyRouteImport } from './routes/app.pharmacy'
+import { Route as AppPrescriptionsRouteImport } from './routes/app.prescriptions'
 import { Route as AppQueueRouteImport } from './routes/app.queue'
 import { Route as AppReportsRouteImport } from './routes/app.reports'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
@@ -101,9 +104,19 @@ const AppCalendarRoute = AppCalendarRouteImport.update({
   path: '/calendar',
   getParentRoute: () => AppRoute,
 } as any)
+const AppConsultationsRoute = AppConsultationsRouteImport.update({
+  id: '/consultations',
+  path: '/consultations',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDoctorScheduleRoute = AppDoctorScheduleRouteImport.update({
+  id: '/doctor-schedule',
+  path: '/doctor-schedule',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDoctorsRoute = AppDoctorsRouteImport.update({
@@ -134,6 +147,11 @@ const AppNowServingRoute = AppNowServingRouteImport.update({
 const AppPharmacyRoute = AppPharmacyRouteImport.update({
   id: '/pharmacy',
   path: '/pharmacy',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPrescriptionsRoute = AppPrescriptionsRouteImport.update({
+  id: '/prescriptions',
+  path: '/prescriptions',
   getParentRoute: () => AppRoute,
 } as any)
 const AppQueueRoute = AppQueueRouteImport.update({
@@ -238,13 +256,16 @@ export interface FileRoutesByFullPath {
   '/app/appointments': typeof AppAppointmentsRoute
   '/app/billing': typeof AppBillingRoute
   '/app/calendar': typeof AppCalendarRoute
+  '/app/consultations': typeof AppConsultationsRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/doctor-schedule': typeof AppDoctorScheduleRoute
   '/app/doctors': typeof AppDoctorsRoute
   '/app/grooming': typeof AppGroomingRoute
   '/app/inventory': typeof AppInventoryRoute
   '/app/lab': typeof AppLabRoute
   '/app/now-serving': typeof AppNowServingRoute
   '/app/pharmacy': typeof AppPharmacyRoute
+  '/app/prescriptions': typeof AppPrescriptionsRoute
   '/app/queue': typeof AppQueueRoute
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
@@ -274,13 +295,16 @@ export interface FileRoutesByTo {
   '/app/appointments': typeof AppAppointmentsRoute
   '/app/billing': typeof AppBillingRoute
   '/app/calendar': typeof AppCalendarRoute
+  '/app/consultations': typeof AppConsultationsRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/doctor-schedule': typeof AppDoctorScheduleRoute
   '/app/doctors': typeof AppDoctorsRoute
   '/app/grooming': typeof AppGroomingRoute
   '/app/inventory': typeof AppInventoryRoute
   '/app/lab': typeof AppLabRoute
   '/app/now-serving': typeof AppNowServingRoute
   '/app/pharmacy': typeof AppPharmacyRoute
+  '/app/prescriptions': typeof AppPrescriptionsRoute
   '/app/queue': typeof AppQueueRoute
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
@@ -313,13 +337,16 @@ export interface FileRoutesById {
   '/app/appointments': typeof AppAppointmentsRoute
   '/app/billing': typeof AppBillingRoute
   '/app/calendar': typeof AppCalendarRoute
+  '/app/consultations': typeof AppConsultationsRoute
   '/app/dashboard': typeof AppDashboardRoute
+  '/app/doctor-schedule': typeof AppDoctorScheduleRoute
   '/app/doctors': typeof AppDoctorsRoute
   '/app/grooming': typeof AppGroomingRoute
   '/app/inventory': typeof AppInventoryRoute
   '/app/lab': typeof AppLabRoute
   '/app/now-serving': typeof AppNowServingRoute
   '/app/pharmacy': typeof AppPharmacyRoute
+  '/app/prescriptions': typeof AppPrescriptionsRoute
   '/app/queue': typeof AppQueueRoute
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
@@ -353,13 +380,16 @@ export interface FileRouteTypes {
     | '/app/appointments'
     | '/app/billing'
     | '/app/calendar'
+    | '/app/consultations'
     | '/app/dashboard'
+    | '/app/doctor-schedule'
     | '/app/doctors'
     | '/app/grooming'
     | '/app/inventory'
     | '/app/lab'
     | '/app/now-serving'
     | '/app/pharmacy'
+    | '/app/prescriptions'
     | '/app/queue'
     | '/app/reports'
     | '/app/settings'
@@ -389,13 +419,16 @@ export interface FileRouteTypes {
     | '/app/appointments'
     | '/app/billing'
     | '/app/calendar'
+    | '/app/consultations'
     | '/app/dashboard'
+    | '/app/doctor-schedule'
     | '/app/doctors'
     | '/app/grooming'
     | '/app/inventory'
     | '/app/lab'
     | '/app/now-serving'
     | '/app/pharmacy'
+    | '/app/prescriptions'
     | '/app/queue'
     | '/app/reports'
     | '/app/settings'
@@ -427,13 +460,16 @@ export interface FileRouteTypes {
     | '/app/appointments'
     | '/app/billing'
     | '/app/calendar'
+    | '/app/consultations'
     | '/app/dashboard'
+    | '/app/doctor-schedule'
     | '/app/doctors'
     | '/app/grooming'
     | '/app/inventory'
     | '/app/lab'
     | '/app/now-serving'
     | '/app/pharmacy'
+    | '/app/prescriptions'
     | '/app/queue'
     | '/app/reports'
     | '/app/settings'
@@ -544,11 +580,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCalendarRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/consultations': {
+      id: '/app/consultations'
+      path: '/consultations'
+      fullPath: '/app/consultations'
+      preLoaderRoute: typeof AppConsultationsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/dashboard': {
       id: '/app/dashboard'
       path: '/dashboard'
       fullPath: '/app/dashboard'
       preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/doctor-schedule': {
+      id: '/app/doctor-schedule'
+      path: '/doctor-schedule'
+      fullPath: '/app/doctor-schedule'
+      preLoaderRoute: typeof AppDoctorScheduleRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/doctors': {
@@ -591,6 +641,13 @@ declare module '@tanstack/react-router' {
       path: '/pharmacy'
       fullPath: '/app/pharmacy'
       preLoaderRoute: typeof AppPharmacyRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/prescriptions': {
+      id: '/app/prescriptions'
+      path: '/prescriptions'
+      fullPath: '/app/prescriptions'
+      preLoaderRoute: typeof AppPrescriptionsRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/queue': {
@@ -726,13 +783,16 @@ interface AppRouteChildren {
   AppAppointmentsRoute: typeof AppAppointmentsRoute
   AppBillingRoute: typeof AppBillingRoute
   AppCalendarRoute: typeof AppCalendarRoute
+  AppConsultationsRoute: typeof AppConsultationsRoute
   AppDashboardRoute: typeof AppDashboardRoute
+  AppDoctorScheduleRoute: typeof AppDoctorScheduleRoute
   AppDoctorsRoute: typeof AppDoctorsRoute
   AppGroomingRoute: typeof AppGroomingRoute
   AppInventoryRoute: typeof AppInventoryRoute
   AppLabRoute: typeof AppLabRoute
   AppNowServingRoute: typeof AppNowServingRoute
   AppPharmacyRoute: typeof AppPharmacyRoute
+  AppPrescriptionsRoute: typeof AppPrescriptionsRoute
   AppQueueRoute: typeof AppQueueRoute
   AppReportsRoute: typeof AppReportsRoute
   AppSettingsRoute: typeof AppSettingsRoute
@@ -750,13 +810,16 @@ const AppRouteChildren: AppRouteChildren = {
   AppAppointmentsRoute: AppAppointmentsRoute,
   AppBillingRoute: AppBillingRoute,
   AppCalendarRoute: AppCalendarRoute,
+  AppConsultationsRoute: AppConsultationsRoute,
   AppDashboardRoute: AppDashboardRoute,
+  AppDoctorScheduleRoute: AppDoctorScheduleRoute,
   AppDoctorsRoute: AppDoctorsRoute,
   AppGroomingRoute: AppGroomingRoute,
   AppInventoryRoute: AppInventoryRoute,
   AppLabRoute: AppLabRoute,
   AppNowServingRoute: AppNowServingRoute,
   AppPharmacyRoute: AppPharmacyRoute,
+  AppPrescriptionsRoute: AppPrescriptionsRoute,
   AppQueueRoute: AppQueueRoute,
   AppReportsRoute: AppReportsRoute,
   AppSettingsRoute: AppSettingsRoute,
@@ -809,13 +872,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

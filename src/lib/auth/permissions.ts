@@ -10,6 +10,10 @@ export type Permission =
   | "appointments:read"
   | "appointments:write"
   | "doctors:read"
+  | "doctors:write"
+  | "consultations:read"
+  | "consultations:write"
+  | "prescriptions:write"
   | "billing:read"
   | "billing:write"
   | "inventory:read"
@@ -31,6 +35,10 @@ const ALL_STAFF: Permission[] = [
   "appointments:read",
   "appointments:write",
   "doctors:read",
+  "doctors:write",
+  "consultations:read",
+  "consultations:write",
+  "prescriptions:write",
   "billing:read",
   "billing:write",
   "inventory:read",
@@ -66,11 +74,14 @@ export const rolePermissions: Record<Role, Permission[]> = {
     "appointments:read",
     "appointments:write",
     "doctors:read",
+    "consultations:read",
+    "consultations:write",
+    "prescriptions:write",
     "lab:read",
     "pharmacy:read",
   ],
   LAB_TECH: ["staff:access", "pets:read", "appointments:read", "lab:read", "lab:write"],
-  PHARMACIST: ["staff:access", "pets:read", "pharmacy:read", "pharmacy:write", "inventory:read"],
+  PHARMACIST: ["staff:access", "pets:read", "pharmacy:read", "pharmacy:write", "prescriptions:write", "inventory:read"],
   GROOMER: ["staff:access", "pets:read", "appointments:read", "grooming:read"],
   BILLING_STAFF: ["staff:access", "owners:read", "billing:read", "billing:write", "reports:read"],
   PET_OWNER: ["portal:access"],
