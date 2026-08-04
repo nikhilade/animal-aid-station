@@ -41,10 +41,23 @@ export const endpoints = {
   doctors: {
     list: "/doctors",
     detail: (id: string) => `/doctors/${id}`,
+    create: "/doctors",
+    update: (id: string) => `/doctors/${id}`,
+    availability: (id: string) => `/doctors/${id}/availability`,
+    leave: (id: string) => `/doctors/${id}/leave`,
+  },
+  medicines: {
+    list: "/medicines",
+  },
+  consultations: {
+    list: "/consultations",
+    create: "/consultations",
+    detail: (id: string) => `/consultations/${id}`,
   },
   branches: {
     list: "/branches",
   },
+
   appointments: {
     list: "/appointments",
     detail: (id: string) => `/appointments/${id}`,
@@ -61,7 +74,11 @@ export const endpoints = {
   prescriptions: {
     list: "/prescriptions",
     mine: "/prescriptions/mine",
+    create: "/prescriptions",
+    detail: (id: string) => `/prescriptions/${id}`,
+    pdf: (id: string) => `/prescriptions/${id}/pdf`,
   },
+
   invoices: {
     list: "/invoices",
     detail: (id: string) => `/invoices/${id}`,
