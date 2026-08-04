@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import kuttoGif from "@/assets/kutto.gif";
 
+// One full loop of the running dog GIF.
+const GIF_LOOP_MS = 520;
+
 export function LoadingScreen() {
   const [isVisible, setIsVisible] = useState(true);
   const [isFading, setIsFading] = useState(false);
@@ -13,22 +16,22 @@ export function LoadingScreen() {
     }, 400);
   };
 
+  // Let the GIF play exactly one loop once it loads, then fade out.
   useEffect(() => {
-    // Dismiss as soon as the gif renders OR after a short safety timeout,
-    // whichever comes first — never block the page longer than 1.2s.
+    if (!gifLoaded) return;
+    const timer = setTimeout(() => {
+      dismiss();
+    }, GIF_LOOP_MS);
+    return () => clearTimeout(timer);
+  }, [gifLoaded]);
+
+  // Safety cap: if the image never loads or is slow, still fade out quickly.
+  useEffect(() => {
     const safetyTimer = setTimeout(() => {
       dismiss();
-    }, 1200);
-
+    }, 1500);
     return () => clearTimeout(safetyTimer);
   }, []);
-
-  // If the image finishes decoding earlier we can fade out immediately.
-  useEffect(() => {
-    if (gifLoaded && !isFading) {
-      dismiss();
-    }
-  }, [gifLoaded, isFading]);
 
   if (!isVisible) return null;
 
@@ -52,4 +55,5 @@ export function LoadingScreen() {
     </div>
   );
 }
+
 
