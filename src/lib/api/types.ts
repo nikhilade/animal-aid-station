@@ -217,3 +217,88 @@ export interface Vaccine {
   next_due_date: string;
   administered_by: string;
 }
+
+/* ---------- Clinical: doctors, consultations, prescriptions ---------- */
+
+export interface DoctorProfile extends Doctor {
+  email: string;
+  phone: string;
+  registration_no: string;
+  branch_id: string;
+  consultation_fee: number;
+  bio?: string;
+  active: boolean;
+}
+
+/** Weekly recurring availability. day_of_week: 0 = Sunday … 6 = Saturday */
+export interface AvailabilityRule {
+  day_of_week: number;
+  start_hour: number;
+  end_hour: number;
+  enabled: boolean;
+}
+
+export interface DoctorLeave {
+  id: string;
+  doctor_id: string;
+  start_date: string;
+  end_date: string;
+  reason: string;
+  type: "LEAVE" | "CONFERENCE" | "HALF_DAY";
+}
+
+export interface DoctorAvailability {
+  doctor_id: string;
+  rules: AvailabilityRule[];
+  leaves: DoctorLeave[];
+}
+
+export interface Consultation {
+  id: string;
+  appointment_id: string;
+  pet_id: string;
+  pet_name: string;
+  owner_id: string;
+  doctor_id: string;
+  doctor_name: string;
+  subjective: string;
+  objective: string;
+  assessment: string;
+  plan: string;
+  vitals: { temperature_c: string; weight_kg: string; heart_rate: string; resp_rate: string };
+  created_at: string;
+}
+
+export interface Medicine {
+  id: string;
+  name: string;
+  strength: string;
+  form: "Tablet" | "Capsule" | "Syrup" | "Injection" | "Topical" | "Chew";
+  default_dosage: string;
+  stock: number;
+}
+
+export interface PrescriptionItem {
+  medicine_id: string;
+  name: string;
+  strength: string;
+  form: string;
+  dosage: string;
+  frequency: string;
+  duration_days: number;
+  notes: string;
+}
+
+export interface PrescriptionDetail extends Prescription {
+  owner_id: string;
+  owner_name: string;
+  appointment_id: string | null;
+  consultation_id: string | null;
+  items: PrescriptionItem[];
+}
+
+export interface PrescriptionPdf {
+  filename: string;
+  mime_type: string;
+  content_base64: string;
+}
