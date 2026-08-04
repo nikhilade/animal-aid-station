@@ -442,13 +442,183 @@ const routes: { pattern: RegExp; handler: Handler }[] = [
     },
   },
   {
-    pattern: /^\/doctors\/([^/]+)$/,
-    handler: ({ query }) => {
-      const found = doctors.find((d) => d.id === query.get("__p1"));
-      return found ? envelope(found) : failure("NOT_FOUND", "Doctor not found.");
+    pattern: /^\/doctors\/([^/]+)\/availability$/,
+    handler: ({ method, body, query }) => {
+      const id = query.get("__p1")!;
+      if (!doctors.some((d) => d.id === id)) return failure("NOT_FOUND", "Doctor not found.");
+      if (method === "PUT" || method === "PATCH" || method === "POST") {
+        const rules = (body.rules as AvailabilityRule[] | undefined) ?? [];
+        const invalid = rules.find((r) => r.enabled && r.end_hour <= r.start_hour);
+        if (invalid) return failure("ERR_INVALID_RANGE", "End time must be after the start time.");
+        doctorAvailability[id] = rules;
+      }
+      return envelope({
+        doctor_id: id,
+        rules: doctorAvailability[id] ?? [],
+        leaves: doctorLeaves.filter((l) => l.doctor_id === id).sort((a, b) => a.start_date.localeCompare(b.start_date)),
+      });
     },
   },
-  { pattern: /^\/doctors$/, handler: () => envelope(doctors) },
+  {
+    pattern: /^\/doctors\/([^/]+)\/leave$/,
+    handler: ({ method, body, query }) => {
+      const id = query.get("__p1")!;
+      if (method === "POST") {
+        const start = String(body.start_date ?? "");
+        const end = String(body.end_date ?? start);
+        if (!start) return failure("ERR_INVALID_RANGE", "A start date is required.");
+        if (end < start) return failure("ERR_INVALID_RANGE", "End date cannot be before the start date.");
+        const overlap = doctorLeaves.find(
+          (l) => l.doctor_id === id && l.start_date <= end && l.end_date >= start,
+        );
+        if (overlap) return failure("ERR_LEAVE_OVERLAP", "That range overlaps an existing leave entry.");
+        const created = {
+          id: `lv_${doctorLeaves.length + 1}`,
+          doctor_id: id,
+          start_date: start,
+          end_date: end,
+          reason: String(body.reason ?? "Leave"),
+          type: (body.type as "LEAVE") ?? "LEAVE",
+        };
+        doctorLeaves.push(created);
+        return envelope(created);
+      }
+      if (method === "DELETE") {
+        const idx = doctorLeaves.findIndex((l) => l.id === body.leave_id);
+        if (idx >= 0) doctorLeaves.splice(idx, 1);
+        return envelope({ ok: true });
+      }
+      return envelope(doctorLeaves.filter((l) => l.doctor_id === id));
+    },
+  },
+  {
+    pattern: /^\/doctors\/([^/]+)$/,
+    handler: ({ method, body, query }) => {
+      const found = doctors.find((d) => d.id === query.get("__p1"));
+      if (!found) return failure("NOT_FOUND", "Doctor not found.");
+      if (method === "PATCH") {
+        found.name = String(body.name ?? found.name);
+        found.specialty = String(body.specialty ?? found.specialty);
+        const profile = doctorProfiles[found.id];
+        if (profile) {
+          Object.assign(profile, {
+            email: String(body.email ?? profile.email),
+            phone: String(body.phone ?? profile.phone),
+            registration_no: String(body.registration_no ?? profile.registration_no),
+            branch_id: String(body.branch_id ?? profile.branch_id),
+            consultation_fee: Number(body.consultation_fee ?? profile.consultation_fee),
+            bio: String(body.bio ?? profile.bio),
+            active: body.active === undefined ? profile.active : Boolean(body.active),
+          });
+        }
+      }
+      return envelope({ ...found, ...doctorProfiles[found.id] });
+    },
+  },
+  {
+    pattern: /^\/doctors$/,
+    handler: ({ method, body }) => {
+      if (method === "POST") {
+        const name = String(body.name ?? "").trim();
+        if (!name) return failure("ERR_NAME_REQUIRED", "Doctor name is required.");
+        const reg = String(body.registration_no ?? "").trim();
+        if (reg && Object.values(doctorProfiles).some((p) => p.registration_no === reg)) {
+          return failure("ERR_DUPLICATE_REGISTRATION", "That registration number is already on file.");
+        }
+        const id = `doc_${doctors.length + 1}`;
+        const created = { id, name, specialty: String(body.specialty ?? "General Medicine"), available_slots: [] };
+        doctors.push(created);
+        doctorProfiles[id] = {
+          email: String(body.email ?? ""),
+          phone: String(body.phone ?? ""),
+          registration_no: reg,
+          branch_id: String(body.branch_id ?? "br_1"),
+          consultation_fee: Number(body.consultation_fee ?? 800),
+          bio: String(body.bio ?? ""),
+          active: body.active === undefined ? true : Boolean(body.active),
+        };
+        doctorAvailability[id] = [0, 1, 2, 3, 4, 5, 6].map((d) => ({
+          day_of_week: d,
+          start_hour: 9,
+          end_hour: 17,
+          enabled: d !== 0,
+        }));
+        return envelope({ ...created, ...doctorProfiles[id] });
+      }
+      return envelope(doctors.map((d) => ({ ...d, ...doctorProfiles[d.id] })));
+    },
+  },
+  { pattern: /^\/medicines$/, handler: ({ query }) => {
+      const q = (query.get("q") ?? "").trim().toLowerCase();
+      const matches = q ? medicines.filter((m) => `${m.name} ${m.strength} ${m.form}`.toLowerCase().includes(q)) : medicines;
+      return envelope(matches);
+    },
+  },
+  {
+    pattern: /^\/consultations\/([^/]+)$/,
+    handler: ({ query }) => {
+      const found = consultations.find((c) => c.id === query.get("__p1"));
+      return found ? envelope(found) : failure("NOT_FOUND", "Consultation not found.");
+    },
+  },
+  {
+    pattern: /^\/consultations$/,
+    handler: ({ method, body, query }) => {
+      if (method === "POST") {
+        const appt = appointments.find((a) => a.id === body.appointment_id);
+        if (!appt) return failure("ERR_APPOINTMENT_REQUIRED", "Select an appointment for this consultation.");
+        if (!["CHECKED_IN", "IN_PROGRESS"].includes(appt.status)) {
+          return failure("ERR_NOT_CHECKED_IN", "The patient must be checked in before a consultation can be recorded.");
+        }
+        const missing = ["subjective", "objective", "assessment", "plan"].filter(
+          (k) => !String(body[k] ?? "").trim(),
+        );
+        if (missing.length) {
+          return failure("ERR_INCOMPLETE_SOAP", `Complete all SOAP sections: ${missing.join(", ")}.`);
+        }
+        const created = {
+          id: `con_${consultations.length + 1}`,
+          appointment_id: appt.id,
+          pet_id: appt.pet_id,
+          pet_name: appt.pet_name,
+          owner_id: appt.owner_id,
+          doctor_id: appt.doctor_id,
+          doctor_name: appt.doctor_name,
+          subjective: String(body.subjective),
+          objective: String(body.objective),
+          assessment: String(body.assessment),
+          plan: String(body.plan),
+          vitals: (body.vitals as { temperature_c: string; weight_kg: string; heart_rate: string; resp_rate: string }) ?? {
+            temperature_c: "",
+            weight_kg: "",
+            heart_rate: "",
+            resp_rate: "",
+          },
+          created_at: new Date().toISOString(),
+        };
+        consultations.push(created);
+        appt.status = "IN_PROGRESS";
+        medicalEvents.push({
+          id: `evt_${medicalEvents.length + 1}`,
+          pet_id: appt.pet_id,
+          type: "VISIT",
+          title: appt.service,
+          detail: created.assessment,
+          doctor_name: appt.doctor_name,
+          occurred_at: created.created_at,
+        });
+        return envelope(created);
+      }
+      const doctorId = query.get("doctor_id");
+      const apptId = query.get("appointment_id");
+      return envelope(
+        consultations
+          .filter((c) => (!doctorId || c.doctor_id === doctorId) && (!apptId || c.appointment_id === apptId))
+          .sort((a, b) => b.created_at.localeCompare(a.created_at)),
+      );
+    },
+  },
+
   { pattern: /^\/appointments\/mine$/, handler: () => envelope(appointments.filter((a) => a.owner_id === currentOwnerId)) },
   {
     pattern: /^\/appointments\/slots\/available$/,
