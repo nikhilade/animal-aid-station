@@ -28,7 +28,7 @@ import {
   prescriptionItems,
 } from "./clinical";
 import { buildTextPdf } from "./pdf";
-import type { AvailabilityRule, PrescriptionItem } from "../api/types";
+import type { AvailabilityRule, Prescription, PrescriptionDetail, PrescriptionItem } from "../api/types";
 
 
 /** Mock layer. Never import this from components — always go through api-client. */
@@ -125,6 +125,24 @@ function login(body: Record<string, unknown>): ApiResponse<LoginResponse> | ApiR
 }
 
 const currentOwnerId = "own_1";
+
+function ownerOf(petId: string) {
+  return pets.find((p) => p.id === petId)?.owner_id ?? "";
+}
+
+/** Expands a stored prescription into the detail shape (owner + line items). */
+function withItems(p: Prescription): PrescriptionDetail {
+  const pet = pets.find((x) => x.id === p.pet_id);
+  return {
+    ...p,
+    owner_id: pet?.owner_id ?? "",
+    owner_name: pet?.owner_name ?? "",
+    appointment_id: null,
+    consultation_id: null,
+    items: prescriptionItems[p.id] ?? [],
+  };
+}
+
 
 type Handler = (ctx: {
   method: string;
