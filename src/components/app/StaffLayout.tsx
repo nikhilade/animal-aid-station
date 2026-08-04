@@ -14,6 +14,10 @@ import {
   Scissors,
   Syringe,
   ClipboardList,
+  Banknote,
+  RotateCcw,
+  Truck,
+
 
   Settings,
   LogOut,
