@@ -28,6 +28,7 @@ import { Route as AppGroomingRouteImport } from './routes/app.grooming'
 import { Route as AppInventoryRouteImport } from './routes/app.inventory'
 import { Route as AppLabRouteImport } from './routes/app.lab'
 import { Route as AppNowServingRouteImport } from './routes/app.now-serving'
+import { Route as AppPaymentsRouteImport } from './routes/app.payments'
 import { Route as AppPharmacyRouteImport } from './routes/app.pharmacy'
 import { Route as AppPrescriptionsRouteImport } from './routes/app.prescriptions'
 import { Route as AppQueueRouteImport } from './routes/app.queue'
@@ -142,6 +143,11 @@ const AppLabRoute = AppLabRouteImport.update({
 const AppNowServingRoute = AppNowServingRouteImport.update({
   id: '/now-serving',
   path: '/now-serving',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPaymentsRoute = AppPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
   getParentRoute: () => AppRoute,
 } as any)
 const AppPharmacyRoute = AppPharmacyRouteImport.update({
@@ -264,6 +270,7 @@ export interface FileRoutesByFullPath {
   '/app/inventory': typeof AppInventoryRoute
   '/app/lab': typeof AppLabRoute
   '/app/now-serving': typeof AppNowServingRoute
+  '/app/payments': typeof AppPaymentsRoute
   '/app/pharmacy': typeof AppPharmacyRoute
   '/app/prescriptions': typeof AppPrescriptionsRoute
   '/app/queue': typeof AppQueueRoute
@@ -303,6 +310,7 @@ export interface FileRoutesByTo {
   '/app/inventory': typeof AppInventoryRoute
   '/app/lab': typeof AppLabRoute
   '/app/now-serving': typeof AppNowServingRoute
+  '/app/payments': typeof AppPaymentsRoute
   '/app/pharmacy': typeof AppPharmacyRoute
   '/app/prescriptions': typeof AppPrescriptionsRoute
   '/app/queue': typeof AppQueueRoute
@@ -345,6 +353,7 @@ export interface FileRoutesById {
   '/app/inventory': typeof AppInventoryRoute
   '/app/lab': typeof AppLabRoute
   '/app/now-serving': typeof AppNowServingRoute
+  '/app/payments': typeof AppPaymentsRoute
   '/app/pharmacy': typeof AppPharmacyRoute
   '/app/prescriptions': typeof AppPrescriptionsRoute
   '/app/queue': typeof AppQueueRoute
@@ -388,6 +397,7 @@ export interface FileRouteTypes {
     | '/app/inventory'
     | '/app/lab'
     | '/app/now-serving'
+    | '/app/payments'
     | '/app/pharmacy'
     | '/app/prescriptions'
     | '/app/queue'
@@ -427,6 +437,7 @@ export interface FileRouteTypes {
     | '/app/inventory'
     | '/app/lab'
     | '/app/now-serving'
+    | '/app/payments'
     | '/app/pharmacy'
     | '/app/prescriptions'
     | '/app/queue'
@@ -468,6 +479,7 @@ export interface FileRouteTypes {
     | '/app/inventory'
     | '/app/lab'
     | '/app/now-serving'
+    | '/app/payments'
     | '/app/pharmacy'
     | '/app/prescriptions'
     | '/app/queue'
@@ -636,6 +648,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppNowServingRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/payments': {
+      id: '/app/payments'
+      path: '/payments'
+      fullPath: '/app/payments'
+      preLoaderRoute: typeof AppPaymentsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/pharmacy': {
       id: '/app/pharmacy'
       path: '/pharmacy'
@@ -791,6 +810,7 @@ interface AppRouteChildren {
   AppInventoryRoute: typeof AppInventoryRoute
   AppLabRoute: typeof AppLabRoute
   AppNowServingRoute: typeof AppNowServingRoute
+  AppPaymentsRoute: typeof AppPaymentsRoute
   AppPharmacyRoute: typeof AppPharmacyRoute
   AppPrescriptionsRoute: typeof AppPrescriptionsRoute
   AppQueueRoute: typeof AppQueueRoute
@@ -818,6 +838,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppInventoryRoute: AppInventoryRoute,
   AppLabRoute: AppLabRoute,
   AppNowServingRoute: AppNowServingRoute,
+  AppPaymentsRoute: AppPaymentsRoute,
   AppPharmacyRoute: AppPharmacyRoute,
   AppPrescriptionsRoute: AppPrescriptionsRoute,
   AppQueueRoute: AppQueueRoute,
