@@ -119,6 +119,16 @@ export const endpoints = {
   reports: {
     overview: "/reports/overview",
   },
+  analytics: {
+    kpis: "/analytics/kpis",
+    revenueDaily: "/analytics/revenue/daily",
+    revenueByService: "/analytics/revenue/by-service",
+    doctorPerformance: "/analytics/doctor-performance",
+    inventoryAlerts: "/analytics/inventory-alerts",
+    paymentModes: "/analytics/payment-modes",
+    appointmentHeatmap: "/analytics/appointment-heatmap",
+    pendingInvoices: "/analytics/pending-invoices",
+  },
 
   dashboard: {
     staff: "/dashboard/staff",
