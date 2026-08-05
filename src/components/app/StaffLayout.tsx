@@ -17,6 +17,10 @@ import {
   Banknote,
   RotateCcw,
   Truck,
+  Building2,
+  Sparkles,
+  IdCard,
+  Database,
 
 
   Settings,
@@ -52,6 +56,11 @@ const navItems: { to: string; label: string; icon: typeof Users; permission: Per
   { to: "/app/analytics", label: "Analytics", icon: BarChart3, permission: "reports:read" },
   { to: "/app/reports", label: "Reports", icon: BarChart3, permission: "reports:read" },
 
+  { to: "/app/branches", label: "Branches", icon: Building2, permission: "branches:read" },
+  { to: "/app/staff", label: "Staff & Attendance", icon: IdCard, permission: "staff:read" },
+  { to: "/app/master-data", label: "Master Data", icon: Database, permission: "masterdata:read" },
+  { to: "/app/tenants", label: "Hospitals", icon: Building2, permission: "tenants:manage" },
+  { to: "/app/onboarding", label: "Onboard Hospital", icon: Sparkles, permission: "tenants:manage" },
   { to: "/app/settings", label: "Settings", icon: Settings, permission: "settings:write" },
 ];
 

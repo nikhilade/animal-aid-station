@@ -15,11 +15,13 @@ import { Route as BookAppointmentRouteImport } from './routes/book-appointment'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PlaygroundRouteImport } from './routes/playground'
 import { Route as PortalRouteImport } from './routes/portal'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppAnalyticsRouteImport } from './routes/app.analytics'
 import { Route as AppAppointmentsRouteImport } from './routes/app.appointments'
 import { Route as AppBillingRouteImport } from './routes/app.billing'
+import { Route as AppBranchesRouteImport } from './routes/app.branches'
 import { Route as AppCalendarRouteImport } from './routes/app.calendar'
 import { Route as AppConsultationsRouteImport } from './routes/app.consultations'
 import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
@@ -28,7 +30,9 @@ import { Route as AppDoctorsRouteImport } from './routes/app.doctors'
 import { Route as AppGroomingRouteImport } from './routes/app.grooming'
 import { Route as AppInventoryRouteImport } from './routes/app.inventory'
 import { Route as AppLabRouteImport } from './routes/app.lab'
+import { Route as AppMasterDataRouteImport } from './routes/app.master-data'
 import { Route as AppNowServingRouteImport } from './routes/app.now-serving'
+import { Route as AppOnboardingRouteImport } from './routes/app.onboarding'
 import { Route as AppPaymentsRouteImport } from './routes/app.payments'
 import { Route as AppPharmacyRouteImport } from './routes/app.pharmacy'
 import { Route as AppPrescriptionsRouteImport } from './routes/app.prescriptions'
@@ -36,7 +40,9 @@ import { Route as AppQueueRouteImport } from './routes/app.queue'
 import { Route as AppRefundsRouteImport } from './routes/app.refunds'
 import { Route as AppReportsRouteImport } from './routes/app.reports'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
+import { Route as AppStaffRouteImport } from './routes/app.staff'
 import { Route as AppSuppliersRouteImport } from './routes/app.suppliers'
+import { Route as AppTenantsRouteImport } from './routes/app.tenants'
 import { Route as AppVaccinationsRouteImport } from './routes/app.vaccinations'
 import { Route as PortalIndexRouteImport } from './routes/portal.index'
 import { Route as PortalBookAppointmentRouteImport } from './routes/portal.book-appointment'
@@ -83,6 +89,11 @@ const PortalRoute = PortalRouteImport.update({
   path: '/portal',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
@@ -106,6 +117,11 @@ const AppAppointmentsRoute = AppAppointmentsRouteImport.update({
 const AppBillingRoute = AppBillingRouteImport.update({
   id: '/billing',
   path: '/billing',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBranchesRoute = AppBranchesRouteImport.update({
+  id: '/branches',
+  path: '/branches',
   getParentRoute: () => AppRoute,
 } as any)
 const AppCalendarRoute = AppCalendarRouteImport.update({
@@ -148,9 +164,19 @@ const AppLabRoute = AppLabRouteImport.update({
   path: '/lab',
   getParentRoute: () => AppRoute,
 } as any)
+const AppMasterDataRoute = AppMasterDataRouteImport.update({
+  id: '/master-data',
+  path: '/master-data',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppNowServingRoute = AppNowServingRouteImport.update({
   id: '/now-serving',
   path: '/now-serving',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppOnboardingRoute = AppOnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
   getParentRoute: () => AppRoute,
 } as any)
 const AppPaymentsRoute = AppPaymentsRouteImport.update({
@@ -188,9 +214,19 @@ const AppSettingsRoute = AppSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AppRoute,
 } as any)
+const AppStaffRoute = AppStaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppSuppliersRoute = AppSuppliersRouteImport.update({
   id: '/suppliers',
   path: '/suppliers',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTenantsRoute = AppTenantsRouteImport.update({
+  id: '/tenants',
+  path: '/tenants',
   getParentRoute: () => AppRoute,
 } as any)
 const AppVaccinationsRoute = AppVaccinationsRouteImport.update({
@@ -276,10 +312,12 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/playground': typeof PlaygroundRoute
   '/portal': typeof PortalRouteWithChildren
+  '/pricing': typeof PricingRoute
   '/signup': typeof SignupRoute
   '/app/analytics': typeof AppAnalyticsRoute
   '/app/appointments': typeof AppAppointmentsRoute
   '/app/billing': typeof AppBillingRoute
+  '/app/branches': typeof AppBranchesRoute
   '/app/calendar': typeof AppCalendarRoute
   '/app/consultations': typeof AppConsultationsRoute
   '/app/dashboard': typeof AppDashboardRoute
@@ -288,7 +326,9 @@ export interface FileRoutesByFullPath {
   '/app/grooming': typeof AppGroomingRoute
   '/app/inventory': typeof AppInventoryRoute
   '/app/lab': typeof AppLabRoute
+  '/app/master-data': typeof AppMasterDataRoute
   '/app/now-serving': typeof AppNowServingRoute
+  '/app/onboarding': typeof AppOnboardingRoute
   '/app/payments': typeof AppPaymentsRoute
   '/app/pharmacy': typeof AppPharmacyRoute
   '/app/prescriptions': typeof AppPrescriptionsRoute
@@ -296,7 +336,9 @@ export interface FileRoutesByFullPath {
   '/app/refunds': typeof AppRefundsRoute
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/staff': typeof AppStaffRoute
   '/app/suppliers': typeof AppSuppliersRoute
+  '/app/tenants': typeof AppTenantsRoute
   '/app/vaccinations': typeof AppVaccinationsRoute
   '/portal/book-appointment': typeof PortalBookAppointmentRoute
   '/portal/dashboard': typeof PortalDashboardRoute
@@ -319,10 +361,12 @@ export interface FileRoutesByTo {
   '/book-appointment': typeof BookAppointmentRoute
   '/login': typeof LoginRoute
   '/playground': typeof PlaygroundRoute
+  '/pricing': typeof PricingRoute
   '/signup': typeof SignupRoute
   '/app/analytics': typeof AppAnalyticsRoute
   '/app/appointments': typeof AppAppointmentsRoute
   '/app/billing': typeof AppBillingRoute
+  '/app/branches': typeof AppBranchesRoute
   '/app/calendar': typeof AppCalendarRoute
   '/app/consultations': typeof AppConsultationsRoute
   '/app/dashboard': typeof AppDashboardRoute
@@ -331,7 +375,9 @@ export interface FileRoutesByTo {
   '/app/grooming': typeof AppGroomingRoute
   '/app/inventory': typeof AppInventoryRoute
   '/app/lab': typeof AppLabRoute
+  '/app/master-data': typeof AppMasterDataRoute
   '/app/now-serving': typeof AppNowServingRoute
+  '/app/onboarding': typeof AppOnboardingRoute
   '/app/payments': typeof AppPaymentsRoute
   '/app/pharmacy': typeof AppPharmacyRoute
   '/app/prescriptions': typeof AppPrescriptionsRoute
@@ -339,7 +385,9 @@ export interface FileRoutesByTo {
   '/app/refunds': typeof AppRefundsRoute
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/staff': typeof AppStaffRoute
   '/app/suppliers': typeof AppSuppliersRoute
+  '/app/tenants': typeof AppTenantsRoute
   '/app/vaccinations': typeof AppVaccinationsRoute
   '/portal/book-appointment': typeof PortalBookAppointmentRoute
   '/portal/dashboard': typeof PortalDashboardRoute
@@ -365,10 +413,12 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/playground': typeof PlaygroundRoute
   '/portal': typeof PortalRouteWithChildren
+  '/pricing': typeof PricingRoute
   '/signup': typeof SignupRoute
   '/app/analytics': typeof AppAnalyticsRoute
   '/app/appointments': typeof AppAppointmentsRoute
   '/app/billing': typeof AppBillingRoute
+  '/app/branches': typeof AppBranchesRoute
   '/app/calendar': typeof AppCalendarRoute
   '/app/consultations': typeof AppConsultationsRoute
   '/app/dashboard': typeof AppDashboardRoute
@@ -377,7 +427,9 @@ export interface FileRoutesById {
   '/app/grooming': typeof AppGroomingRoute
   '/app/inventory': typeof AppInventoryRoute
   '/app/lab': typeof AppLabRoute
+  '/app/master-data': typeof AppMasterDataRoute
   '/app/now-serving': typeof AppNowServingRoute
+  '/app/onboarding': typeof AppOnboardingRoute
   '/app/payments': typeof AppPaymentsRoute
   '/app/pharmacy': typeof AppPharmacyRoute
   '/app/prescriptions': typeof AppPrescriptionsRoute
@@ -385,7 +437,9 @@ export interface FileRoutesById {
   '/app/refunds': typeof AppRefundsRoute
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/staff': typeof AppStaffRoute
   '/app/suppliers': typeof AppSuppliersRoute
+  '/app/tenants': typeof AppTenantsRoute
   '/app/vaccinations': typeof AppVaccinationsRoute
   '/portal/book-appointment': typeof PortalBookAppointmentRoute
   '/portal/dashboard': typeof PortalDashboardRoute
@@ -412,10 +466,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/playground'
     | '/portal'
+    | '/pricing'
     | '/signup'
     | '/app/analytics'
     | '/app/appointments'
     | '/app/billing'
+    | '/app/branches'
     | '/app/calendar'
     | '/app/consultations'
     | '/app/dashboard'
@@ -424,7 +480,9 @@ export interface FileRouteTypes {
     | '/app/grooming'
     | '/app/inventory'
     | '/app/lab'
+    | '/app/master-data'
     | '/app/now-serving'
+    | '/app/onboarding'
     | '/app/payments'
     | '/app/pharmacy'
     | '/app/prescriptions'
@@ -432,7 +490,9 @@ export interface FileRouteTypes {
     | '/app/refunds'
     | '/app/reports'
     | '/app/settings'
+    | '/app/staff'
     | '/app/suppliers'
+    | '/app/tenants'
     | '/app/vaccinations'
     | '/portal/book-appointment'
     | '/portal/dashboard'
@@ -455,10 +515,12 @@ export interface FileRouteTypes {
     | '/book-appointment'
     | '/login'
     | '/playground'
+    | '/pricing'
     | '/signup'
     | '/app/analytics'
     | '/app/appointments'
     | '/app/billing'
+    | '/app/branches'
     | '/app/calendar'
     | '/app/consultations'
     | '/app/dashboard'
@@ -467,7 +529,9 @@ export interface FileRouteTypes {
     | '/app/grooming'
     | '/app/inventory'
     | '/app/lab'
+    | '/app/master-data'
     | '/app/now-serving'
+    | '/app/onboarding'
     | '/app/payments'
     | '/app/pharmacy'
     | '/app/prescriptions'
@@ -475,7 +539,9 @@ export interface FileRouteTypes {
     | '/app/refunds'
     | '/app/reports'
     | '/app/settings'
+    | '/app/staff'
     | '/app/suppliers'
+    | '/app/tenants'
     | '/app/vaccinations'
     | '/portal/book-appointment'
     | '/portal/dashboard'
@@ -500,10 +566,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/playground'
     | '/portal'
+    | '/pricing'
     | '/signup'
     | '/app/analytics'
     | '/app/appointments'
     | '/app/billing'
+    | '/app/branches'
     | '/app/calendar'
     | '/app/consultations'
     | '/app/dashboard'
@@ -512,7 +580,9 @@ export interface FileRouteTypes {
     | '/app/grooming'
     | '/app/inventory'
     | '/app/lab'
+    | '/app/master-data'
     | '/app/now-serving'
+    | '/app/onboarding'
     | '/app/payments'
     | '/app/pharmacy'
     | '/app/prescriptions'
@@ -520,7 +590,9 @@ export interface FileRouteTypes {
     | '/app/refunds'
     | '/app/reports'
     | '/app/settings'
+    | '/app/staff'
     | '/app/suppliers'
+    | '/app/tenants'
     | '/app/vaccinations'
     | '/portal/book-appointment'
     | '/portal/dashboard'
@@ -546,6 +618,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   PlaygroundRoute: typeof PlaygroundRoute
   PortalRoute: typeof PortalRouteWithChildren
+  PricingRoute: typeof PricingRoute
   SignupRoute: typeof SignupRoute
 }
 
@@ -593,6 +666,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/signup': {
       id: '/signup'
       path: '/signup'
@@ -626,6 +706,13 @@ declare module '@tanstack/react-router' {
       path: '/billing'
       fullPath: '/app/billing'
       preLoaderRoute: typeof AppBillingRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/branches': {
+      id: '/app/branches'
+      path: '/branches'
+      fullPath: '/app/branches'
+      preLoaderRoute: typeof AppBranchesRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/calendar': {
@@ -684,11 +771,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLabRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/master-data': {
+      id: '/app/master-data'
+      path: '/master-data'
+      fullPath: '/app/master-data'
+      preLoaderRoute: typeof AppMasterDataRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/now-serving': {
       id: '/app/now-serving'
       path: '/now-serving'
       fullPath: '/app/now-serving'
       preLoaderRoute: typeof AppNowServingRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/onboarding': {
+      id: '/app/onboarding'
+      path: '/onboarding'
+      fullPath: '/app/onboarding'
+      preLoaderRoute: typeof AppOnboardingRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/payments': {
@@ -740,11 +841,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/staff': {
+      id: '/app/staff'
+      path: '/staff'
+      fullPath: '/app/staff'
+      preLoaderRoute: typeof AppStaffRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/suppliers': {
       id: '/app/suppliers'
       path: '/suppliers'
       fullPath: '/app/suppliers'
       preLoaderRoute: typeof AppSuppliersRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/tenants': {
+      id: '/app/tenants'
+      path: '/tenants'
+      fullPath: '/app/tenants'
+      preLoaderRoute: typeof AppTenantsRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/vaccinations': {
@@ -859,6 +974,7 @@ interface AppRouteChildren {
   AppAnalyticsRoute: typeof AppAnalyticsRoute
   AppAppointmentsRoute: typeof AppAppointmentsRoute
   AppBillingRoute: typeof AppBillingRoute
+  AppBranchesRoute: typeof AppBranchesRoute
   AppCalendarRoute: typeof AppCalendarRoute
   AppConsultationsRoute: typeof AppConsultationsRoute
   AppDashboardRoute: typeof AppDashboardRoute
@@ -867,7 +983,9 @@ interface AppRouteChildren {
   AppGroomingRoute: typeof AppGroomingRoute
   AppInventoryRoute: typeof AppInventoryRoute
   AppLabRoute: typeof AppLabRoute
+  AppMasterDataRoute: typeof AppMasterDataRoute
   AppNowServingRoute: typeof AppNowServingRoute
+  AppOnboardingRoute: typeof AppOnboardingRoute
   AppPaymentsRoute: typeof AppPaymentsRoute
   AppPharmacyRoute: typeof AppPharmacyRoute
   AppPrescriptionsRoute: typeof AppPrescriptionsRoute
@@ -875,7 +993,9 @@ interface AppRouteChildren {
   AppRefundsRoute: typeof AppRefundsRoute
   AppReportsRoute: typeof AppReportsRoute
   AppSettingsRoute: typeof AppSettingsRoute
+  AppStaffRoute: typeof AppStaffRoute
   AppSuppliersRoute: typeof AppSuppliersRoute
+  AppTenantsRoute: typeof AppTenantsRoute
   AppVaccinationsRoute: typeof AppVaccinationsRoute
   AppIndexRoute: typeof AppIndexRoute
   AppOwnersIdRoute: typeof AppOwnersIdRoute
@@ -890,6 +1010,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAnalyticsRoute: AppAnalyticsRoute,
   AppAppointmentsRoute: AppAppointmentsRoute,
   AppBillingRoute: AppBillingRoute,
+  AppBranchesRoute: AppBranchesRoute,
   AppCalendarRoute: AppCalendarRoute,
   AppConsultationsRoute: AppConsultationsRoute,
   AppDashboardRoute: AppDashboardRoute,
@@ -898,7 +1019,9 @@ const AppRouteChildren: AppRouteChildren = {
   AppGroomingRoute: AppGroomingRoute,
   AppInventoryRoute: AppInventoryRoute,
   AppLabRoute: AppLabRoute,
+  AppMasterDataRoute: AppMasterDataRoute,
   AppNowServingRoute: AppNowServingRoute,
+  AppOnboardingRoute: AppOnboardingRoute,
   AppPaymentsRoute: AppPaymentsRoute,
   AppPharmacyRoute: AppPharmacyRoute,
   AppPrescriptionsRoute: AppPrescriptionsRoute,
@@ -906,7 +1029,9 @@ const AppRouteChildren: AppRouteChildren = {
   AppRefundsRoute: AppRefundsRoute,
   AppReportsRoute: AppReportsRoute,
   AppSettingsRoute: AppSettingsRoute,
+  AppStaffRoute: AppStaffRoute,
   AppSuppliersRoute: AppSuppliersRoute,
+  AppTenantsRoute: AppTenantsRoute,
   AppVaccinationsRoute: AppVaccinationsRoute,
   AppIndexRoute: AppIndexRoute,
   AppOwnersIdRoute: AppOwnersIdRoute,
@@ -951,6 +1076,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   PlaygroundRoute: PlaygroundRoute,
   PortalRoute: PortalRouteWithChildren,
+  PricingRoute: PricingRoute,
   SignupRoute: SignupRoute,
 }
 export const routeTree = rootRouteImport

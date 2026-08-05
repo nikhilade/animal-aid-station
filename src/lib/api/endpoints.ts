@@ -134,4 +134,29 @@ export const endpoints = {
     staff: "/dashboard/staff",
     portal: "/dashboard/portal",
   },
+
+  tenants: {
+    list: "/admin/tenants",
+    provision: "/tenants/provision",
+  },
+  subscriptions: {
+    plans: "/subscriptions/plans",
+    upgrade: (planId: string) => `/subscriptions/${planId}/upgrade`,
+  },
+  branchAdmin: {
+    list: "/branches",
+    create: "/branches",
+    detail: (id: string) => `/branches/${id}`,
+  },
+  staff: {
+    list: "/staff",
+    create: "/staff",
+    detail: (id: string) => `/staff/${id}`,
+    attendance: (id: string) => `/staff/${id}/attendance`,
+  },
+  masterData: {
+    list: (resource: string) => `/master-data/${resource}`,
+    create: (resource: string) => `/master-data/${resource}`,
+    detail: (resource: string, id: string) => `/master-data/${resource}/${id}`,
+  },
 } as const;

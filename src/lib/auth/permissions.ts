@@ -30,7 +30,14 @@ export type Permission =
   | "pharmacy:write"
   | "grooming:read"
   | "reports:read"
-  | "settings:write";
+  | "settings:write"
+  | "tenants:manage"
+  | "branches:read"
+  | "branches:write"
+  | "staff:read"
+  | "staff:write"
+  | "masterdata:read"
+  | "masterdata:write";
 
 const ALL_STAFF: Permission[] = [
   "staff:access",
@@ -62,10 +69,16 @@ const ALL_STAFF: Permission[] = [
   "grooming:read",
   "reports:read",
   "settings:write",
+  "branches:read",
+  "branches:write",
+  "staff:read",
+  "staff:write",
+  "masterdata:read",
+  "masterdata:write",
 ];
 
 export const rolePermissions: Record<Role, Permission[]> = {
-  SUPER_ADMIN: ALL_STAFF,
+  SUPER_ADMIN: [...ALL_STAFF, "tenants:manage"],
   HOSPITAL_ADMIN: ALL_STAFF,
   RECEPTIONIST: [
     "staff:access",
