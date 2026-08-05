@@ -49,6 +49,7 @@ const navItems: { to: string; label: string; icon: typeof Users; permission: Per
   { to: "/app/refunds", label: "Refunds", icon: RotateCcw, permission: "billing:read" },
   { to: "/app/inventory", label: "Inventory", icon: Boxes, permission: "inventory:read" },
   { to: "/app/suppliers", label: "Suppliers", icon: Truck, permission: "suppliers:read" },
+  { to: "/app/analytics", label: "Analytics", icon: BarChart3, permission: "reports:read" },
   { to: "/app/reports", label: "Reports", icon: BarChart3, permission: "reports:read" },
 
   { to: "/app/settings", label: "Settings", icon: Settings, permission: "settings:write" },
