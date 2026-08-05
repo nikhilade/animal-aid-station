@@ -30,6 +30,7 @@ import {
 import { buildTextPdf } from "./pdf";
 import { billingRoutes } from "./billing-handlers";
 import { analyticsRoutes } from "./analytics";
+import { tenancyRoutes } from "./tenancy";
 
 import type { AvailabilityRule, Prescription, PrescriptionDetail, PrescriptionItem } from "../api/types";
 
@@ -156,6 +157,7 @@ type Handler = (ctx: {
 const routes: { pattern: RegExp; handler: Handler }[] = [
   ...billingRoutes,
   ...analyticsRoutes,
+  ...tenancyRoutes,
 
   {
     pattern: /^\/pet-owners\/lookup-or-create$/,
