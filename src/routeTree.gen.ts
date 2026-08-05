@@ -38,6 +38,7 @@ import { Route as AppQueueRouteImport } from './routes/app.queue'
 import { Route as AppRefundsRouteImport } from './routes/app.refunds'
 import { Route as AppReportsRouteImport } from './routes/app.reports'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
+import { Route as AppStaffRouteImport } from './routes/app.staff'
 import { Route as AppSuppliersRouteImport } from './routes/app.suppliers'
 import { Route as AppTenantsRouteImport } from './routes/app.tenants'
 import { Route as AppVaccinationsRouteImport } from './routes/app.vaccinations'
@@ -201,6 +202,11 @@ const AppSettingsRoute = AppSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AppRoute,
 } as any)
+const AppStaffRoute = AppStaffRouteImport.update({
+  id: '/staff',
+  path: '/staff',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppSuppliersRoute = AppSuppliersRouteImport.update({
   id: '/suppliers',
   path: '/suppliers',
@@ -316,6 +322,7 @@ export interface FileRoutesByFullPath {
   '/app/refunds': typeof AppRefundsRoute
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/staff': typeof AppStaffRoute
   '/app/suppliers': typeof AppSuppliersRoute
   '/app/tenants': typeof AppTenantsRoute
   '/app/vaccinations': typeof AppVaccinationsRoute
@@ -362,6 +369,7 @@ export interface FileRoutesByTo {
   '/app/refunds': typeof AppRefundsRoute
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/staff': typeof AppStaffRoute
   '/app/suppliers': typeof AppSuppliersRoute
   '/app/tenants': typeof AppTenantsRoute
   '/app/vaccinations': typeof AppVaccinationsRoute
@@ -411,6 +419,7 @@ export interface FileRoutesById {
   '/app/refunds': typeof AppRefundsRoute
   '/app/reports': typeof AppReportsRoute
   '/app/settings': typeof AppSettingsRoute
+  '/app/staff': typeof AppStaffRoute
   '/app/suppliers': typeof AppSuppliersRoute
   '/app/tenants': typeof AppTenantsRoute
   '/app/vaccinations': typeof AppVaccinationsRoute
@@ -461,6 +470,7 @@ export interface FileRouteTypes {
     | '/app/refunds'
     | '/app/reports'
     | '/app/settings'
+    | '/app/staff'
     | '/app/suppliers'
     | '/app/tenants'
     | '/app/vaccinations'
@@ -507,6 +517,7 @@ export interface FileRouteTypes {
     | '/app/refunds'
     | '/app/reports'
     | '/app/settings'
+    | '/app/staff'
     | '/app/suppliers'
     | '/app/tenants'
     | '/app/vaccinations'
@@ -555,6 +566,7 @@ export interface FileRouteTypes {
     | '/app/refunds'
     | '/app/reports'
     | '/app/settings'
+    | '/app/staff'
     | '/app/suppliers'
     | '/app/tenants'
     | '/app/vaccinations'
@@ -790,6 +802,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/staff': {
+      id: '/app/staff'
+      path: '/staff'
+      fullPath: '/app/staff'
+      preLoaderRoute: typeof AppStaffRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/suppliers': {
       id: '/app/suppliers'
       path: '/suppliers'
@@ -934,6 +953,7 @@ interface AppRouteChildren {
   AppRefundsRoute: typeof AppRefundsRoute
   AppReportsRoute: typeof AppReportsRoute
   AppSettingsRoute: typeof AppSettingsRoute
+  AppStaffRoute: typeof AppStaffRoute
   AppSuppliersRoute: typeof AppSuppliersRoute
   AppTenantsRoute: typeof AppTenantsRoute
   AppVaccinationsRoute: typeof AppVaccinationsRoute
@@ -968,6 +988,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppRefundsRoute: AppRefundsRoute,
   AppReportsRoute: AppReportsRoute,
   AppSettingsRoute: AppSettingsRoute,
+  AppStaffRoute: AppStaffRoute,
   AppSuppliersRoute: AppSuppliersRoute,
   AppTenantsRoute: AppTenantsRoute,
   AppVaccinationsRoute: AppVaccinationsRoute,
