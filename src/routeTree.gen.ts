@@ -29,6 +29,7 @@ import { Route as AppDoctorsRouteImport } from './routes/app.doctors'
 import { Route as AppGroomingRouteImport } from './routes/app.grooming'
 import { Route as AppInventoryRouteImport } from './routes/app.inventory'
 import { Route as AppLabRouteImport } from './routes/app.lab'
+import { Route as AppMasterDataRouteImport } from './routes/app.master-data'
 import { Route as AppNowServingRouteImport } from './routes/app.now-serving'
 import { Route as AppOnboardingRouteImport } from './routes/app.onboarding'
 import { Route as AppPaymentsRouteImport } from './routes/app.payments'
@@ -155,6 +156,11 @@ const AppInventoryRoute = AppInventoryRouteImport.update({
 const AppLabRoute = AppLabRouteImport.update({
   id: '/lab',
   path: '/lab',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMasterDataRoute = AppMasterDataRouteImport.update({
+  id: '/master-data',
+  path: '/master-data',
   getParentRoute: () => AppRoute,
 } as any)
 const AppNowServingRoute = AppNowServingRouteImport.update({
@@ -313,6 +319,7 @@ export interface FileRoutesByFullPath {
   '/app/grooming': typeof AppGroomingRoute
   '/app/inventory': typeof AppInventoryRoute
   '/app/lab': typeof AppLabRoute
+  '/app/master-data': typeof AppMasterDataRoute
   '/app/now-serving': typeof AppNowServingRoute
   '/app/onboarding': typeof AppOnboardingRoute
   '/app/payments': typeof AppPaymentsRoute
@@ -360,6 +367,7 @@ export interface FileRoutesByTo {
   '/app/grooming': typeof AppGroomingRoute
   '/app/inventory': typeof AppInventoryRoute
   '/app/lab': typeof AppLabRoute
+  '/app/master-data': typeof AppMasterDataRoute
   '/app/now-serving': typeof AppNowServingRoute
   '/app/onboarding': typeof AppOnboardingRoute
   '/app/payments': typeof AppPaymentsRoute
@@ -410,6 +418,7 @@ export interface FileRoutesById {
   '/app/grooming': typeof AppGroomingRoute
   '/app/inventory': typeof AppInventoryRoute
   '/app/lab': typeof AppLabRoute
+  '/app/master-data': typeof AppMasterDataRoute
   '/app/now-serving': typeof AppNowServingRoute
   '/app/onboarding': typeof AppOnboardingRoute
   '/app/payments': typeof AppPaymentsRoute
@@ -461,6 +470,7 @@ export interface FileRouteTypes {
     | '/app/grooming'
     | '/app/inventory'
     | '/app/lab'
+    | '/app/master-data'
     | '/app/now-serving'
     | '/app/onboarding'
     | '/app/payments'
@@ -508,6 +518,7 @@ export interface FileRouteTypes {
     | '/app/grooming'
     | '/app/inventory'
     | '/app/lab'
+    | '/app/master-data'
     | '/app/now-serving'
     | '/app/onboarding'
     | '/app/payments'
@@ -557,6 +568,7 @@ export interface FileRouteTypes {
     | '/app/grooming'
     | '/app/inventory'
     | '/app/lab'
+    | '/app/master-data'
     | '/app/now-serving'
     | '/app/onboarding'
     | '/app/payments'
@@ -737,6 +749,13 @@ declare module '@tanstack/react-router' {
       path: '/lab'
       fullPath: '/app/lab'
       preLoaderRoute: typeof AppLabRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/master-data': {
+      id: '/app/master-data'
+      path: '/master-data'
+      fullPath: '/app/master-data'
+      preLoaderRoute: typeof AppMasterDataRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/now-serving': {
@@ -944,6 +963,7 @@ interface AppRouteChildren {
   AppGroomingRoute: typeof AppGroomingRoute
   AppInventoryRoute: typeof AppInventoryRoute
   AppLabRoute: typeof AppLabRoute
+  AppMasterDataRoute: typeof AppMasterDataRoute
   AppNowServingRoute: typeof AppNowServingRoute
   AppOnboardingRoute: typeof AppOnboardingRoute
   AppPaymentsRoute: typeof AppPaymentsRoute
@@ -979,6 +999,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppGroomingRoute: AppGroomingRoute,
   AppInventoryRoute: AppInventoryRoute,
   AppLabRoute: AppLabRoute,
+  AppMasterDataRoute: AppMasterDataRoute,
   AppNowServingRoute: AppNowServingRoute,
   AppOnboardingRoute: AppOnboardingRoute,
   AppPaymentsRoute: AppPaymentsRoute,
