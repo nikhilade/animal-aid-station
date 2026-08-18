@@ -1,16 +1,19 @@
 /** Billing, payments, refunds, inventory and supplier domain types. */
 
-export type LineItemType = "CONSULTATION" | "LAB" | "PHARMACY" | "GROOMING" | "MISC";
+export type LineItemType = "CONSULTATION" | "LAB" | "PHARMACY" | "GROOMING" | "SURGERY" | "MISC";
 
-export const LINE_ITEM_TYPES: LineItemType[] = ["CONSULTATION", "LAB", "PHARMACY", "GROOMING", "MISC"];
+export const LINE_ITEM_TYPES: LineItemType[] = ["CONSULTATION", "LAB", "PHARMACY", "GROOMING", "SURGERY", "MISC"];
 
 /** Master catalogue of chargeable services, grouped by line-item type. */
 export interface ChargeableItem {
   id: string;
-  type: LineItemType;
-  label: string;
-  unit_price: number;
-  gst_rate: number;
+  code: string;
+  name: string;
+  description: string;
+  itemType: LineItemType;
+  price: number;
+  taxRate: number;
+  active: boolean;
 }
 
 export interface InvoiceLineItem {
@@ -18,7 +21,7 @@ export interface InvoiceLineItem {
   type: LineItemType;
   label: string;
   quantity: number;
-  unit_price: number;
+  unitPrice: number;
   amount: number;
 }
 
@@ -26,23 +29,26 @@ export type InvoiceDetailStatus = "DRAFT" | "DUE" | "OVERDUE" | "PAID" | "CANCEL
 
 export interface InvoiceDetail {
   id: string;
-  number: string;
-  owner_id: string;
-  owner_name: string;
-  pet_name: string | null;
+  invoiceNumber: string;
+  ownerId: string;
+  ownerName: string;
+  petName: string | null;
   status: InvoiceDetailStatus;
-  line_items: InvoiceLineItem[];
+  lineItems: InvoiceLineItem[];
   subtotal: number;
   discount: number;
-  gst_rate: number;
-  inter_state: boolean;
+  gstRate: number;
+  interState: boolean;
   tax: number;
-  grand_total: number;
-  amount_paid: number;
+  cgst?: number;
+  sgst?: number;
+  igst?: number;
+  grandTotal: number;
+  amountPaid: number;
   /** Once GST-finalised, corrections must go through a credit note. */
-  gst_finalised: boolean;
-  issued_at: string;
-  due_at: string;
+  gstFinalised: boolean;
+  invoiceDate: string;
+  dueDate: string;
 }
 
 export type PaymentMethod = "CASH" | "CARD" | "UPI" | "ONLINE";
@@ -51,13 +57,13 @@ export type PaymentStatus = "SUCCESS" | "FAILED" | "UNKNOWN";
 
 export interface Payment {
   id: string;
-  invoice_id: string;
-  invoice_number: string;
+  invoiceId: string;
+  invoiceNumber: string;
   method: PaymentMethod;
   amount: number;
   status: PaymentStatus;
   reference: string;
-  created_at: string;
+  createdAt: string;
 }
 
 export type RefundStatus =
@@ -69,39 +75,39 @@ export type RefundStatus =
 export interface CreditNote {
   id: string;
   number: string;
-  invoice_id: string;
-  invoice_number: string;
-  refund_id: string;
+  invoiceId: string;
+  invoiceNumber: string;
+  refundId: string;
   amount: number;
   tax: number;
-  issued_at: string;
+  issuedAt: string;
 }
 
 export interface Refund {
   id: string;
-  invoice_id: string;
-  invoice_number: string;
-  owner_name: string;
+  invoiceId: string;
+  invoiceNumber: string;
+  ownerName: string;
   amount: number;
   reason: string;
   status: RefundStatus;
-  requested_by: string;
-  requested_at: string;
-  approved_by: string | null;
-  approved_at: string | null;
+  requestedBy: string;
+  requestedAt: string;
+  approvedBy: string | null;
+  approvedAt: string | null;
   /** Approvals above the threshold need a Super Admin. */
-  requires_super_admin: boolean;
-  credit_note: CreditNote | null;
-  rejection_reason?: string;
+  requiresSuperAdmin: boolean;
+  creditNote: CreditNote | null;
+  rejectionReason?: string;
 }
 
 /** Refunds above this value escalate to Super Admin approval. */
 export const SUPER_ADMIN_REFUND_THRESHOLD = 10000;
 
 export interface StockBatch {
-  batch_no: string;
+  batchNo: string;
   quantity: number;
-  expiry_date: string;
+  expiryDate: string;
 }
 
 export interface StockItem {
@@ -109,30 +115,30 @@ export interface StockItem {
   name: string;
   category: string;
   stock: number;
-  reorder_level: number;
-  unit_price: number;
-  supplier_id: string | null;
-  supplier_name: string | null;
+  reorderLevel: number;
+  unitPrice: number;
+  supplierId: string | null;
+  supplierName: string | null;
   batches: StockBatch[];
   /** Earliest expiry across batches. */
-  nearest_expiry: string | null;
+  nearestExpiry: string | null;
 }
 
 export interface StockMovement {
   id: string;
-  item_id: string;
-  item_name: string;
+  itemId: string;
+  itemName: string;
   type: "ENTRY" | "ADJUST";
   quantity: number;
   reason: string;
-  batch_no: string | null;
-  created_at: string;
+  batchNo: string | null;
+  createdAt: string;
 }
 
 export interface Supplier {
   id: string;
   name: string;
-  contact_person: string;
+  contactPerson: string;
   phone: string;
   email: string;
   gstin: string;

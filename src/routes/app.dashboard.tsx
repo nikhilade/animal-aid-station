@@ -25,7 +25,12 @@ function StaffDashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
 
   useEffect(() => {
-    apiClient.get<DashboardStats>(endpoints.dashboard.staff).then(setStats).catch(() => setStats(null));
+    function load() {
+      apiClient.get<DashboardStats>(endpoints.dashboard.staff).then(setStats).catch(() => setStats(null));
+    }
+    load();
+    const t = setInterval(load, 15000);
+    return () => clearInterval(t);
   }, []);
 
   return (
@@ -35,11 +40,11 @@ function StaffDashboard() {
       ) : (
         <div className="space-y-6">
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-            <StatCard label="Appointments today" value={stats.appointments_today} />
-            <StatCard label="Active patients" value={stats.active_patients} />
-            <StatCard label="Revenue (month)" value={formatMoney(stats.revenue_month)} />
-            <StatCard label="Pending invoices" value={stats.pending_invoices} />
-            <StatCard label="Low stock items" value={stats.low_stock_items} />
+            <StatCard label="Appointments today" value={stats.appointmentsToday} />
+            <StatCard label="Active patients" value={stats.activePatients} />
+            <StatCard label="Revenue (month)" value={formatMoney(stats.revenueMonth)} />
+            <StatCard label="Pending invoices" value={stats.pendingInvoices} />
+            <StatCard label="Low stock items" value={stats.lowStockItems} />
           </div>
 
           <Panel title="Upcoming appointments">
@@ -56,13 +61,13 @@ function StaffDashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {stats.upcoming.map((a) => (
+                  {(stats.upcoming || []).map((a) => (
                     <tr key={a.id} className="border-t border-border">
-                      <td className="py-3 font-medium">{a.pet_name}</td>
-                      <td className="py-3 text-foreground/70">{a.owner_name}</td>
-                      <td className="py-3 text-foreground/70">{a.doctor_name}</td>
+                      <td className="py-3 font-medium">{a.petName}</td>
+                      <td className="py-3 text-foreground/70">{a.ownerName}</td>
+                      <td className="py-3 text-foreground/70">{a.doctorName}</td>
                       <td className="py-3 text-foreground/70">{a.service}</td>
-                      <td className="py-3 text-foreground/70">{formatDate(a.scheduled_at)}</td>
+                      <td className="py-3 text-foreground/70">{formatDate(a.scheduledAt)}</td>
                       <td className="py-3">
                         <StatusPill status={a.status} />
                       </td>

@@ -48,19 +48,36 @@ function BillingPage() {
 
   const load = useCallback(() => {
     apiClient
-      .get<InvoiceDetail[]>(endpoints.billing.invoices)
-      .then(setInvoices)
+      .get<InvoiceDetail[] | { content: InvoiceDetail[] }>(endpoints.billing.invoices)
+      .then((res) => {
+        console.log("Raw invoices response:", res);
+        const data = Array.isArray(res) ? res : (res?.content ?? []);
+        console.log("Parsed invoices data:", data, "isArray:", Array.isArray(data));
+        setInvoices(data);
+      })
       .catch(() => setInvoices([]));
   }, []);
 
   useEffect(() => {
     load();
-    apiClient.get<ChargeableItem[]>(endpoints.billing.chargeableItems).then(setCatalog).catch(() => setCatalog([]));
+    apiClient
+      .get<ChargeableItem[]>(endpoints.billing.chargeableItems)
+      .then(setCatalog)
+      .catch(() => {
+        // Fallback mock catalog since backend endpoint doesn't exist yet
+        setCatalog([
+          { id: "1", code: "C001", name: "General Consultation", description: "", itemType: "CONSULTATION", price: 500, taxRate: 18, active: true },
+          { id: "2", code: "P001", name: "Rabies Vaccine", description: "", itemType: "PHARMACY", price: 300, taxRate: 12, active: true },
+          { id: "3", code: "P002", name: "Deworming Tablets", description: "", itemType: "PHARMACY", price: 150, taxRate: 12, active: true },
+          { id: "4", code: "L001", name: "Complete Blood Count (CBC)", description: "", itemType: "LAB", price: 800, taxRate: 18, active: true },
+          { id: "5", code: "G001", name: "Basic Grooming", description: "", itemType: "GROOMING", price: 1000, taxRate: 18, active: true }
+        ]);
+      });
   }, [load]);
 
   const outstanding = (invoices ?? [])
     .filter((i) => i.status === "DUE" || i.status === "OVERDUE")
-    .reduce((sum, i) => sum + (i.grand_total - i.amount_paid), 0);
+    .reduce((sum, i) => sum + (i.grandTotal - i.amountPaid), 0);
 
   return (
     <StaffLayout title="Billing" subtitle="Invoices, line items and GST" permission="billing:read">
@@ -112,15 +129,15 @@ function BillingPage() {
                 <tbody>
                   {invoices.map((i) => (
                     <tr key={i.id} className="border-t border-border">
-                      <td className="py-3 font-medium">{i.number}</td>
+                      <td className="py-3 font-medium">{i.invoiceNumber}</td>
                       <td className="py-3 text-foreground/70">
-                        {i.owner_name}
-                        {i.pet_name ? <span className="text-foreground/45"> · {i.pet_name}</span> : null}
+                        {i.ownerName}
+                        {i.petName ? <span className="text-foreground/45"> · {i.petName}</span> : null}
                       </td>
-                      <td className="py-3 text-foreground/70">{new Date(i.issued_at).toLocaleDateString()}</td>
-                      <td className="py-3 text-foreground/70">{i.line_items.length}</td>
-                      <td className="py-3 tabular-nums">{INR(i.grand_total)}</td>
-                      <td className="py-3 tabular-nums text-foreground/70">{INR(i.amount_paid)}</td>
+                      <td className="py-3 text-foreground/70">{new Date(i.invoiceDate || new Date()).toLocaleDateString()}</td>
+                      <td className="py-3 text-foreground/70">{i.lineItems?.length || 0}</td>
+                      <td className="py-3 tabular-nums">{INR(i.grandTotal)}</td>
+                      <td className="py-3 tabular-nums text-foreground/70">{INR(i.amountPaid)}</td>
                       <td className="py-3">
                         <span className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${statusTone[i.status]}`}>
                           {i.status.toLowerCase()}
@@ -159,35 +176,36 @@ function InvoiceBuilder({
 }) {
   const locked = isLocked(invoice);
   const [owner, setOwner] = useState<PetOwner | null>(null);
-  const [petName, setPetName] = useState(invoice?.pet_name ?? "");
+  const [petName, setPetName] = useState(invoice?.petName ?? "");
   const [type, setType] = useState<LineItemType>("CONSULTATION");
-  const [items, setItems] = useState<InvoiceLineItem[]>(invoice?.line_items ?? []);
+  const [items, setItems] = useState<InvoiceLineItem[]>(invoice?.lineItems ?? []);
   const [discount, setDiscount] = useState(invoice?.discount ?? 0);
-  const [gstRate, setGstRate] = useState(invoice?.gst_rate ?? 18);
-  const [interState, setInterState] = useState(invoice?.inter_state ?? false);
+  const [gstRate, setGstRate] = useState(invoice?.gstRate ?? 18);
+  const [interState, setInterState] = useState(invoice?.interState ?? false);
   const [error, setError] = useState("");
+  const [cancelling, setCancelling] = useState(false);
 
   const subtotal = useMemo(() => items.reduce((sum, i) => sum + i.amount, 0), [items]);
-  const options = catalog.filter((c) => c.type === type);
+  const options = catalog.filter((c) => c.itemType === type && c.active);
 
   function addItem(entry: ChargeableItem) {
     if (locked) return;
     setItems((current) => {
-      const existing = current.find((i) => i.label === entry.label && i.type === entry.type);
+      const existing = current.find((i) => i.label === entry.name && i.type === entry.itemType);
       if (existing) {
         return current.map((i) =>
-          i === existing ? { ...i, quantity: i.quantity + 1, amount: (i.quantity + 1) * i.unit_price } : i,
+          i === existing ? { ...i, quantity: i.quantity + 1, amount: (i.quantity + 1) * i.unitPrice } : i,
         );
       }
       return [
         ...current,
         {
           id: `li_${entry.id}_${current.length}`,
-          type: entry.type,
-          label: entry.label,
+          type: entry.itemType,
+          label: entry.name,
           quantity: 1,
-          unit_price: entry.unit_price,
-          amount: entry.unit_price,
+          unitPrice: entry.price,
+          amount: entry.price,
         },
       ];
     });
@@ -195,7 +213,7 @@ function InvoiceBuilder({
 
   function setQuantity(id: string, quantity: number) {
     setItems((current) =>
-      current.map((i) => (i.id === id ? { ...i, quantity, amount: Math.max(1, quantity) * i.unit_price } : i)),
+      current.map((i) => (i.id === id ? { ...i, quantity, amount: Math.max(1, quantity) * i.unitPrice } : i)),
     );
   }
 
@@ -204,28 +222,56 @@ function InvoiceBuilder({
     if (locked) throw new Error("This invoice can no longer be edited.");
     if (!items.length) throw new Error("Add at least one line item.");
     const payload = {
-      owner_id: invoice?.owner_id ?? owner?.id,
-      owner_name: invoice?.owner_name ?? owner?.name,
-      pet_name: petName || null,
-      line_items: items,
+      patientId: owner?.id, // Temporary fallback since pet picker isn't fully wired for billing yet
+      hospitalId: "00000000-0000-0000-0000-000000000000", // Fallback hospital ID, will need to be fetched from context later
+      visitId: null,
+      items: items.map(i => ({
+        itemType: i.type,
+        description: i.label,
+        quantity: i.quantity,
+        unitPrice: i.unitPrice,
+        taxRate: gstRate
+      })),
       discount,
-      gst_rate: gstRate,
-      inter_state: interState,
+      isInterState: interState,
     };
     if (invoice) return apiClient.patch<InvoiceDetail>(endpoints.billing.invoice(invoice.id), payload, headers);
     if (!owner) throw new Error("Select the client being billed.");
     return apiClient.post<InvoiceDetail>(endpoints.billing.invoices, payload, headers);
   }
 
+  async function cancelInvoice() {
+    if (!invoice || locked) return;
+    setCancelling(true);
+    try {
+      await apiClient.patch(endpoints.billing.invoiceStatus(invoice.id), { status: "CANCELLED" });
+      onSaved();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to cancel invoice.");
+      setCancelling(false);
+    }
+  }
+
   return (
     <div className="grid gap-5 lg:grid-cols-[1.6fr_1fr]">
       <div className="space-y-5">
         <Panel
-          title={invoice ? `Invoice ${invoice.number}` : "New invoice"}
+          title={invoice ? `Invoice ${invoice.invoiceNumber}` : "New invoice"}
           action={
-            <button onClick={onClose} className="inline-flex items-center gap-1.5 rounded-full border border-border px-4 py-2 text-sm">
-              <X className="size-4" /> Close
-            </button>
+            <div className="flex items-center gap-2">
+              {invoice && !locked ? (
+                <button
+                  onClick={cancelInvoice}
+                  disabled={cancelling}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-destructive/30 px-4 py-2 text-sm text-destructive hover:bg-destructive/10 disabled:opacity-50"
+                >
+                  <X className="size-4" /> {cancelling ? "Cancelling…" : "Cancel Invoice"}
+                </button>
+              ) : null}
+              <button onClick={onClose} className="inline-flex items-center gap-1.5 rounded-full border border-border px-4 py-2 text-sm">
+                <X className="size-4" /> Close
+              </button>
+            </div>
           }
         >
           {locked ? (
@@ -242,7 +288,7 @@ function InvoiceBuilder({
             {invoice ? (
               <div>
                 <p className="mb-1.5 text-xs font-medium text-foreground/60">Client</p>
-                <p className="rounded-2xl bg-muted px-4 py-2.5 text-sm">{invoice.owner_name}</p>
+                <p className="rounded-2xl bg-muted px-4 py-2.5 text-sm">{invoice.ownerName}</p>
               </div>
             ) : (
               <OwnerSearchCombobox value={owner} onChange={setOwner} />
@@ -283,8 +329,8 @@ function InvoiceBuilder({
                 disabled={locked}
                 className="flex items-center justify-between gap-3 rounded-2xl border border-border px-4 py-3 text-left text-sm transition-colors hover:border-forest disabled:opacity-50"
               >
-                <span>{c.label}</span>
-                <span className="shrink-0 tabular-nums text-foreground/60">{INR(c.unit_price)}</span>
+                <span>{c.name}</span>
+                <span className="shrink-0 tabular-nums text-foreground/60">{INR(c.price)}</span>
               </button>
             ))}
           </div>
@@ -311,7 +357,7 @@ function InvoiceBuilder({
                     <tr key={i.id} className="border-t border-border">
                       <td className="py-3 text-xs uppercase text-foreground/50">{i.type}</td>
                       <td className="py-3">{i.label}</td>
-                      <td className="py-3 tabular-nums text-foreground/70">{INR(i.unit_price)}</td>
+                      <td className="py-3 tabular-nums text-foreground/70">{INR(i.unitPrice)}</td>
                       <td className="py-3">
                         <input
                           type="number"
@@ -371,7 +417,15 @@ function InvoiceBuilder({
               />
               Inter-state supply (IGST)
             </label>
-            <GstBreakdown subtotal={subtotal} discount={discount} gstRate={gstRate} interState={interState} />
+            <GstBreakdown
+              subtotal={subtotal}
+              discount={discount}
+              gstRate={gstRate}
+              interState={interState}
+              cgst={invoice?.cgst}
+              sgst={invoice?.sgst}
+              igst={invoice?.igst}
+            />
             {error ? <p className="text-xs text-destructive">{error}</p> : null}
             <IdempotentSubmitButton
               disabled={locked || items.length === 0}

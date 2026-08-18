@@ -32,7 +32,12 @@ function PortalDashboard() {
   const [stats, setStats] = useState<PortalStats | null>(null);
 
   useEffect(() => {
-    apiClient.get<PortalStats>(endpoints.dashboard.portal).then(setStats).catch(() => setStats(null));
+    function load() {
+      apiClient.get<PortalStats>(endpoints.dashboard.portal).then(setStats).catch(() => setStats(null));
+    }
+    load();
+    const t = setInterval(load, 15000);
+    return () => clearInterval(t);
   }, []);
 
   return (
@@ -53,9 +58,9 @@ function PortalDashboard() {
               <div>
                 <p className="text-lg">{stats.next_appointment.service}</p>
                 <p className="mt-1 text-sm text-foreground/70">
-                  {stats.next_appointment.pet_name} with {stats.next_appointment.doctor_name}
+                  {stats.next_appointment.petName} with {stats.next_appointment.doctorName}
                 </p>
-                <p className="mt-1 text-sm text-clay">{formatDate(stats.next_appointment.scheduled_at)}</p>
+                <p className="mt-1 text-sm text-clay">{formatDate(stats.next_appointment.scheduledAt)}</p>
               </div>
             ) : (
               <EmptyState message="No upcoming visits yet." />

@@ -32,9 +32,31 @@ function QueuePage() {
   const [busy, setBusy] = useState<string | null>(null);
 
   const load = useCallback(() => {
-    apiClient
-      .get<Appointment[]>(endpoints.appointments.queue, { branch_id: "br_1" })
-      .then(setItems)
+    Promise.all([
+      apiClient.get<Appointment[]>(endpoints.appointments.queue, { branchId: "br_1" }).catch(() => []),
+      apiClient.get<Appointment[]>(endpoints.appointments.list).catch(() => []),
+    ])
+      .then(([queueItems, allAppointments]) => {
+        const queueList = queueItems ?? [];
+        const apptList = allAppointments ?? [];
+        const todayISO = new Date().toISOString().split("T")[0];
+
+        const todayAppointments = apptList.filter((a) => {
+          const d = a.scheduledAt ? a.scheduledAt.split("T")[0] : a.appointmentDate;
+          return !d || d === todayISO;
+        });
+
+        const checkedInIds = new Set(queueList.map((q) => (q as { appointmentId?: string; id: string }).appointmentId || q.id));
+        const combined = [...queueList];
+
+        for (const appt of todayAppointments) {
+          if (!checkedInIds.has(appt.id)) {
+            combined.push(appt);
+          }
+        }
+
+        setItems(combined);
+      })
       .catch(() => setItems([]));
   }, []);
 
@@ -47,7 +69,27 @@ function QueuePage() {
   async function checkIn(id: string) {
     setBusy(id);
     try {
-      await apiClient.post(endpoints.appointments.checkIn(id));
+      await apiClient.post(endpoints.appointments.checkIn, { appointmentId: id });
+      load();
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function skipPatient(id: string) {
+    setBusy(id);
+    try {
+      await apiClient.put(endpoints.appointments.skip(id));
+      load();
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function recallPatient(id: string) {
+    setBusy(id);
+    try {
+      await apiClient.put(endpoints.appointments.recall(id));
       load();
     } finally {
       setBusy(null);
@@ -57,7 +99,15 @@ function QueuePage() {
   async function setStatus(id: string, status: AppointmentStatus) {
     setBusy(id);
     try {
-      await apiClient.post(endpoints.appointments.status(id), { status });
+      if (status === "IN_PROGRESS") {
+        await apiClient.put(endpoints.appointments.callNext);
+      } else if (status === "COMPLETED") {
+        await apiClient.put(endpoints.appointments.complete(id));
+      } else if (status === "NO_SHOW") {
+        await apiClient.put(endpoints.appointments.noShow(id));
+      } else {
+        await apiClient.post(endpoints.appointments.status(id), { status });
+      }
       load();
     } finally {
       setBusy(null);
@@ -65,15 +115,15 @@ function QueuePage() {
   }
 
   const list = items ?? [];
-  const waiting = list.filter((a) => a.status === "CHECKED_IN");
-  const serving = list.find((a) => a.status === "IN_PROGRESS") ?? null;
+  const waiting = list.filter((a) => a.status === "CHECKED_IN" || (a.status as string) === "WAITING");
+  const serving = list.find((a) => a.status === "IN_PROGRESS" || (a.status as string) === "CALLED") ?? null;
   const done = list.filter((a) => a.status === "COMPLETED").length;
 
   return (
     <StaffLayout title="Reception & Queue" subtitle="Today's check-ins" permission="appointments:read">
       <div className="space-y-5">
         <div className="grid gap-4 sm:grid-cols-4">
-          <StatCard label="Now serving" value={serving?.token_number ? `#${serving.token_number}` : "—"} hint={serving?.pet_name} />
+          <StatCard label="Now serving" value={serving?.tokenNumber ? `#${serving.tokenNumber}` : "—"} hint={serving?.petName} />
           <StatCard label="Waiting" value={waiting.length} hint="Checked in, not called" />
           <StatCard label="Completed" value={done} hint="So far today" />
           <div className="flex items-center justify-center gap-2 rounded-[1.5rem] border border-border bg-card p-5">
@@ -118,12 +168,12 @@ function QueuePage() {
                   {list.map((a) => (
                     <tr key={a.id} className="border-t border-border">
                       <td className="py-3 font-mono text-base font-bold text-forest">
-                        {a.token_number ? `#${a.token_number}` : "—"}
+                        {a.tokenNumber ? `#${a.tokenNumber}` : "—"}
                       </td>
-                      <td className="py-3 text-foreground/70">{timeLabel(a.scheduled_at)}</td>
-                      <td className="py-3 font-medium">{a.pet_name}</td>
-                      <td className="py-3 text-foreground/70">{a.owner_name}</td>
-                      <td className="py-3 text-foreground/70">{a.doctor_name}</td>
+                      <td className="py-3 text-foreground/70">{timeLabel(a.scheduledAt)}</td>
+                      <td className="py-3 font-medium">{a.petName}</td>
+                      <td className="py-3 text-foreground/70">{a.ownerName}</td>
+                      <td className="py-3 text-foreground/70">{a.doctorName}</td>
                       <td className="py-3">
                         <StatusBadge status={a.status} />
                       </td>
@@ -136,22 +186,64 @@ function QueuePage() {
                           >
                             Check in
                           </button>
-                        ) : a.status === "CHECKED_IN" ? (
-                          <button
-                            disabled={busy === a.id}
-                            onClick={() => setStatus(a.id, "IN_PROGRESS")}
-                            className="rounded-full border border-forest px-4 py-2 text-xs font-medium text-forest disabled:opacity-60"
-                          >
-                            Call in
-                          </button>
-                        ) : a.status === "IN_PROGRESS" ? (
-                          <button
-                            disabled={busy === a.id}
-                            onClick={() => setStatus(a.id, "COMPLETED")}
-                            className="inline-flex items-center gap-1.5 rounded-full border border-border px-4 py-2 text-xs font-medium disabled:opacity-60"
-                          >
-                            <CheckCircle2 className="size-3.5" /> Complete
-                          </button>
+                        ) : a.status === "CHECKED_IN" || (a.status as string) === "WAITING" ? (
+                          <div className="flex justify-end gap-2">
+                            <button
+                              disabled={busy === a.id}
+                              onClick={() => setStatus(a.id, "IN_PROGRESS")}
+                              className="rounded-full border border-forest px-4 py-2 text-xs font-medium text-forest disabled:opacity-60"
+                            >
+                              Call in
+                            </button>
+                            <button
+                              disabled={busy === a.id}
+                              onClick={() => skipPatient(a.id)}
+                              className="rounded-full border border-border px-4 py-2 text-xs font-medium text-foreground/70 disabled:opacity-60"
+                            >
+                              Skip
+                            </button>
+                            <button
+                              disabled={busy === a.id}
+                              onClick={() => setStatus(a.id, "NO_SHOW")}
+                              className="rounded-full border border-destructive px-4 py-2 text-xs font-medium text-destructive disabled:opacity-60"
+                            >
+                              No-show
+                            </button>
+                          </div>
+                        ) : (a.status as string) === "SKIPPED" ? (
+                          <div className="flex justify-end gap-2">
+                            <button
+                              disabled={busy === a.id}
+                              onClick={() => recallPatient(a.id)}
+                              className="rounded-full border border-forest px-4 py-2 text-xs font-medium text-forest disabled:opacity-60"
+                            >
+                              Recall
+                            </button>
+                            <button
+                              disabled={busy === a.id}
+                              onClick={() => setStatus(a.id, "NO_SHOW")}
+                              className="rounded-full border border-destructive px-4 py-2 text-xs font-medium text-destructive disabled:opacity-60"
+                            >
+                              No-show
+                            </button>
+                          </div>
+                        ) : a.status === "IN_PROGRESS" || (a.status as string) === "CALLED" ? (
+                          <div className="flex justify-end gap-2">
+                            <button
+                              disabled={busy === a.id}
+                              onClick={() => setStatus(a.id, "COMPLETED")}
+                              className="inline-flex items-center gap-1.5 rounded-full border border-border px-4 py-2 text-xs font-medium disabled:opacity-60"
+                            >
+                              <CheckCircle2 className="size-3.5" /> Complete
+                            </button>
+                            <button
+                              disabled={busy === a.id}
+                              onClick={() => setStatus(a.id, "NO_SHOW")}
+                              className="rounded-full border border-destructive px-4 py-2 text-xs font-medium text-destructive disabled:opacity-60"
+                            >
+                              No-show
+                            </button>
+                          </div>
                         ) : (
                           <span className="text-xs text-foreground/40">—</span>
                         )}

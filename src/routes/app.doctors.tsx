@@ -29,27 +29,31 @@ const field = "w-full rounded-2xl border border-border bg-background px-4 py-2.5
 const labelCls = "block text-xs font-medium uppercase tracking-wide text-foreground/50";
 
 type Draft = {
-  name: string;
-  specialty: string;
+  hospitalId: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
-  registration_no: string;
-  branch_id: string;
-  consultation_fee: string;
-  bio: string;
-  active: boolean;
+  gender: string;
+  dob: string;
+  joiningDate: string;
+  consultationFee: string;
+  consultationDurationMin: string;
+  status: string;
 };
 
 const emptyDraft: Draft = {
-  name: "",
-  specialty: "General Medicine",
+  hospitalId: "",
+  firstName: "",
+  lastName: "",
   email: "",
   phone: "",
-  registration_no: "",
-  branch_id: "br_1",
-  consultation_fee: "800",
-  bio: "",
-  active: true,
+  gender: "MALE",
+  dob: "",
+  joiningDate: "",
+  consultationFee: "800",
+  consultationDurationMin: "15",
+  status: "ACTIVE",
 };
 
 function DoctorsPage() {
@@ -57,6 +61,7 @@ function DoctorsPage() {
   const canWrite = can(role, "doctors:write");
   const [doctors, setDoctors] = useState<DoctorProfile[] | null>(null);
   const [branches, setBranches] = useState<Branch[]>([]);
+  const [hospitals, setHospitals] = useState<any[]>([]);
   const [editing, setEditing] = useState<string | null>(null);
   const [draft, setDraft] = useState<Draft>(emptyDraft);
   const [open, setOpen] = useState(false);
@@ -70,6 +75,7 @@ function DoctorsPage() {
   useEffect(() => {
     load();
     apiClient.get<Branch[]>(endpoints.branches.list).then(setBranches).catch(() => setBranches([]));
+    apiClient.get<any[]>(endpoints.hospitals.list).then(setHospitals).catch(() => setHospitals([]));
   }, []);
 
   function startCreate() {
@@ -82,15 +88,17 @@ function DoctorsPage() {
   function startEdit(d: DoctorProfile) {
     setEditing(d.id);
     setDraft({
-      name: d.name,
-      specialty: d.specialty,
+      hospitalId: (d as any).hospitalId ?? "",
+      firstName: d.firstName ?? "",
+      lastName: d.lastName ?? "",
       email: d.email ?? "",
       phone: d.phone ?? "",
-      registration_no: d.registration_no ?? "",
-      branch_id: d.branch_id ?? "br_1",
-      consultation_fee: String(d.consultation_fee ?? 800),
-      bio: d.bio ?? "",
-      active: d.active ?? true,
+      gender: d.gender ?? "MALE",
+      dob: d.dob ?? "",
+      joiningDate: d.joiningDate ?? "",
+      consultationFee: String(d.consultationFee ?? 800),
+      consultationDurationMin: String(d.consultationDurationMin ?? 15),
+      status: d.status ?? "ACTIVE",
     });
     setError("");
     setOpen(true);
@@ -99,9 +107,11 @@ function DoctorsPage() {
   async function save() {
     setSaving(true);
     setError("");
-    const body = { ...draft, consultation_fee: Number(draft.consultation_fee) || 0 };
+    const body: any = { ...draft, consultationFee: Number(draft.consultationFee) || 0, consultationDurationMin: Number(draft.consultationDurationMin) || 15 };
+    if (!body.dob) delete body.dob;
+    if (!body.joiningDate) delete body.joiningDate;
     try {
-      if (editing) await apiClient.patch<DoctorProfile>(endpoints.doctors.update(editing), body);
+      if (editing) await apiClient.put<DoctorProfile>(endpoints.doctors.update(editing), body);
       else await apiClient.post<DoctorProfile>(endpoints.doctors.create, body);
       setOpen(false);
       load();
@@ -131,12 +141,21 @@ function DoctorsPage() {
           <Panel title={editing ? "Edit doctor" : "Add doctor"}>
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <label className={labelCls} htmlFor="doc-name">Full name</label>
-                <input id="doc-name" className={`${field} mt-1.5`} value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} placeholder="Dr. Amelia Reed" />
+                <label className={labelCls} htmlFor="doc-hospital">Hospital</label>
+                <select id="doc-hospital" className={`${field} mt-1.5`} value={draft.hospitalId} onChange={(e) => setDraft({ ...draft, hospitalId: e.target.value })}>
+                  <option value="">Select a hospital</option>
+                  {hospitals.map((h) => (
+                    <option key={h.id} value={h.id}>{h.hospitalName ?? h.name ?? h.id}</option>
+                  ))}
+                </select>
               </div>
               <div>
-                <label className={labelCls} htmlFor="doc-spec">Specialty</label>
-                <input id="doc-spec" className={`${field} mt-1.5`} value={draft.specialty} onChange={(e) => setDraft({ ...draft, specialty: e.target.value })} />
+                <label className={labelCls} htmlFor="doc-fn">First name</label>
+                <input id="doc-fn" className={`${field} mt-1.5`} value={draft.firstName} onChange={(e) => setDraft({ ...draft, firstName: e.target.value })} placeholder="Amelia" />
+              </div>
+              <div>
+                <label className={labelCls} htmlFor="doc-ln">Last name</label>
+                <input id="doc-ln" className={`${field} mt-1.5`} value={draft.lastName} onChange={(e) => setDraft({ ...draft, lastName: e.target.value })} placeholder="Reed" />
               </div>
               <div>
                 <label className={labelCls} htmlFor="doc-email">Email</label>
@@ -147,28 +166,27 @@ function DoctorsPage() {
                 <input id="doc-phone" className={`${field} mt-1.5`} value={draft.phone} onChange={(e) => setDraft({ ...draft, phone: e.target.value })} />
               </div>
               <div>
-                <label className={labelCls} htmlFor="doc-reg">Registration no.</label>
-                <input id="doc-reg" className={`${field} mt-1.5`} value={draft.registration_no} onChange={(e) => setDraft({ ...draft, registration_no: e.target.value })} />
-              </div>
-              <div>
-                <label className={labelCls} htmlFor="doc-branch">Branch</label>
-                <select id="doc-branch" className={`${field} mt-1.5`} value={draft.branch_id} onChange={(e) => setDraft({ ...draft, branch_id: e.target.value })}>
-                  {branches.map((b) => (
-                    <option key={b.id} value={b.id}>{b.name}</option>
-                  ))}
+                <label className={labelCls} htmlFor="doc-gender">Gender</label>
+                <select id="doc-gender" className={`${field} mt-1.5`} value={draft.gender} onChange={(e) => setDraft({ ...draft, gender: e.target.value })}>
+                  <option value="MALE">Male</option>
+                  <option value="FEMALE">Female</option>
+                  <option value="OTHER">Other</option>
                 </select>
               </div>
               <div>
                 <label className={labelCls} htmlFor="doc-fee">Consultation fee (₹)</label>
-                <input id="doc-fee" inputMode="numeric" className={`${field} mt-1.5`} value={draft.consultation_fee} onChange={(e) => setDraft({ ...draft, consultation_fee: e.target.value })} />
+                <input id="doc-fee" inputMode="numeric" className={`${field} mt-1.5`} value={draft.consultationFee} onChange={(e) => setDraft({ ...draft, consultationFee: e.target.value })} />
               </div>
-              <label className="flex items-end gap-2 pb-2 text-sm">
-                <input type="checkbox" checked={draft.active} onChange={(e) => setDraft({ ...draft, active: e.target.checked })} className="size-4 accent-[var(--color-forest)]" />
-                Accepting appointments
-              </label>
-              <div className="md:col-span-2">
-                <label className={labelCls} htmlFor="doc-bio">Bio</label>
-                <textarea id="doc-bio" rows={2} className={`${field} mt-1.5`} value={draft.bio} onChange={(e) => setDraft({ ...draft, bio: e.target.value })} />
+              <div>
+                <label className={labelCls} htmlFor="doc-dur">Consultation Duration (min)</label>
+                <input id="doc-dur" inputMode="numeric" className={`${field} mt-1.5`} value={draft.consultationDurationMin} onChange={(e) => setDraft({ ...draft, consultationDurationMin: e.target.value })} />
+              </div>
+              <div>
+                <label className={labelCls} htmlFor="doc-status">Status</label>
+                <select id="doc-status" className={`${field} mt-1.5`} value={draft.status} onChange={(e) => setDraft({ ...draft, status: e.target.value })}>
+                  <option value="ACTIVE">Active</option>
+                  <option value="INACTIVE">Inactive</option>
+                </select>
               </div>
             </div>
             {error ? <p className="mt-3 text-sm text-destructive">{error}</p> : null}
@@ -191,16 +209,15 @@ function DoctorsPage() {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {doctors.map((d) => (
-            <Panel key={d.id} title={d.name}>
-              <p className="text-sm text-foreground/70">{d.specialty}</p>
+            <Panel key={d.id} title={`${d.firstName} ${d.lastName}`}>
+              <p className="text-sm text-foreground/70">Emp Code: {d.employeeCode || "N/A"}</p>
               <dl className="mt-3 space-y-1 text-sm text-foreground/70">
-                {d.registration_no ? <div>Reg. {d.registration_no}</div> : null}
                 {d.email ? <div>{d.email}</div> : null}
                 {d.phone ? <div>{d.phone}</div> : null}
-                {d.consultation_fee ? <div>Consultation ₹{d.consultation_fee}</div> : null}
+                {d.consultationFee ? <div>Consultation ₹{d.consultationFee} ({d.consultationDurationMin} min)</div> : null}
               </dl>
-              <span className={`mt-3 inline-flex rounded-full px-3 py-1 text-xs font-medium ${d.active === false ? "bg-destructive/10 text-destructive" : "bg-forest/10 text-forest"}`}>
-                {d.active === false ? "inactive" : "accepting appointments"}
+              <span className={`mt-3 inline-flex rounded-full px-3 py-1 text-xs font-medium ${d.status === "INACTIVE" ? "bg-destructive/10 text-destructive" : "bg-forest/10 text-forest"}`}>
+                {d.status === "INACTIVE" ? "inactive" : "active"}
               </span>
               <div className="mt-4 flex flex-wrap gap-2">
                 <Link

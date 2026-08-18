@@ -1,12 +1,24 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Activity, Pencil, Syringe } from "lucide-react";
+import { ArrowLeft, Activity, Pencil, Syringe, Trash2, Loader2 } from "lucide-react";
+import { SpeciesName, BreedName } from "@/components/app/MasterData";
 import { StaffLayout } from "@/components/app/StaffLayout";
 import { EmptyState, Loading, Panel, formatDate } from "@/components/app/ui";
 import { PetForm } from "@/components/app/kit/PetForm";
-import { apiClient } from "@/lib/api-client";
+import { apiClient, ApiError } from "@/lib/api-client";
 import { endpoints } from "@/lib/api/endpoints";
 import type { MedicalEvent, Pet, Vaccine } from "@/lib/api/types";
+import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export const Route = createFileRoute("/app/pets/$id")({
   head: () => ({
@@ -34,11 +46,14 @@ const typeTone: Record<MedicalEvent["type"], string> = {
 
 function PetDetailPage() {
   const { id } = Route.useParams();
+  const navigate = useNavigate();
   const [pet, setPet] = useState<Pet | null>(null);
   const [events, setEvents] = useState<MedicalEvent[]>([]);
   const [vaccines, setVaccines] = useState<Vaccine[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -51,8 +66,8 @@ function PetDetailPage() {
       .then(([p, h, v]) => {
         if (!active) return;
         setPet(p);
-        setEvents(h);
-        setVaccines(v);
+        setEvents(Array.isArray(h) ? h : []);
+        setVaccines(v || []);
       })
       .finally(() => active && setLoading(false));
     return () => {
@@ -60,8 +75,23 @@ function PetDetailPage() {
     };
   }, [id]);
 
+  async function handleDeletePet() {
+    if (!pet) return;
+    setDeleting(true);
+    try {
+      await apiClient.delete(endpoints.pets.delete(id));
+      toast.success(`Pet ${pet.petName} deleted successfully`);
+      navigate({ to: "/app/pets" });
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : "Could not delete this pet");
+    } finally {
+      setDeleting(false);
+      setShowDeleteDialog(false);
+    }
+  }
+
   return (
-    <StaffLayout title={pet?.name ?? "Patient"} subtitle="Patient record" permission="pets:read">
+    <StaffLayout title={pet?.petName ?? "Patient"} subtitle="Patient record" permission="pets:read">
       <Link to="/app/pets" className="mb-4 inline-flex items-center gap-1.5 text-sm text-forest">
         <ArrowLeft className="size-4" /> Back to patients
       </Link>
@@ -74,14 +104,22 @@ function PetDetailPage() {
             <Panel
               title="Profile"
               action={
-                <button onClick={() => setEditing((v) => !v)} className="inline-flex items-center gap-1.5 text-sm text-forest">
-                  <Pencil className="size-4" /> {editing ? "Cancel" : "Edit"}
-                </button>
+                <div className="flex items-center gap-3">
+                  <button onClick={() => setEditing((v) => !v)} className="inline-flex items-center gap-1.5 text-sm text-forest cursor-pointer">
+                    <Pencil className="size-4" /> {editing ? "Cancel" : "Edit"}
+                  </button>
+                  <button
+                    onClick={() => setShowDeleteDialog(true)}
+                    className="inline-flex items-center gap-1.5 text-sm text-destructive hover:text-destructive/80 transition-colors cursor-pointer"
+                  >
+                    <Trash2 className="size-4" /> Delete
+                  </button>
+                </div>
               }
             >
               {editing ? (
                 <PetForm
-                  ownerId={pet.owner_id}
+                  ownerId={pet.ownerId}
                   pet={pet}
                   submitLabel="Save changes"
                   onSaved={(p) => {
@@ -92,44 +130,56 @@ function PetDetailPage() {
               ) : (
                 <div className="space-y-4">
                   <div className="flex items-center gap-4">
-                    {pet.photo_url ? (
-                      <img src={pet.photo_url} alt={`${pet.name}`} className="size-20 rounded-2xl object-cover" />
+                    {pet.photoUrl ? (
+                      <img src={pet.photoUrl} alt={`${pet.petName}`} className="size-20 rounded-2xl object-cover" />
                     ) : null}
                     <div>
-                      <p className="text-lg font-medium">{pet.name}</p>
-                      <Link to="/app/owners/$id" params={{ id: pet.owner_id }} className="text-sm text-forest underline underline-offset-4">
-                        {pet.owner_name}
+                      <p className="text-lg font-medium">{pet.petName}</p>
+                      <Link to="/app/owners/$id" params={{ id: pet.ownerId }} className="text-sm text-forest underline underline-offset-4">
+                        {pet.ownerName || "View Owner"}
                       </Link>
                     </div>
                   </div>
                   <dl className="grid grid-cols-2 gap-3 text-sm">
                     <div>
                       <dt className="text-foreground/60">Species</dt>
-                      <dd>{pet.species}</dd>
+                      <dd><SpeciesName id={pet.speciesId} /></dd>
                     </div>
                     <div>
                       <dt className="text-foreground/60">Breed</dt>
-                      <dd>{pet.breed}</dd>
+                      <dd><BreedName id={pet.breedId} /></dd>
                     </div>
                     <div>
                       <dt className="text-foreground/60">Age</dt>
-                      <dd>{pet.age_years} yrs</dd>
+                      <dd>{pet.age} yrs</dd>
                     </div>
                     <div>
                       <dt className="text-foreground/60">Weight</dt>
-                      <dd>{pet.weight_kg} kg</dd>
+                      <dd>{pet.weightKg} kg</dd>
                     </div>
                     <div>
                       <dt className="text-foreground/60">Sex</dt>
-                      <dd>{pet.sex}</dd>
+                      <dd>{pet.gender}</dd>
                     </div>
                     <div>
                       <dt className="text-foreground/60">Microchip</dt>
-                      <dd>{pet.microchip_id ?? "—"}</dd>
+                      <dd>{pet.microchipNumber ?? "—"}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-foreground/60">Color</dt>
+                      <dd>{pet.color || "—"}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-foreground/60">Status</dt>
+                      <dd className={pet.status === "Deceased" ? "text-destructive font-medium" : ""}>{pet.status || "—"}</dd>
                     </div>
                     <div className="col-span-2">
                       <dt className="text-foreground/60">Allergies</dt>
                       <dd className={pet.allergies ? "text-destructive" : ""}>{pet.allergies || "None recorded"}</dd>
+                    </div>
+                    <div className="col-span-2">
+                      <dt className="text-foreground/60">Notes</dt>
+                      <dd className="whitespace-pre-wrap">{pet.notes || "No notes recorded"}</dd>
                     </div>
                   </dl>
                 </div>
@@ -143,9 +193,9 @@ function PetDetailPage() {
                 <ul className="space-y-2 text-sm">
                   {vaccines.map((v) => (
                     <li key={v.id} className="rounded-2xl border border-border px-4 py-3">
-                      <p className="font-medium">{v.vaccine_name}</p>
+                      <p className="font-medium">{v.vaccineName}</p>
                       <p className="text-xs text-foreground/60">
-                        Given {v.vaccination_date} · next due {v.next_due_date}
+                        Given {v.vaccinationDate} · next due {v.nextDueDate}
                       </p>
                     </li>
                   ))}
@@ -170,11 +220,11 @@ function PetDetailPage() {
                       <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${typeTone[e.type]}`}>
                         {e.type.toLowerCase()}
                       </span>
-                      <span className="text-xs text-foreground/50">{formatDate(e.occurred_at)}</span>
+                      <span className="text-xs text-foreground/50">{formatDate(e.occurredAt)}</span>
                     </div>
                     <p className="mt-1 font-medium">{e.title}</p>
                     <p className="text-sm text-foreground/70">{e.detail}</p>
-                    <p className="mt-0.5 text-xs text-foreground/50">{e.doctor_name}</p>
+                    <p className="mt-0.5 text-xs text-foreground/50">{e.doctorName}</p>
                   </li>
                 ))}
               </ol>
@@ -182,6 +232,33 @@ function PetDetailPage() {
           </Panel>
         </div>
       )}
+
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Patient Record</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete <span className="font-semibold text-foreground">{pet?.petName}</span>? This action cannot be undone and will permanently remove this patient record and medical history.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeletePet}
+              disabled={deleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deleting ? (
+                <>
+                  <Loader2 className="mr-2 size-4 animate-spin" /> Deleting…
+                </>
+              ) : (
+                "Delete pet"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </StaffLayout>
   );
 }

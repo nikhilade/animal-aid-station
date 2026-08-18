@@ -4,6 +4,7 @@ import { apiClient } from "@/lib/api-client";
 import { endpoints } from "@/lib/api/endpoints";
 import type { Pet, PetOwner } from "@/lib/api/types";
 import { OwnerSearchCombobox } from "./OwnerSearchCombobox";
+import { useMasterData } from "@/hooks/use-master-data";
 
 const field =
   "w-full rounded-2xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-forest";
@@ -21,7 +22,11 @@ export function PetPicker({ owner: ownerProp, onOwnerChange, value = null, onCha
   const [pets, setPets] = useState<Pet[]>([]);
   const [loading, setLoading] = useState(false);
   const [adding, setAdding] = useState(false);
-  const [draft, setDraft] = useState({ name: "", species: "Dog", breed: "", sex: "Male", age_years: "1" });
+  const [draft, setDraft] = useState({ name: "", speciesId: "", breedId: "", sex: "Male", age: "1" });
+
+  const { data: speciesList = [] } = useMasterData("species");
+  const { data: breedsList = [] } = useMasterData("breeds");
+  const breeds = breedsList.filter((b) => !b.speciesId || b.speciesId === draft.speciesId);
 
   useEffect(() => {
     if (ownerProp !== undefined) setOwner(ownerProp);
@@ -30,6 +35,10 @@ export function PetPicker({ owner: ownerProp, onOwnerChange, value = null, onCha
   useEffect(() => {
     if (!owner) {
       setPets([]);
+      return;
+    }
+    if (owner.pets && owner.pets.length > 0) {
+      setPets(owner.pets);
       return;
     }
     let active = true;
@@ -45,16 +54,22 @@ export function PetPicker({ owner: ownerProp, onOwnerChange, value = null, onCha
   }, [owner]);
 
   async function addPet() {
-    if (!owner || !draft.name.trim()) return;
-    const created = await apiClient.post<Pet>(endpoints.pets.create, {
-      ...draft,
-      owner_id: owner.id,
-      age_years: Number(draft.age_years) || 1,
-    });
+    if (!owner || !draft.name.trim() || !draft.speciesId || !draft.breedId) return;
+    const created = await apiClient.post<Pet>(
+      endpoints.pets.lookupOrCreate,
+      undefined,
+      undefined,
+      {
+        ownerId: owner.id,
+        petName: draft.name,
+        speciesId: draft.speciesId,
+        breedId: draft.breedId,
+      }
+    );
     setPets((p) => [...p, created]);
     onChange?.(created);
     setAdding(false);
-    setDraft({ name: "", species: "Dog", breed: "", sex: "Male", age_years: "1" });
+    setDraft({ name: "", speciesId: "", breedId: "", sex: "Male", age: "1" });
   }
 
   return (
@@ -89,9 +104,9 @@ export function PetPicker({ owner: ownerProp, onOwnerChange, value = null, onCha
               >
                 <PawPrint className="size-4 text-clay" />
                 <span>
-                  <span className="block font-medium">{p.name}</span>
+                  <span className="block font-medium">{p.name || (p as any).petName || "Unnamed Pet"}</span>
                   <span className="block text-xs text-foreground/60">
-                    {p.species} · {p.breed} · {p.age_years}y
+                    {p.species || speciesList.find(s => s.id === (p as any).speciesId)?.name || "Unknown Species"} · {p.breed || breedsList.find(b => b.id === (p as any).breedId)?.name || "Unknown Breed"} · {p.age}y
                   </span>
                 </span>
               </button>
@@ -100,17 +115,23 @@ export function PetPicker({ owner: ownerProp, onOwnerChange, value = null, onCha
               <div className="space-y-2 rounded-2xl border border-border p-4">
                 <input className={field} placeholder="Pet name" value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} />
                 <div className="grid grid-cols-2 gap-2">
-                  <select className={field} value={draft.species} onChange={(e) => setDraft({ ...draft, species: e.target.value })}>
-                    {["Dog", "Cat", "Bird", "Rabbit"].map((s) => (
-                      <option key={s}>{s}</option>
+                  <select className={field} value={draft.speciesId} onChange={(e) => setDraft({ ...draft, speciesId: e.target.value, breedId: "" })}>
+                    <option value="">Species</option>
+                    {speciesList.map((s) => (
+                      <option key={s.id} value={s.id}>{s.name}</option>
                     ))}
                   </select>
                   <select className={field} value={draft.sex} onChange={(e) => setDraft({ ...draft, sex: e.target.value })}>
                     <option>Male</option>
                     <option>Female</option>
                   </select>
-                  <input className={field} placeholder="Breed" value={draft.breed} onChange={(e) => setDraft({ ...draft, breed: e.target.value })} />
-                  <input className={field} placeholder="Age (years)" value={draft.age_years} onChange={(e) => setDraft({ ...draft, age_years: e.target.value })} />
+                  <select className={field} value={draft.breedId} onChange={(e) => setDraft({ ...draft, breedId: e.target.value })}>
+                    <option value="">Breed</option>
+                    {breeds.map((b) => (
+                      <option key={b.id} value={b.id}>{b.name}</option>
+                    ))}
+                  </select>
+                  <input className={field} placeholder="Age (years)" value={draft.age} onChange={(e) => setDraft({ ...draft, age: e.target.value })} />
                 </div>
                 <div className="flex gap-2">
                   <button type="button" onClick={addPet} className="rounded-full bg-forest px-4 py-2 text-sm text-primary-foreground">

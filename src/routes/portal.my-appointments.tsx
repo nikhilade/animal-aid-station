@@ -41,7 +41,7 @@ function MyAppointments() {
     setBusy(a.id);
     setMessage(null);
     try {
-      replace(await apiClient.post<Appointment>(endpoints.appointments.cancel(a.id)));
+      replace(await apiClient.put<Appointment>(endpoints.appointments.cancel(a.id)));
       setMessage("Appointment cancelled.");
     } catch (e) {
       setMessage(e instanceof ApiError ? e.message : "Could not cancel — please call the clinic.");
@@ -56,8 +56,8 @@ function MyAppointments() {
     setMessage(null);
     try {
       replace(
-        await apiClient.post<Appointment>(endpoints.appointments.reschedule(a.id), {
-          scheduled_at: new Date(newDate).toISOString(),
+        await apiClient.put<Appointment>(endpoints.appointments.reschedule(a.id), {
+          scheduledAt: new Date(newDate).toISOString(),
         }),
       );
       setRescheduling(null);
@@ -71,8 +71,8 @@ function MyAppointments() {
   }
 
   const now = Date.now();
-  const upcoming = (items ?? []).filter((a) => new Date(a.scheduled_at).getTime() >= now && a.status !== "CANCELLED");
-  const past = (items ?? []).filter((a) => new Date(a.scheduled_at).getTime() < now || a.status === "CANCELLED");
+  const upcoming = (items ?? []).filter((a) => new Date(a.scheduledAt).getTime() >= now && a.status !== "CANCELLED");
+  const past = (items ?? []).filter((a) => new Date(a.scheduledAt).getTime() < now || a.status === "CANCELLED");
 
   const card = (a: Appointment, actions: boolean) => (
     <Panel key={a.id}>
@@ -80,9 +80,9 @@ function MyAppointments() {
         <div>
           <p className="text-lg">{a.service}</p>
           <p className="mt-1 text-sm text-foreground/70">
-            {a.pet_name} · {a.doctor_name}
+            {a.petName} · {a.doctorName}
           </p>
-          <p className="mt-1 text-sm text-clay">{formatDate(a.scheduled_at)}</p>
+          <p className="mt-1 text-sm text-clay">{formatDate(a.scheduledAt)}</p>
           {a.notes ? <p className="mt-2 text-sm text-foreground/60">{a.notes}</p> : null}
         </div>
         <StatusPill status={a.status} />

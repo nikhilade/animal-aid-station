@@ -18,12 +18,19 @@ export const endpoints = {
     me: "/api/auth/me",
     logout: "/api/auth/logout",
   },
+  files: {
+    upload: `${V1}/files/upload`,
+  },
+  hospitals: {
+    list: `${V1}/hospitals`,
+  },
   petOwners: {
     list: `${V1}/pet-owners`,
     search: `${V1}/pet-owners/search`,
     detail: (id: string) => `${V1}/pet-owners/${id}`,
     create: `${V1}/pet-owners`,
     update: (id: string) => `${V1}/pet-owners/${id}`,
+    delete: (id: string) => `${V1}/pet-owners/${id}`,
     lookupOrCreate: `${V1}/pet-owners/lookup-or-create`,
     documents: (id: string) => `${V1}/pet-owners/${id}/documents`,
     communications: (id: string) => `${V1}/pet-owners/${id}/communications`,
@@ -35,13 +42,16 @@ export const endpoints = {
     byOwner: (ownerId: string) => `${V1}/pet-owners/${ownerId}/pets`,
     lookupOrCreate: `${V1}/pets/lookup-or-create`,
     update: (id: string) => `${V1}/pets/${id}`,
+    delete: (id: string) => `${V1}/pets/${id}`,
     history: (id: string) => `${V1}/pets/history/${id}`,
   },
   vaccines: {
-    list: `${V1}/vaccines`,
-    due: `${V1}/vaccines/due`,
-    create: `${V1}/vaccines`,
-    byPet: (petId: string) => `${V1}/pets/${petId}/vaccines`,
+    list: `${V1}/vaccinations`,
+    due: `${V1}/vaccinations/due`,
+    create: `${V1}/vaccinations`,
+    update: (id: string) => `${V1}/vaccinations/${id}`,
+    delete: (id: string) => `${V1}/vaccinations/${id}`,
+    byPet: (petId: string) => `${V1}/vaccinations/pet/${petId}`,
   },
   doctors: {
     list: `${V1}/doctors`,
@@ -51,6 +61,21 @@ export const endpoints = {
     availability: (id: string) => `${V1}/doctors/${id}/availability`,
     /** StaffLeaveController — queried by staff id. */
     leave: (id: string) => `${V1}/staff-leaves/search/${id}`,
+  },
+  doctorSchedules: {
+    byDoctor: (doctorId: string) => `${V1}/doctor-schedules/doctor/${doctorId}`,
+    create: `${V1}/doctor-schedules`,
+    update: (scheduleId: string) => `${V1}/doctor-schedules/${scheduleId}`,
+    delete: (scheduleId: string) => `${V1}/doctor-schedules/${scheduleId}`,
+    getById: (scheduleId: string) => `${V1}/doctor-schedules/${scheduleId}`,
+  },
+  leaves: {
+    search: `${V1}/staff-leaves/search`,
+    apply: `${V1}/staff-leaves`,
+    cancel: (leaveId: string) => `${V1}/staff-leaves/${leaveId}/cancel`,
+    approve: (leaveId: string) => `${V1}/staff-leaves/${leaveId}/approve`,
+    reject: (leaveId: string) => `${V1}/staff-leaves/${leaveId}/reject`,
+    getById: (leaveId: string) => `${V1}/staff-leaves/${leaveId}`,
   },
   medicines: {
     /** Inventory items filtered to the medicine category on the frontend. */
@@ -74,7 +99,12 @@ export const endpoints = {
     availableSlots: `${V1}/appointments/slots/available`,
     /** ReceptionQueueController */
     queue: `${V1}/reception/queue`,
-    checkIn: (id: string) => `${V1}/reception/check-in/${id}`,
+    checkIn: `${V1}/reception/check-in`,
+    callNext: `${V1}/reception/call-next`,
+    skip: (id: string) => `${V1}/reception/${id}/skip`,
+    recall: (id: string) => `${V1}/reception/${id}/recall`,
+    complete: (id: string) => `${V1}/reception/${id}/complete`,
+    noShow: (id: string) => `${V1}/reception/${id}/no-show`,
     status: (id: string) => `${V1}/appointments/${id}/status`,
     reschedule: (id: string) => `${V1}/appointments/${id}/reschedule`,
     cancel: (id: string) => `${V1}/appointments/${id}/cancel`,
@@ -97,6 +127,7 @@ export const endpoints = {
     chargeableItems: `${V1}/billing/chargeable-items`,
     invoices: `${V1}/billing/invoices`,
     invoice: (id: string) => `${V1}/billing/invoices/${id}`,
+    invoiceStatus: (id: string) => `${V1}/billing/invoices/${id}/status`,
   },
   payments: {
     list: `${V1}/payments`,
@@ -140,6 +171,7 @@ export const endpoints = {
   },
 
   dashboard: {
+    admin: `${V1}/dashboard/admin`,
     staff: `${V1}/dashboard/staff`,
     portal: `${V1}/dashboard/daily-summary`,
   },
@@ -164,8 +196,45 @@ export const endpoints = {
     attendance: (id: string) => `${V1}/staff-attendance/staff/${id}`,
   },
   masterData: {
-    list: (resource: string) => `${V1}/master-data/${resource}`,
-    create: (resource: string) => `${V1}/master-data/${resource}`,
-    detail: (resource: string, id: string) => `${V1}/master-data/${resource}/${id}`,
+    list: (resource: string) => {
+      const paths: Record<string, string> = {
+        cities: `${V1}/cities`,
+        states: `${V1}/states`,
+        designations: `${V1}/designations`,
+        breeds: `/api/breeds`,
+        species: `/api/species`,
+        specializations: `${V1}/specializations`,
+        "lab-tests": `${V1}/lab-tests`,
+        hospitals: `${V1}/hospitals`,
+      };
+      if (resource.startsWith("cities-by-state/")) {
+        return `${V1}/cities/state/${resource.split("/")[1]}`;
+      }
+      return paths[resource] || `${V1}/master-data/${resource}`;
+    },
+    create: (resource: string) => {
+      const paths: Record<string, string> = {
+        cities: `${V1}/cities`,
+        states: `${V1}/states`,
+        designations: `${V1}/designations`,
+        breeds: `/api/breeds`,
+        species: `/api/species`,
+        specializations: `${V1}/specializations`,
+        "lab-tests": `${V1}/lab-tests`,
+      };
+      return paths[resource] || `${V1}/master-data/${resource}`;
+    },
+    detail: (resource: string, id: string) => {
+      const paths: Record<string, string> = {
+        cities: `${V1}/cities/${id}`,
+        states: `${V1}/states/${id}`,
+        designations: `${V1}/designations/${id}`,
+        breeds: `/api/breeds/${id}`,
+        species: `/api/species/${id}`,
+        specializations: `${V1}/specializations/${id}`,
+        "lab-tests": `${V1}/lab-tests/${id}`,
+      };
+      return paths[resource] || `${V1}/master-data/${resource}/${id}`;
+    },
   },
 } as const;
