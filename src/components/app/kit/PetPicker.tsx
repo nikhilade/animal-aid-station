@@ -4,7 +4,7 @@ import { apiClient } from "@/lib/api-client";
 import { endpoints } from "@/lib/api/endpoints";
 import type { Pet, PetOwner } from "@/lib/api/types";
 import { OwnerSearchCombobox } from "./OwnerSearchCombobox";
-import { useMasterData } from "@/hooks/use-master-data";
+import { useMasterData, type MasterDataItem } from "@/hooks/use-master-data";
 
 const field =
   "w-full rounded-2xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-forest";
@@ -26,7 +26,7 @@ export function PetPicker({ owner: ownerProp, onOwnerChange, value = null, onCha
 
   const { data: speciesList = [] } = useMasterData("species");
   const { data: breedsList = [] } = useMasterData("breeds");
-  const breeds = breedsList.filter((b) => !b.speciesId || b.speciesId === draft.speciesId);
+  const breeds = breedsList.filter((b: MasterDataItem) => !b.speciesId || b.speciesId === draft.speciesId);
 
   useEffect(() => {
     if (ownerProp !== undefined) setOwner(ownerProp);
@@ -104,9 +104,9 @@ export function PetPicker({ owner: ownerProp, onOwnerChange, value = null, onCha
               >
                 <PawPrint className="size-4 text-clay" />
                 <span>
-                  <span className="block font-medium">{p.name || (p as any).petName || "Unnamed Pet"}</span>
+                  <span className="block font-medium">{p.petName || "Unnamed Pet"}</span>
                   <span className="block text-xs text-foreground/60">
-                    {p.species || speciesList.find(s => s.id === (p as any).speciesId)?.name || "Unknown Species"} · {p.breed || breedsList.find(b => b.id === (p as any).breedId)?.name || "Unknown Breed"} · {p.age}y
+                    {speciesList.find((s: MasterDataItem) => s.id === p.speciesId)?.name || "Unknown Species"} · {breedsList.find((b: MasterDataItem) => b.id === p.breedId)?.name || "Unknown Breed"} · {p.age}y
                   </span>
                 </span>
               </button>
@@ -117,7 +117,7 @@ export function PetPicker({ owner: ownerProp, onOwnerChange, value = null, onCha
                 <div className="grid grid-cols-2 gap-2">
                   <select className={field} value={draft.speciesId} onChange={(e) => setDraft({ ...draft, speciesId: e.target.value, breedId: "" })}>
                     <option value="">Species</option>
-                    {speciesList.map((s) => (
+                    {speciesList.map((s: MasterDataItem) => (
                       <option key={s.id} value={s.id}>{s.name}</option>
                     ))}
                   </select>
@@ -127,7 +127,7 @@ export function PetPicker({ owner: ownerProp, onOwnerChange, value = null, onCha
                   </select>
                   <select className={field} value={draft.breedId} onChange={(e) => setDraft({ ...draft, breedId: e.target.value })}>
                     <option value="">Breed</option>
-                    {breeds.map((b) => (
+                    {breeds.map((b: MasterDataItem) => (
                       <option key={b.id} value={b.id}>{b.name}</option>
                     ))}
                   </select>

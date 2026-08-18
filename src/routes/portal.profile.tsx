@@ -41,7 +41,7 @@ function ProfilePage() {
       .then(([o, d]) => {
         setOwner(o);
         setDocs(d);
-        setDraft({ firstName: o.name, email: o.email, phoneNumber: o.phone, address: o.address });
+        setDraft({ firstName: o.firstName, email: o.email, phoneNumber: o.phoneNumber, address: o.address });
       })
       .finally(() => setLoading(false));
   }, []);
