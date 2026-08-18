@@ -127,8 +127,6 @@ export interface Branch {
   status: string;
   createdAt: string;
   updatedAt: string;
-  /** Optional operating hours used by the slot picker and calendar. */
-  workingHours?: BranchWorkingHours;
 }
 
 export type AppointmentStatus =
@@ -158,7 +156,6 @@ export interface Appointment {
   status: AppointmentStatus;
   notes: string;
   branchId?: string;
-  branchName?: string;
   tokenNumber?: number | null;
   checkedInAt?: string | null;
   sourceChannel?: SourceChannel;

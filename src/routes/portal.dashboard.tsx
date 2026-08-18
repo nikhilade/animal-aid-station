@@ -4,7 +4,6 @@ import { PortalLayout } from "@/components/app/PortalLayout";
 import { EmptyState, Loading, Panel, StatCard, formatDate } from "@/components/app/ui";
 import { apiClient } from "@/lib/api-client";
 import { endpoints } from "@/lib/api/endpoints";
-import { useMasterData, type MasterDataItem } from "@/hooks/use-master-data";
 import type { Appointment, Pet } from "@/lib/api/types";
 
 export const Route = createFileRoute("/portal/dashboard")({
@@ -31,8 +30,6 @@ interface PortalStats {
 
 function PortalDashboard() {
   const [stats, setStats] = useState<PortalStats | null>(null);
-  const { data: speciesList = [] } = useMasterData("species");
-  const { data: breedsList = [] } = useMasterData("breeds");
 
   useEffect(() => {
     function load() {
@@ -80,9 +77,9 @@ function PortalDashboard() {
             <ul className="space-y-3">
               {stats.pets.map((p) => (
                 <li key={p.id} className="flex items-center justify-between rounded-[1.25rem] bg-muted px-4 py-3">
-                  <span className="font-medium">{p.petName}</span>
+                  <span className="font-medium">{p.name}</span>
                   <span className="text-sm text-foreground/60">
-                    {speciesList.find((s: MasterDataItem) => s.id === p.speciesId)?.name || "Unknown"} · {breedsList.find((b: MasterDataItem) => b.id === p.breedId)?.name || "Unknown"}
+                    {p.species} · {p.breed}
                   </span>
                 </li>
               ))}

@@ -8,7 +8,7 @@ import { toast } from "sonner";
 const field =
   "w-full rounded-2xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-forest";
 
-import { useMasterData, type MasterDataItem } from "@/hooks/use-master-data";
+import { useMasterData } from "@/hooks/use-master-data";
 
 export interface PetFormProps {
   ownerId: string;
@@ -43,7 +43,7 @@ export function PetForm({ ownerId, pet = null, onSaved, submitLabel = "Save pet"
 
   // Optional: if breeds should be filtered by species, you could do it here
   // assuming breed objects have a speciesId field. For now, filter if applicable.
-  const breeds = breedsList.filter((b: MasterDataItem) => !b.speciesId || b.speciesId === form.speciesId);
+  const breeds = breedsList.filter((b) => !b.speciesId || b.speciesId === form.speciesId);
 
   function onPhoto(file: File | undefined) {
     if (!file) return;
@@ -130,13 +130,13 @@ export function PetForm({ ownerId, pet = null, onSaved, submitLabel = "Save pet"
           onChange={(e) => setForm({ ...form, speciesId: e.target.value as Pet["speciesId"], breedId: "" })}
         >
           <option value="">Select species</option>
-          {speciesList.map((s: MasterDataItem) => (
+          {speciesList.map((s) => (
             <option key={s.id} value={s.id}>{s.name}</option>
           ))}
         </select>
         <select className={field} value={form.breedId} onChange={(e) => setForm({ ...form, breedId: e.target.value })}>
           <option value="">Select breed</option>
-          {breeds.map((b: MasterDataItem) => (
+          {breeds.map((b) => (
             <option key={b.id} value={b.id}>{b.name}</option>
           ))}
         </select>
