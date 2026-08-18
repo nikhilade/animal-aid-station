@@ -43,7 +43,7 @@ export function PetForm({ ownerId, pet = null, onSaved, submitLabel = "Save pet"
 
   // Optional: if breeds should be filtered by species, you could do it here
   // assuming breed objects have a speciesId field. For now, filter if applicable.
-  const breeds = breedsList.filter((b) => !b.speciesId || b.speciesId === form.speciesId);
+  const breeds = breedsList.filter((b: MasterDataItem) => !b.speciesId || b.speciesId === form.speciesId);
 
   function onPhoto(file: File | undefined) {
     if (!file) return;
