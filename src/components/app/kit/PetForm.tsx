@@ -8,7 +8,7 @@ import { toast } from "sonner";
 const field =
   "w-full rounded-2xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-forest";
 
-import { useMasterData } from "@/hooks/use-master-data";
+import { useMasterData, type MasterDataItem } from "@/hooks/use-master-data";
 
 export interface PetFormProps {
   ownerId: string;
@@ -130,13 +130,13 @@ export function PetForm({ ownerId, pet = null, onSaved, submitLabel = "Save pet"
           onChange={(e) => setForm({ ...form, speciesId: e.target.value as Pet["speciesId"], breedId: "" })}
         >
           <option value="">Select species</option>
-          {speciesList.map((s) => (
+          {speciesList.map((s: MasterDataItem) => (
             <option key={s.id} value={s.id}>{s.name}</option>
           ))}
         </select>
         <select className={field} value={form.breedId} onChange={(e) => setForm({ ...form, breedId: e.target.value })}>
           <option value="">Select breed</option>
-          {breeds.map((b) => (
+          {breeds.map((b: MasterDataItem) => (
             <option key={b.id} value={b.id}>{b.name}</option>
           ))}
         </select>
