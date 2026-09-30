@@ -17,12 +17,18 @@ export const endpoints = {
     signup: "/api/auth/signup",
     me: "/api/auth/me",
     logout: "/api/auth/logout",
+    verifyEmail: "/api/auth/verify-email",
+    resendVerificationOtp: "/api/auth/resend-verification-otp",
+    setupPassword: "/api/auth/setup-password",
   },
   files: {
     upload: `${V1}/files/upload`,
   },
   hospitals: {
     list: `${V1}/hospitals`,
+    departments: (hospitalId: string) => `${V1}/hospitals/${hospitalId}/departments`,
+    departmentDetail: (hospitalId: string, departmentId: string) => `${V1}/hospitals/${hospitalId}/departments/${departmentId}`,
+    settings: (hospitalId: string) => `${V1}/hospitals/settings/${hospitalId}`,
   },
   petOwners: {
     list: `${V1}/pet-owners`,
@@ -85,6 +91,33 @@ export const endpoints = {
     list: `${V1}/consultations`,
     create: `${V1}/consultations`,
     detail: (id: string) => `${V1}/consultations/${id}`,
+    update: (id: string) => `${V1}/consultations/${id}`,
+    byDoctor: (doctorId: string) => `${V1}/consultations/doctor/${doctorId}`,
+    byPet: (petId: string) => `${V1}/consultations/pet/${petId}`,
+    delete: (id: string) => `${V1}/consultations/${id}`,
+  },
+  diagnoses: {
+    list: "/v1/diagnosis",
+    create: "/v1/diagnosis",
+    detail: (id: string) => `/v1/diagnosis/${id}`,
+    update: (id: string) => `/v1/diagnosis/${id}`,
+    byConsultation: (consultationId: string) => `/v1/diagnosis/consultation/${consultationId}`,
+    delete: (id: string) => `/v1/diagnosis/${id}`,
+  },
+  treatmentPlans: {
+    list: "/v1/treatment-plans",
+    create: "/v1/treatment-plans",
+    detail: (id: string) => `/v1/treatment-plans/${id}`,
+    update: (id: string) => `/v1/treatment-plans/${id}`,
+    byConsultation: (consultationId: string) => `/v1/treatment-plans/consultation/${consultationId}`,
+    delete: (id: string) => `/v1/treatment-plans/${id}`,
+  },
+  labOrders: {
+    list: `${V1}/lab-orders`,
+    create: `${V1}/lab-orders`,
+    detail: (id: string) => `${V1}/lab-orders/${id}`,
+    byConsultation: (consultationId: string) => `${V1}/lab-orders/consultation/${consultationId}`,
+    cancel: (id: string) => `${V1}/lab-orders/${id}/cancel`,
   },
   branches: {
     list: `${V1}/branches`,
@@ -111,11 +144,16 @@ export const endpoints = {
   },
 
   prescriptions: {
-    list: `${V1}/prescriptions`,
-    mine: `${V1}/prescriptions/mine`,
-    create: `${V1}/prescriptions`,
-    detail: (id: string) => `${V1}/prescriptions/${id}`,
-    pdf: (id: string) => `${V1}/prescriptions/${id}/pdf`,
+    list: `/v1/prescriptions`,
+    mine: `/v1/prescriptions/mine`,
+    create: `/v1/prescriptions`,
+    detail: (id: string) => `/v1/prescriptions/${id}`,
+    pdf: (id: string) => `/v1/prescriptions/${id}/pdf`,
+  },
+
+  pharmacy: {
+    queue: `${V1}/pharmacy/queue`,
+    dispense: `${V1}/pharmacy/dispense`,
   },
 
   invoices: {
@@ -144,17 +182,18 @@ export const endpoints = {
     list: `${V1}/credit-notes`,
   },
   inventory: {
-    list: `${V1}/inventory`,
+    list: `${V1}/inventory/items`,
+    create: `${V1}/inventory/items`,
     lowStock: `${V1}/inventory/low-stock`,
     expiry: `${V1}/inventory/expiry`,
     stockEntry: `${V1}/inventory/stock/entry`,
     stockAdjust: `${V1}/inventory/stock/adjust`,
-    movements: `${V1}/inventory/stock/transfer`,
+    movements: `${V1}/inventory/movements`,
   },
   suppliers: {
-    list: `${V1}/suppliers`,
-    create: `${V1}/suppliers`,
-    detail: (id: string) => `${V1}/suppliers/${id}`,
+    list: `${V1}/inventory/suppliers`,
+    create: `${V1}/inventory/suppliers`,
+    detail: (id: string) => `${V1}/inventory/suppliers/${id}`,
   },
   reports: {
     overview: `${V1}/reports/overview`,
@@ -191,9 +230,14 @@ export const endpoints = {
   },
   staff: {
     list: `${V1}/staff`,
+    me: `${V1}/staff/me`,
     create: `${V1}/staff`,
     detail: (id: string) => `${V1}/staff/${id}`,
     attendance: (id: string) => `${V1}/staff-attendance/staff/${id}`,
+    markAttendance: `${V1}/staff-attendance/mark`,
+    checkIn: `${V1}/staff-attendance/check-in`,
+    checkOut: (id: string) => `${V1}/staff-attendance/${id}/check-out`,
+    attendanceByDate: (date: string) => `${V1}/staff-attendance/date?attendanceDate=${date}`,
   },
   masterData: {
     list: (resource: string) => {

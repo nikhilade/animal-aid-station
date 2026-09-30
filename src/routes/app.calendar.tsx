@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { CalendarDays, ChevronLeft, ChevronRight, Plus, X, AlertTriangle } from "lucide-react";
 import { StaffLayout } from "@/components/app/StaffLayout";
+import { AdminHospitalSelector } from "@/components/app/AdminHospitalSelector";
+
 import { EmptyState, Loading, Panel } from "@/components/app/ui";
 import { StatusBadge, statusAccent } from "@/components/app/kit/StatusBadge";
 import { NewAppointmentForm } from "@/components/app/kit/NewAppointmentForm";
@@ -95,9 +97,14 @@ function CalendarPage() {
     });
   }
 
-  const closedOn = (day: Date) => !!branch && !!branch.workingHours && !!branch.workingHours.closedDays && branch.workingHours.closedDays.includes(day.getDay());
-  const outsideHours = (day: Date, hour: number) =>
-    !!branch && !!branch.workingHours && (hour < branch.workingHours.openHour || hour >= branch.workingHours.closeHour || closedOn(day));
+  const closedOn = (day: Date) => {
+    const wh = (branch as any)?.workingHours;
+    return !!wh?.closedDays && wh.closedDays.includes(day.getDay());
+  };
+  const outsideHours = (day: Date, hour: number) => {
+    const wh = (branch as any)?.workingHours;
+    return !!wh && (hour < wh.openHour || hour >= wh.closeHour || closedOn(day));
+  };
 
   async function drop(day: Date, hour: number) {
     const id = dragId;
@@ -129,6 +136,7 @@ function CalendarPage() {
 
   return (
     <StaffLayout title="Appointment Calendar" subtitle="Day & week schedule" permission="appointments:read">
+      <AdminHospitalSelector />
       <div className="space-y-5">
         <Panel>
           <div className="flex flex-wrap items-center justify-between gap-3">

@@ -43,10 +43,16 @@ export function PetForm({ ownerId, pet = null, onSaved, submitLabel = "Save pet"
 
   // Optional: if breeds should be filtered by species, you could do it here
   // assuming breed objects have a speciesId field. For now, filter if applicable.
-  const breeds = breedsList.filter((b) => !b.speciesId || b.speciesId === form.speciesId);
+  const breeds = breedsList.filter((b: any) => !b.speciesId || b.speciesId === form.speciesId);
+
+  const MAX_IMAGE_SIZE_MB = 1;
 
   function onPhoto(file: File | undefined) {
     if (!file) return;
+    if (file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024) {
+      toast.error(`Image is too large (${(file.size / (1024 * 1024)).toFixed(1)}MB). Maximum allowed size is ${MAX_IMAGE_SIZE_MB}MB.`);
+      return;
+    }
     setPhotoFile(file);
     const reader = new FileReader();
     reader.onload = () => setPhoto(String(reader.result));
@@ -59,6 +65,14 @@ export function PetForm({ ownerId, pet = null, onSaved, submitLabel = "Save pet"
       setError("Pet name is required.");
       return;
     }
+    if (!form.speciesId) {
+      setError("Species is required.");
+      return;
+    }
+    if (!form.breedId) {
+      setError("Breed is required.");
+      return;
+    }
     setSaving(true);
     try {
       let finalPhotoUrl = photo;
@@ -67,32 +81,31 @@ export function PetForm({ ownerId, pet = null, onSaved, submitLabel = "Save pet"
         const formData = new FormData();
         formData.append("file", photoFile);
         formData.append("folder", "pets");
-        
-        const rawToken = window.localStorage.getItem("petgood.auth");
-        const token = rawToken ? JSON.parse(rawToken).token : "";
-        
-        const res = await fetch(endpoints.files.upload, {
-          method: "POST",
-          body: formData,
-          headers: {
-            "Authorization": `Bearer ${token}`
-          }
-        });
-        
-        if (!res.ok) {
-           throw new Error("Failed to upload photo to server");
+        try {
+          const res = await apiClient.post<any>(endpoints.files.upload, formData);
+          finalPhotoUrl = res?.fileUrl || res?.data?.fileUrl || res?.url || finalPhotoUrl;
+        } catch (uploadErr: any) {
+          const msg = uploadErr.message || "Failed to upload photo.";
+          toast.error(msg);
+          throw new Error(msg);
         }
-        
-        const json = await res.json();
-        finalPhotoUrl = json.data.fileUrl;
       }
 
       const payload = {
         ...form,
         ownerId: ownerId,
+        gender: form.gender || "Male",
+        status: form.status || "Active",
+        speciesId: form.speciesId?.trim() || null,
+        breedId: form.breedId?.trim() || null,
         age: Number(form.age) || 0,
-        weightKg: Number(form.weightKg) || 0,
+        weight: Number(form.weightKg) || 0,
         photoUrl: finalPhotoUrl,
+        microchipNumber: form.microchipNumber?.trim() || null,
+        color: form.color?.trim() || null,
+        allergies: form.allergies?.trim() || null,
+        notes: form.notes?.trim() || null,
+        dateOfBirth: form.dateOfBirth?.trim() || null,
       };
       const saved = pet
         ? await apiClient.put<Pet>(endpoints.pets.update(pet.id), payload)
@@ -130,13 +143,13 @@ export function PetForm({ ownerId, pet = null, onSaved, submitLabel = "Save pet"
           onChange={(e) => setForm({ ...form, speciesId: e.target.value as Pet["speciesId"], breedId: "" })}
         >
           <option value="">Select species</option>
-          {speciesList.map((s) => (
+          {speciesList.map((s: any) => (
             <option key={s.id} value={s.id}>{s.name}</option>
           ))}
         </select>
         <select className={field} value={form.breedId} onChange={(e) => setForm({ ...form, breedId: e.target.value })}>
           <option value="">Select breed</option>
-          {breeds.map((b) => (
+          {breeds.map((b: any) => (
             <option key={b.id} value={b.id}>{b.name}</option>
           ))}
         </select>

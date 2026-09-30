@@ -23,14 +23,17 @@ export interface ApiResponse<T> {
 
 export const ROLES = [
   "SUPER_ADMIN",
+  "WEBSITE_ADMIN",
+  "WEBSITE_STAFF",
+  "PUBLIC_USER",
+  "PET_OWNER",
   "HOSPITAL_ADMIN",
-  "RECEPTIONIST",
   "DOCTOR",
-  "LAB_TECH",
+  "RECEPTIONIST",
+  "GENERAL_STAFF",
+  "LAB_TECHNICIAN",
   "PHARMACIST",
   "GROOMER",
-  "BILLING_STAFF",
-  "PET_OWNER",
 ] as const;
 
 export type Role = (typeof ROLES)[number];
@@ -41,6 +44,7 @@ export interface AuthUser {
   email: string;
   role: Role;
   avatarUrl: string | null;
+  hospitalId?: string;
 }
 
 export interface LoginResponse {
@@ -52,8 +56,10 @@ export interface PetOwner {
   id: string;
   firstName: string;
   lastName: string;
+  name?: string;
   email: string;
   phoneNumber: string;
+  phone?: string;
   address: string;
   pets?: Pet[];
   petsCount?: number;
@@ -65,8 +71,11 @@ export interface Pet {
   ownerId: string;
   ownerName?: string;
   petName: string;
+  name?: string;
   speciesId: string;
+  species?: string;
   breedId: string;
+  breed?: string;
   gender: "Male" | "Female";
   age: number;
   weightKg: number;
@@ -127,6 +136,7 @@ export interface Branch {
   status: string;
   createdAt: string;
   updatedAt: string;
+  workingHours?: BranchWorkingHours;
 }
 
 export type AppointmentStatus =
@@ -142,6 +152,7 @@ export type SourceChannel = "WALK_IN" | "PHONE" | "ONLINE";
 
 export interface Appointment {
   id: string;
+  appointmentNumber?: string;
   petId: string;
   petName: string;
   ownerId: string;
@@ -150,28 +161,72 @@ export interface Appointment {
   doctorName: string;
   service: string;
   scheduledAt: string;
-  appointmentDate: string;
-  startTime: string;
-  endTime: string;
+  appointmentDate?: string;
+  startTime?: string;
+  endTime?: string;
   status: AppointmentStatus;
-  notes: string;
+  notes?: string;
   branchId?: string;
-  tokenNumber?: number | null;
+  branchName?: string;
+  tokenNumber?: string | number | null;
   checkedInAt?: string | null;
   sourceChannel?: SourceChannel;
 }
 
 
+export type PrescriptionStatus = "PENDING" | "DISPENSED" | "PARTIALLY_DISPENSED" | "CANCELLED";
+
+export interface PrescriptionMedicineItem {
+  id: string;
+  medicineName: string;
+  dosage: string;
+  frequency: string;
+  duration: string;
+  instructions?: string;
+  quantity?: number;
+  dispensedQuantity?: number;
+  inventoryItemId?: string;
+}
+
 export interface Prescription {
   id: string;
-  petId: string;
-  petName: string;
-  doctorName: string;
-  medication: string;
-  dosage: string;
-  instructions: string;
-  issuedAt: string;
-  refillsLeft: number;
+  consultationId?: string | null;
+  hospitalId?: string;
+  petId?: string;
+  petName?: string;
+  petSpecies?: string;
+  petBreed?: string;
+  ownerName?: string;
+  ownerPhone?: string;
+  doctorId?: string;
+  doctorName?: string;
+  status?: PrescriptionStatus;
+  issuedAt?: string;
+  dispensedAt?: string;
+  dispensedBy?: string;
+  dispensedByName?: string;
+  dispensedNotes?: string;
+  items?: PrescriptionMedicineItem[];
+  pdfUrl?: string;
+
+  // Legacy fallback fields for existing callers
+  medication?: string;
+  dosage?: string;
+  instructions?: string;
+  refillsLeft?: number;
+}
+
+export interface PharmacyDispenseItemRequest {
+  prescriptionItemId: string;
+  inventoryItemId: string;
+  batchNumber?: string;
+  quantity: number;
+}
+
+export interface PharmacyDispenseRequest {
+  prescriptionId: string;
+  items: PharmacyDispenseItemRequest[];
+  notes?: string;
 }
 
 export type InvoiceStatus = "PAID" | "DUE" | "OVERDUE";
@@ -362,20 +417,76 @@ export interface DoctorAvailability {
   leaves: DoctorLeave[];
 }
 
+export interface ConsultationVitals {
+  temperatureC?: string;
+  weightKg?: string;
+  heartRate?: string;
+  respRate?: string;
+}
+
+export type DiagnosisSeverity = "Mild" | "Moderate" | "Severe" | "Critical";
+
+export interface DiagnosisItem {
+  id?: string;
+  consultationId?: string;
+  diagnosisName: string;
+  description?: string;
+  severity?: DiagnosisSeverity | string;
+}
+
+export interface TreatmentPlanItem {
+  id?: string;
+  consultationId?: string;
+  treatment: string;
+  medication?: string;
+  dosage?: string;
+  instructions?: string;
+}
+
+export type LabPriority = "NORMAL" | "URGENT" | "STAT";
+export type LabOrderStatus = "ORDERED" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
+
+export interface LabOrderDto {
+  id?: string;
+  hospitalId?: string;
+  branchId?: string;
+  consultationId: string;
+  labTestId: string;
+  labTestName?: string;
+  priority: LabPriority;
+  status?: LabOrderStatus;
+  clinicalNotes?: string;
+  orderedAt?: string;
+}
+
 export interface Consultation {
   id: string;
   appointmentId: string;
   petId: string;
-  petName: string;
-  ownerId: string;
+  petName?: string;
+  ownerId?: string;
+  ownerName?: string;
   doctorId: string;
-  doctorName: string;
+  doctorName?: string;
   subjective: string;
   objective: string;
   assessment: string;
   plan: string;
-  vitals: { temperatureC: string; weightKg: string; heartRate: string; respRate: string };
-  createdAt: string;
+  followUpDate?: string | null;
+  vitals?: ConsultationVitals;
+  createdAt?: string;
+}
+
+export interface AddConsultationPayload {
+  appointmentId: string;
+  doctorId: string;
+  petId: string;
+  subjective: string;
+  objective: string;
+  assessment: string;
+  plan: string;
+  followUpDate?: string | null;
+  vitals?: ConsultationVitals;
 }
 
 export interface Medicine {
@@ -398,7 +509,7 @@ export interface PrescriptionItem {
   notes: string;
 }
 
-export interface PrescriptionDetail extends Prescription {
+export interface PrescriptionDetail extends Omit<Prescription, "items"> {
   ownerId: string;
   ownerName: string;
   appointmentId: string | null;
@@ -410,4 +521,28 @@ export interface PrescriptionPdf {
   filename: string;
   mimeType: string;
   contentBase64: string;
+}
+
+export interface HospitalSettings {
+  id: string;
+  hospitalId: string;
+  openingTime: string;
+  closingTime: string;
+  appointmentSlotDuration: number;
+  maxAdvanceBookingDays: number;
+  currency: string;
+  timezone: string;
+  paymentModes: string;
+  gstRate: number;
+}
+
+export interface HospitalSettingsRequest {
+  openingTime: string;
+  closingTime: string;
+  appointmentSlotDuration: number;
+  maxAdvanceBookingDays: number;
+  currency: string;
+  timezone: string;
+  paymentModes: string;
+  gstRate: number;
 }

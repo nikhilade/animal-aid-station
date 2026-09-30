@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
 import { CheckCircle2, MonitorPlay, RefreshCw, Users } from "lucide-react";
 import { StaffLayout } from "@/components/app/StaffLayout";
+import { AdminHospitalSelector } from "@/components/app/AdminHospitalSelector";
+
 import { EmptyState, Loading, Panel, StatCard } from "@/components/app/ui";
 import { StatusBadge } from "@/components/app/kit/StatusBadge";
 import { apiClient } from "@/lib/api-client";
@@ -23,8 +25,11 @@ export const Route = createFileRoute("/app/queue")({
   component: QueuePage,
 });
 
-function timeLabel(iso: string) {
-  return new Date(iso).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+function timeLabel(val?: string | null) {
+  if (!val) return "Today";
+  const date = new Date(val);
+  if (isNaN(date.getTime())) return "Today";
+  return date.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
 }
 
 function QueuePage() {
@@ -121,6 +126,7 @@ function QueuePage() {
 
   return (
     <StaffLayout title="Reception & Queue" subtitle="Today's check-ins" permission="appointments:read">
+      <AdminHospitalSelector />
       <div className="space-y-5">
         <div className="grid gap-4 sm:grid-cols-4">
           <StatCard label="Now serving" value={serving?.tokenNumber ? `#${serving.tokenNumber}` : "—"} hint={serving?.petName} />

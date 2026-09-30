@@ -1,11 +1,13 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Check, ChevronLeft, ChevronRight, PartyPopper } from "lucide-react";
 import { StaffLayout } from "@/components/app/StaffLayout";
-import { Panel } from "@/components/app/ui";
+import { Panel, FormTimeline } from "@/components/app/ui";
+import { toast } from "sonner";
 import { apiClient, ApiError } from "@/lib/api-client";
 import { endpoints } from "@/lib/api/endpoints";
 import type { SubscriptionPlan, Tenant } from "@/lib/api/tenancy-types";
+import { useMasterData } from "@/hooks/use-master-data";
 
 export const Route = createFileRoute("/app/onboarding")({
   head: () => ({
@@ -25,7 +27,7 @@ export const Route = createFileRoute("/app/onboarding")({
 const field =
   "w-full rounded-2xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-forest";
 
-const steps = ["Hospital", "Owner", "First branch", "Plan", "Review"];
+const steps = ["Hospital", "Owner", "Plan", "Review"];
 
 const fallbackPlans: SubscriptionPlan[] = [
   {
@@ -65,15 +67,15 @@ const fallbackPlans: SubscriptionPlan[] = [
 
 const blank = {
   name: "",
-  city: "",
+  countryId: "",
+  stateId: "",
+  cityId: "",
+  branch_address: "",
+  pincode: "",
   gstin: "",
   ownerName: "",
   owner_email: "",
   phone: "",
-  branch_name: "",
-  branch_address: "",
-  latitude: "",
-  longitude: "",
   plan_id: "",
   billing_cycle: "MONTHLY" as "MONTHLY" | "YEARLY",
 };
@@ -86,6 +88,25 @@ function OnboardingPage() {
   const [error, setError] = useState("");
   const [created, setCreated] = useState<Tenant | null>(null);
   const [saving, setSaving] = useState(false);
+
+  const { data: allStates = [] } = useMasterData("states");
+  
+  const countries = useMemo(() => {
+    const map = new Map<string, any>();
+    allStates.forEach((s: any) => {
+      if (s.countryId && !map.has(s.countryId)) {
+        map.set(s.countryId, { id: s.countryId, name: s.countryName || s.countryId });
+      }
+    });
+    return Array.from(map.values()).sort((a: any, b: any) => a.name.localeCompare(b.name));
+  }, [allStates]);
+
+  const states = useMemo(() => {
+    if (!form.countryId) return [];
+    return allStates.filter((s: any) => s.countryId === form.countryId);
+  }, [allStates, form.countryId]);
+
+  const { data: cities = [] } = useMasterData(form.stateId ? `cities-by-state/${form.stateId}` : null);
 
   useEffect(() => {
     apiClient
@@ -134,15 +155,21 @@ function OnboardingPage() {
 
   function validate(current: number) {
     if (current === 0 && !form.name.trim()) return "Hospital name is required.";
+    if (current === 0 && !form.countryId) return "Country is required.";
+    if (current === 0 && !form.stateId) return "State is required.";
+    if (current === 0 && !form.cityId) return "City is required.";
     if (current === 1 && (!form.ownerName.trim() || !form.owner_email.trim()))
       return "Owner name and email are required.";
-    if (current === 2 && !form.branch_name.trim()) return "First branch name is required.";
     return "";
   }
 
   function next() {
     const msg = validate(step);
-    if (msg) return setError(msg);
+    if (msg) {
+      setError(msg);
+      toast.error(msg);
+      return;
+    }
     setError("");
     setStep((s) => Math.min(steps.length - 1, s + 1));
   }
@@ -155,14 +182,15 @@ function OnboardingPage() {
       const res = await apiClient.post<any>(endpoints.tenants.provision, {
         ...form,
         plan_id: selectedPlanId,
-        latitude: form.latitude === "" ? null : Number(form.latitude),
-        longitude: form.longitude === "" ? null : Number(form.longitude),
       });
 
       const tenantData: Tenant = res?.tenant || res;
       setCreated(tenantData);
-    } catch (e) {
-      setError(e instanceof ApiError ? e.message : "Provisioning failed. Try again.");
+      toast.success("Hospital onboarded successfully!");
+    } catch (e: any) {
+      const errorMessage = e instanceof ApiError ? e.message : (e?.message || "Provisioning failed. Try again.");
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setSaving(false);
     }
@@ -184,10 +212,10 @@ function OnboardingPage() {
             <PartyPopper className="size-8 text-clay" />
             <h2 className="text-xl text-forest">{hospitalName} is live</h2>
             <p className="max-w-md text-sm text-foreground/60">
-              A 14-day trial has started on the {planName} plan, and the first branch has been created. The
-              owner can sign in with {ownerEmail}.
+              A 14-day trial has started on the {planName} plan. 
+              The owner (<span className="font-medium text-foreground">{ownerEmail}</span>) will receive an email to verify their account and set up their password.
             </p>
-            <div className="mt-2 flex flex-wrap justify-center gap-3">
+            <div className="mt-4 flex flex-wrap justify-center gap-3">
               <button
                 type="button"
                 onClick={() => navigate({ to: "/app/tenants" })}
@@ -218,25 +246,19 @@ function OnboardingPage() {
   return (
     <StaffLayout title="Onboard a Hospital" subtitle="Provision a new tenant" permission="tenants:manage">
       <Panel>
-        <ol className="mb-6 flex flex-wrap gap-2">
-          {steps.map((label, i) => (
-            <li
-              key={label}
-              className={`inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs ${
-                i === step
-                  ? "bg-forest text-primary-foreground"
-                  : i < step
-                    ? "bg-forest/10 text-forest"
-                    : "bg-muted text-foreground/60"
-              }`}
-            >
-              {i < step ? <Check className="size-3.5" /> : <span>{i + 1}</span>}
-              {label}
-            </li>
-          ))}
-        </ol>
-
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-8 lg:grid-cols-[240px_1fr]">
+          <div className="hidden lg:block">
+            <div className="sticky top-6">
+              <h3 className="mb-6 text-sm font-semibold text-foreground/70 uppercase tracking-wider">Setup Progress</h3>
+              <FormTimeline steps={steps} currentStep={step} />
+            </div>
+          </div>
+          <div>
+            <div className="lg:hidden mb-6">
+              <FormTimeline steps={steps} currentStep={step} />
+            </div>
+            
+            <div className="grid gap-4 sm:grid-cols-2">
           {step === 0 ? (
             <>
               <label className="space-y-1.5 text-sm">
@@ -244,11 +266,42 @@ function OnboardingPage() {
                 <input className={field} placeholder="e.g. Apollo Pet Hospital" value={form.name} onChange={(e) => set("name", e.target.value)} />
               </label>
               <label className="space-y-1.5 text-sm">
-                <span className="text-foreground/70">City</span>
-                <input className={field} placeholder="e.g. Mumbai" value={form.city} onChange={(e) => set("city", e.target.value)} />
+                <span className="text-foreground/70">Country</span>
+                <select className={field} value={form.countryId} onChange={(e) => { set("countryId", e.target.value); set("stateId", ""); set("cityId", ""); }}>
+                  <option value="">Select country</option>
+                  {countries.map((c: any) => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
+                  ))}
+                </select>
               </label>
               <label className="space-y-1.5 text-sm">
-                <span className="text-foreground/70">GSTIN (optional)</span>
+                <span className="text-foreground/70">State</span>
+                <select className={field} value={form.stateId} onChange={(e) => { set("stateId", e.target.value); set("cityId", ""); }} disabled={!form.countryId}>
+                  <option value="">Select state</option>
+                  {states.map((s: any) => (
+                    <option key={s.id} value={s.id}>{s.name}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="space-y-1.5 text-sm">
+                <span className="text-foreground/70">City</span>
+                <select className={field} value={form.cityId} onChange={(e) => set("cityId", e.target.value)} disabled={!form.stateId}>
+                  <option value="">Select city</option>
+                  {cities.map((c: any) => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="space-y-1.5 text-sm">
+                <span className="text-foreground/70">Address (Optional)</span>
+                <input className={field} placeholder="e.g. 123 Main Street" value={form.branch_address} onChange={(e) => set("branch_address", e.target.value)} />
+              </label>
+              <label className="space-y-1.5 text-sm">
+                <span className="text-foreground/70">Pincode (Optional)</span>
+                <input className={field} placeholder="e.g. 110001" value={form.pincode} onChange={(e) => set("pincode", e.target.value)} />
+              </label>
+              <label className="space-y-1.5 text-sm">
+                <span className="text-foreground/70">GSTIN (Optional)</span>
                 <input className={field} placeholder="e.g. 27AAAAA0000A1Z5" value={form.gstin} onChange={(e) => set("gstin", e.target.value)} />
               </label>
             </>
@@ -277,50 +330,8 @@ function OnboardingPage() {
             </>
           ) : null}
 
-          {step === 2 ? (
-            <>
-              <label className="space-y-1.5 text-sm">
-                <span className="text-foreground/70">Branch name</span>
-                <input
-                  className={field}
-                  placeholder="e.g. Main Clinic - Bandra"
-                  value={form.branch_name}
-                  onChange={(e) => set("branch_name", e.target.value)}
-                />
-              </label>
-              <label className="space-y-1.5 text-sm">
-                <span className="text-foreground/70">Address</span>
-                <input
-                  className={field}
-                  placeholder="e.g. 42 Hill Road, Bandra West"
-                  value={form.branch_address}
-                  onChange={(e) => set("branch_address", e.target.value)}
-                />
-              </label>
-              <label className="space-y-1.5 text-sm">
-                <span className="text-foreground/70">Latitude (optional)</span>
-                <input
-                  className={field}
-                  inputMode="decimal"
-                  placeholder="e.g. 19.0596"
-                  value={form.latitude}
-                  onChange={(e) => set("latitude", e.target.value)}
-                />
-              </label>
-              <label className="space-y-1.5 text-sm">
-                <span className="text-foreground/70">Longitude (optional)</span>
-                <input
-                  className={field}
-                  inputMode="decimal"
-                  placeholder="e.g. 72.8295"
-                  value={form.longitude}
-                  onChange={(e) => set("longitude", e.target.value)}
-                />
-              </label>
-            </>
-          ) : null}
 
-          {step === 3 ? (
+          {step === 2 ? (
             <div className="sm:col-span-2 space-y-4">
               <div className="grid gap-3 md:grid-cols-3">
                 {plans.map((p) => {
@@ -369,15 +380,13 @@ function OnboardingPage() {
             </div>
           ) : null}
 
-          {step === 4 ? (
+          {step === 3 ? (
             <dl className="sm:col-span-2 grid gap-3 rounded-[1.25rem] bg-muted p-5 text-sm sm:grid-cols-2">
               {[
                 ["Hospital", form.name],
-                ["City", form.city || "—"],
+                ["City ID", form.cityId || "—"],
                 ["Owner", `${form.ownerName} · ${form.owner_email}`],
                 ["Phone", form.phone || "—"],
-                ["First branch", `${form.branch_name}${form.branch_address ? ` · ${form.branch_address}` : ""}`],
-                ["GPS", form.latitude && form.longitude ? `${form.latitude}, ${form.longitude}` : "Not set"],
                 ["Plan", `${currentPlan?.name ?? "Starter"} · ${form.billing_cycle}`],
               ].map(([k, v]) => (
                 <div key={k}>
@@ -391,7 +400,10 @@ function OnboardingPage() {
 
         {error ? <p className="mt-4 text-sm text-destructive">{error}</p> : null}
 
-        <div className="mt-6 flex items-center justify-between gap-3">
+            </div>
+          </div>
+          
+        <div className="mt-8 flex items-center justify-between gap-3 border-t border-border pt-6">
           <button
             type="button"
             disabled={step === 0}

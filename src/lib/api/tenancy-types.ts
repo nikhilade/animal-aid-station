@@ -20,6 +20,7 @@ export interface Tenant {
   renews_at: string | null;
   mrr: number;
   createdAt: string;
+  hospitalStatus?: string;
 }
 
 export interface SubscriptionPlan {
@@ -40,10 +41,6 @@ export interface ProvisionTenantPayload {
   ownerName: string;
   owner_email: string;
   phone: string;
-  branch_name: string;
-  branch_address: string;
-  latitude: number | null;
-  longitude: number | null;
   plan_id: string;
   billing_cycle: "MONTHLY" | "YEARLY";
   gstin?: string;
@@ -53,6 +50,7 @@ export interface BranchRecord {
   id: string;
   tenant_id: string;
   name: string;
+  branchName?: string;
   address: string;
   city: string;
   phone: string;
@@ -63,21 +61,26 @@ export interface BranchRecord {
   active: boolean;
 }
 
-export type AttendanceStatus = "PRESENT" | "ABSENT" | "LEAVE" | "HALF_DAY";
+export type AttendanceStatus = "PRESENT" | "ABSENT" | "ON_LEAVE" | "HALF_DAY";
 
 export interface StaffMember {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
+  departmentName: string;
+  designationName: string;
   role: string;
   branchId: string;
-  branch_name: string;
-  employee_code: string;
-  joined_on: string;
+  branchName: string;
+  employeeCode: string;
+  joinDate: string;
   active: boolean;
-  attendance_today: AttendanceStatus;
-  present_days_30: number;
+  attendanceToday: AttendanceStatus;
+  presentDays30: number;
+  userStatus?: string;
+  emailVerified?: boolean;
 }
 
 export interface MasterDataRecord {
