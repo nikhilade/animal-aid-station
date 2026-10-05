@@ -30,12 +30,14 @@ import {
   Bell,
   ChevronRight,
   X,
+  Command,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { authStore, useAuth } from "@/lib/auth/store";
 import { can, roleLabels, type Permission } from "@/lib/auth/permissions";
 import { RequireAuth } from "./RequireAuth";
 import { Breadcrumbs } from "@/components/app/ui";
+import { Button } from "@/components/ui/button";
 
 const navItems: { to: string; label: string; icon: typeof Users; permission: Permission }[] = [
   { to: "/app/dashboard", label: "Dashboard", icon: LayoutDashboard, permission: "staff:access" },
@@ -70,11 +72,19 @@ const navItems: { to: string; label: string; icon: typeof Users; permission: Per
   { to: "/app/settings", label: "Settings", icon: Settings, permission: "settings:write" },
 ];
 
-const navGroups = [
+const standardNavGroups = [
   { label: "Overview", paths: ["/app/dashboard", "/app/analytics", "/app/reports"] },
   { label: "Patient care", paths: ["/app/owners", "/app/pets", "/app/vaccinations", "/app/appointments", "/app/calendar", "/app/queue", "/app/doctors", "/app/doctor-schedule", "/app/consultations", "/app/prescriptions", "/app/lab", "/app/grooming"] },
   { label: "Finance & stock", paths: ["/app/billing", "/app/payments", "/app/refunds", "/app/pharmacy", "/app/inventory", "/app/suppliers"] },
   { label: "Administration", paths: ["/app/tenants", "/app/onboarding", "/app/branches", "/app/staff", "/app/attendance", "/app/master-data", "/app/settings"] },
+] as const;
+
+const superAdminNavGroups = [
+  { label: "Hospital network", paths: ["/app/tenants", "/app/onboarding", "/app/branches"] },
+  { label: "Overview", paths: ["/app/dashboard", "/app/analytics", "/app/reports"] },
+  { label: "Patient care", paths: ["/app/owners", "/app/pets", "/app/vaccinations", "/app/appointments", "/app/calendar", "/app/queue", "/app/doctors", "/app/doctor-schedule", "/app/consultations", "/app/prescriptions", "/app/lab", "/app/grooming"] },
+  { label: "Finance & stock", paths: ["/app/billing", "/app/payments", "/app/refunds", "/app/pharmacy", "/app/inventory", "/app/suppliers"] },
+  { label: "Administration", paths: ["/app/staff", "/app/attendance", "/app/master-data", "/app/settings"] },
 ] as const;
 
 export function StaffLayout({
@@ -95,6 +105,7 @@ export function StaffLayout({
   const [open, setOpen] = useState(false);
 
   const items = navItems.filter((i) => can(role, i.permission));
+  const navGroups = role === "SUPER_ADMIN" ? superAdminNavGroups : standardNavGroups;
   const initials = (user?.name || "PG")
     .split(" ")
     .filter(Boolean)
@@ -106,7 +117,7 @@ export function StaffLayout({
 
   return (
     <RequireAuth permission={permission}>
-      <div className="staff-console min-h-screen bg-sand lg:flex">
+      <div className="staff-console min-h-screen bg-background lg:flex">
         {open && (
           <div
             className="fixed inset-0 z-30 bg-foreground/35 backdrop-blur-xs lg:hidden"
@@ -116,7 +127,7 @@ export function StaffLayout({
         )}
         <aside
           data-lenis-prevent
-          className={`${open ? "block" : "hidden"} fixed inset-y-0 left-0 z-40 w-[17rem] overflow-y-auto overscroll-contain no-scrollbar bg-forest px-3 py-5 text-primary-foreground lg:sticky lg:top-0 lg:block lg:h-screen lg:max-h-screen lg:shrink-0`}
+          className={`${open ? "block" : "hidden"} fixed inset-y-0 left-0 z-40 w-[17rem] overflow-y-auto overscroll-contain no-scrollbar bg-forest px-3 py-5 text-primary-foreground shadow-xl lg:sticky lg:top-0 lg:block lg:h-screen lg:max-h-screen lg:shrink-0 lg:shadow-none`}
         >
           <div className="flex min-h-full flex-col">
             <div className="flex items-center justify-between px-2">
@@ -129,9 +140,9 @@ export function StaffLayout({
                   <span className="mt-1 block text-[10px] font-semibold uppercase tracking-[0.16em] text-primary-foreground/55">Clinical OS</span>
                 </span>
               </Link>
-              <button aria-label="Close navigation" onClick={() => setOpen(false)} className="flex size-9 items-center justify-center rounded-lg border border-primary-foreground/15 lg:hidden">
+              <Button variant="ghost" size="icon" aria-label="Close navigation" onClick={() => setOpen(false)} className="border border-primary-foreground/15 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground lg:hidden">
                 <X className="size-4" />
-              </button>
+              </Button>
             </div>
             <nav className="mt-7 flex-1 space-y-6 pb-8">
               {navGroups.map((group) => {
@@ -140,13 +151,13 @@ export function StaffLayout({
                 return (
                   <div key={group.label}>
                     <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-primary-foreground/45">{group.label}</p>
-                    <div className="space-y-1">
+                    <div className={`space-y-1 ${group.label === "Hospital network" ? "rounded-lg border border-primary-foreground/12 bg-primary-foreground/6 p-1.5" : ""}`}>
                       {groupItems.map(({ to, label, icon: Icon }) => (
                         <Link
                           key={to}
                           to={to}
                           onClick={() => setOpen(false)}
-                          className="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] font-medium text-primary-foreground/68 transition-all hover:bg-primary-foreground/8 hover:text-primary-foreground"
+                          className="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] font-medium text-primary-foreground/70 transition-all hover:bg-primary-foreground/10 hover:text-primary-foreground"
                           activeProps={{ className: "!bg-primary-foreground !text-forest shadow-sm" }}
                         >
                           <Icon className="size-4" />
@@ -167,15 +178,17 @@ export function StaffLayout({
         </aside>
 
         <div className="min-w-0 flex-1">
-          <header className="sticky top-0 z-30 flex h-[4.5rem] items-center justify-between gap-4 border-b border-border bg-card/95 px-4 backdrop-blur-lg lg:px-8">
+          <header className="sticky top-0 z-30 flex h-[4.75rem] items-center justify-between gap-4 border-b border-border bg-card/92 px-4 backdrop-blur-xl lg:px-8">
             <div className="flex items-center gap-3">
-              <button
+              <Button
+                variant="outline"
+                size="icon"
                 aria-label="Toggle navigation"
                 onClick={() => setOpen((v) => !v)}
-                className="flex size-9 items-center justify-center rounded-lg border border-border bg-background lg:hidden"
+                className="lg:hidden"
               >
                 <Menu className="size-4" />
-              </button>
+              </Button>
               <div>
                 <div className="hidden sm:block mb-1">
                   <Breadcrumbs paths={breadcrumbs || [{ label: title }]} />
@@ -186,27 +199,30 @@ export function StaffLayout({
             <div className="flex items-center gap-2">
               <div className="relative hidden xl:block">
                 <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                <input aria-label="Search the console" placeholder="Search patients, owners…" className="h-9 w-64 rounded-lg border border-border bg-background pl-9 pr-3 text-xs outline-none transition-colors focus:border-forest" />
+                <input aria-label="Search the console" placeholder="Search patients, owners…" className="h-10 w-72 rounded-lg border border-border bg-background pl-9 pr-10 text-xs outline-none transition-all focus:border-forest focus:ring-2 focus:ring-forest/10" />
+                <span className="absolute right-2.5 top-1/2 flex -translate-y-1/2 items-center gap-0.5 rounded border border-border bg-card px-1.5 py-0.5 text-[9px] text-muted-foreground"><Command className="size-2.5" />K</span>
               </div>
               <span className="hidden border-l border-border pl-3 text-xs font-medium text-muted-foreground md:block">{today}</span>
-              <button aria-label="Notifications" className="relative flex size-9 items-center justify-center rounded-lg border border-border bg-background text-foreground transition-colors hover:bg-muted">
+              <Button variant="outline" size="icon" aria-label="Notifications" className="relative">
                 <Bell className="size-4" />
                 <span className="absolute right-2 top-2 size-1.5 rounded-full bg-clay" />
-              </button>
+              </Button>
               <span className="flex size-9 items-center justify-center rounded-lg bg-sage text-xs font-bold text-forest">{initials}</span>
-              <button
+              <Button
+                variant="outline"
+                size="icon"
                 aria-label="Sign out"
                 onClick={() => {
                   authStore.logout();
                   navigate({ to: "/login", replace: true });
                 }}
-                className="inline-flex size-9 items-center justify-center rounded-lg border border-border bg-background text-forest transition-colors hover:bg-muted"
+                className="text-forest"
               >
                 <LogOut className="size-4" />
-              </button>
+              </Button>
             </div>
           </header>
-          <main key={adminHospitalId || 'default'} className="mx-auto w-full max-w-[1600px] p-4 pb-24 lg:p-8">
+          <main key={adminHospitalId || 'default'} className="mx-auto w-full max-w-[1600px] p-4 pb-24 sm:p-6 lg:p-8 xl:p-10">
             {subtitle ? <p className="mb-5 text-sm text-muted-foreground lg:-mt-3 lg:mb-6">{subtitle}</p> : null}
             {children}
           </main>

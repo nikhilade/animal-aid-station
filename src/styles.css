@@ -44,6 +44,8 @@
 
 .staff-console {
   font-family: var(--font-admin);
+  background:
+    linear-gradient(180deg, color-mix(in oklab, var(--sage) 28%, var(--background)) 0, var(--background) 22rem);
 }
 
 .staff-console h1,
@@ -57,6 +59,16 @@
 .staff-console .admin-panel,
 .staff-console .admin-stat {
   animation: admin-panel-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.staff-console .admin-panel {
+  box-shadow: 0 1px 2px color-mix(in oklab, var(--forest) 8%, transparent), 0 14px 32px -26px color-mix(in oklab, var(--forest) 38%, transparent);
+}
+
+.staff-console input,
+.staff-console select,
+.staff-console textarea {
+  caret-color: var(--forest);
 }
 
 @keyframes admin-panel-in {

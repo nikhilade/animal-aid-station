@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Building2, CheckCircle2, ChevronsUpDown } from "lucide-react";
 import { apiClient } from "@/lib/api-client";
 import { endpoints } from "@/lib/api/endpoints";
 import { useAuth, authStore } from "@/lib/auth/store";
@@ -36,20 +37,30 @@ export function AdminHospitalSelector() {
   if (role !== "SUPER_ADMIN" || hospitals.length === 0) return null;
 
   return (
-    <div className="mb-6 flex flex-wrap items-center gap-3 rounded-lg border border-border bg-card px-4 py-3 shadow-sm">
-      <span className="size-2 rounded-full bg-forest" />
-      <label className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">Hospital context</label>
-      <select
-        className="min-w-56 rounded-md border border-border bg-background px-3 py-2 text-sm font-medium outline-none transition-colors hover:bg-muted focus:border-forest"
-        value={adminHospitalId || ""}
-        onChange={(e) => authStore.setAdminHospital(e.target.value)}
-      >
-        {hospitals.map(h => (
-          <option key={h.id} value={h.id} disabled={h.hospitalStatus === 'PENDING'}>
-            {h.name} {h.hospitalStatus === 'PENDING' ? '(Pending Verification)' : ''}
-          </option>
-        ))}
-      </select>
+    <div className="admin-panel mb-6 flex flex-col gap-3 rounded-lg border border-forest/20 bg-sage/45 px-4 py-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex items-center gap-3">
+        <span className="flex size-10 items-center justify-center rounded-lg bg-forest text-primary-foreground shadow-sm"><Building2 className="size-5" /></span>
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">Active hospital</p>
+          <p className="mt-0.5 text-sm font-semibold text-forest">Viewing this hospital’s workspace</p>
+        </div>
+      </div>
+      <div className="relative min-w-64">
+        <select
+          aria-label="Active hospital"
+          className="h-11 w-full appearance-none rounded-lg border border-border bg-card pl-4 pr-10 text-sm font-semibold text-foreground outline-none transition-all hover:border-forest/40 focus:border-forest focus:ring-2 focus:ring-forest/10"
+          value={adminHospitalId || ""}
+          onChange={(e) => authStore.setAdminHospital(e.target.value)}
+        >
+          {hospitals.map(h => (
+            <option key={h.id} value={h.id} disabled={h.hospitalStatus === 'PENDING'}>
+              {h.name} {h.hospitalStatus === 'PENDING' ? '(Pending Verification)' : ''}
+            </option>
+          ))}
+        </select>
+        <ChevronsUpDown className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+      </div>
+      <span className="hidden items-center gap-1.5 text-xs font-semibold text-forest lg:flex"><CheckCircle2 className="size-4" /> Live context</span>
     </div>
   );
 }

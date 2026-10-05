@@ -152,15 +152,12 @@ export function InitialsAvatar({ name, className = '' }: { name?: string | null;
     for (let i = 0; i < str.length; i++) h = str.charCodeAt(i) + ((h << 5) - h);
     return Math.abs(h);
   };
-  const gradients = [
-    'from-rose-400 to-red-500', 'from-blue-400 to-indigo-500', 'from-emerald-400 to-teal-500',
-    'from-amber-400 to-orange-500', 'from-purple-400 to-fuchsia-500', 'from-cyan-400 to-blue-500'
-  ];
   const safeName = name || '?';
-  const bg = gradients[hash(safeName) % gradients.length];
+  const tones = ['bg-forest text-primary-foreground', 'bg-clay text-accent-foreground', 'bg-sage text-forest'];
+  const bg = tones[hash(safeName) % tones.length];
   
   return (
-    <div className={`flex shrink-0 items-center justify-center rounded-full bg-gradient-to-br text-white font-semibold shadow-sm ${bg} ${className}`}>
+    <div className={`flex shrink-0 items-center justify-center rounded-full font-semibold shadow-sm ${bg} ${className}`}>
       {getInitials(safeName)}
     </div>
   );
