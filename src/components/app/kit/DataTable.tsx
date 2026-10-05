@@ -60,11 +60,12 @@ export function DataTable<T>({ columns, fetchPage, rowKey, emptyMessage = "Nothi
   const sorted = useMemo(() => {
     if (!sort) return rows;
     const col = columns.find((c) => c.key === sort.key);
-    if (!col?.sortValue) return rows;
+    const sortValue = col?.sortValue;
+    if (!sortValue) return rows;
     const factor = sort.dir === "asc" ? 1 : -1;
     return [...rows].sort((a, b) => {
-      const av = col.sortValue(a);
-      const bv = col.sortValue(b);
+      const av = sortValue(a);
+      const bv = sortValue(b);
       return av === bv ? 0 : (av > bv ? 1 : -1) * factor;
     });
   }, [rows, sort, columns]);
