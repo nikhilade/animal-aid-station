@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
+import { Link } from "@tanstack/react-router";
 import { LineChart, Line, ResponsiveContainer } from "recharts";
-import { TrendingUp, TrendingDown, Minus, Check, type LucideIcon } from "lucide-react";
+import { TrendingUp, TrendingDown, Minus, Check, Home, ChevronRight, type LucideIcon } from "lucide-react";
 
 export function Panel({ title, action, children, className }: { title?: string; action?: ReactNode; children: ReactNode; className?: string }) {
   return (
@@ -184,5 +185,40 @@ export function FormTimeline({ steps, currentStep }: { steps: string[]; currentS
         );
       })}
     </div>
+  );
+}
+
+export function Breadcrumbs({ paths }: { paths: { label: string; to?: string }[] }) {
+  return (
+    <nav aria-label="Breadcrumb" className="flex items-center space-x-1 text-[13px] sm:space-x-2">
+      <Link
+        to="/app/dashboard"
+        className="flex items-center text-muted-foreground transition-colors hover:text-foreground"
+        title="Dashboard"
+      >
+        <Home className="size-4" />
+      </Link>
+      
+      {paths.map((path, idx) => {
+        const isLast = idx === paths.length - 1;
+        return (
+          <div key={idx} className="flex items-center">
+            <ChevronRight className="mx-1 size-3.5 text-muted-foreground/50" />
+            {isLast || !path.to ? (
+              <span className="font-semibold text-forest">
+                {path.label}
+              </span>
+            ) : (
+              <Link
+                to={path.to}
+                className="font-medium text-muted-foreground transition-colors hover:text-foreground"
+              >
+                {path.label}
+              </Link>
+            )}
+          </div>
+        );
+      })}
+    </nav>
   );
 }

@@ -35,6 +35,7 @@ import { useState, type ReactNode } from "react";
 import { authStore, useAuth } from "@/lib/auth/store";
 import { can, roleLabels, type Permission } from "@/lib/auth/permissions";
 import { RequireAuth } from "./RequireAuth";
+import { Breadcrumbs } from "@/components/app/ui";
 
 const navItems: { to: string; label: string; icon: typeof Users; permission: Permission }[] = [
   { to: "/app/dashboard", label: "Dashboard", icon: LayoutDashboard, permission: "staff:access" },
@@ -79,11 +80,13 @@ const navGroups = [
 export function StaffLayout({
   title,
   subtitle,
+  breadcrumbs,
   children,
   permission = "staff:access",
 }: {
   title: string;
   subtitle?: string;
+  breadcrumbs?: { label: string; to?: string }[];
   children: ReactNode;
   permission?: Permission;
 }) {
@@ -144,7 +147,7 @@ export function StaffLayout({
                           to={to}
                           onClick={() => setOpen(false)}
                           className="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-[13px] font-medium text-primary-foreground/68 transition-all hover:bg-primary-foreground/8 hover:text-primary-foreground"
-                          activeProps={{ className: "bg-primary-foreground text-forest shadow-sm" }}
+                          activeProps={{ className: "!bg-primary-foreground !text-forest shadow-sm" }}
                         >
                           <Icon className="size-4" />
                           <span className="min-w-0 flex-1 truncate">{label}</span>
@@ -174,7 +177,9 @@ export function StaffLayout({
                 <Menu className="size-4" />
               </button>
               <div>
-                <p className="hidden text-[10px] font-semibold uppercase tracking-[0.14em] text-clay sm:block">Operational view</p>
+                <div className="hidden sm:block mb-1">
+                  <Breadcrumbs paths={breadcrumbs || [{ label: title }]} />
+                </div>
                 <h1 className="text-lg leading-tight lg:text-xl">{title}</h1>
               </div>
             </div>
@@ -207,7 +212,7 @@ export function StaffLayout({
           </main>
           <nav className="fixed inset-x-3 bottom-3 z-20 grid grid-cols-4 rounded-lg border border-border bg-card/95 p-1.5 shadow-lg backdrop-blur-lg lg:hidden">
             {items.filter((item) => ["/app/dashboard", "/app/calendar", "/app/queue", "/app/pets"].includes(item.to)).map(({ to, label, icon: Icon }) => (
-              <Link key={to} to={to} className="flex min-w-0 flex-col items-center gap-1 rounded-md px-1 py-2 text-[10px] font-medium text-muted-foreground" activeProps={{ className: "bg-sage text-forest" }}>
+              <Link key={to} to={to} className="flex min-w-0 flex-col items-center gap-1 rounded-md px-1 py-2 text-[10px] font-medium text-muted-foreground" activeProps={{ className: "bg-sage !text-forest" }}>
                 <Icon className="size-4" /><span className="truncate">{label}</span>
               </Link>
             ))}
