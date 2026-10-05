@@ -3,6 +3,7 @@ import { ArrowDown, ArrowUp, ChevronsUpDown, Loader2 } from "lucide-react";
 import type { ReactNode } from "react";
 import type { ApiMeta } from "@/lib/api/types";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 
 export interface DataTableColumn<T> {
   key: string;
@@ -62,8 +63,8 @@ export function DataTable<T>({ columns, fetchPage, rowKey, emptyMessage = "Nothi
     if (!col?.sortValue) return rows;
     const factor = sort.dir === "asc" ? 1 : -1;
     return [...rows].sort((a, b) => {
-      const av = col.sortValue!(a);
-      const bv = col.sortValue!(b);
+      const av = col.sortValue(a);
+      const bv = col.sortValue(b);
       return av === bv ? 0 : (av > bv ? 1 : -1) * factor;
     });
   }, [rows, sort, columns]);
@@ -76,7 +77,7 @@ export function DataTable<T>({ columns, fetchPage, rowKey, emptyMessage = "Nothi
             <TableRow>
               {columns.map((c) => {
                 const active = sort?.key === c.key;
-                const Icon = !c.sortValue ? null : active ? (sort!.dir === "asc" ? ArrowUp : ArrowDown) : ChevronsUpDown;
+                const Icon = !c.sortValue ? null : active ? (sort?.dir === "asc" ? ArrowUp : ArrowDown) : ChevronsUpDown;
                 return (
                   <TableHead key={c.key} className={c.className}>
                     {c.sortValue ? (
@@ -128,14 +129,15 @@ export function DataTable<T>({ columns, fetchPage, rowKey, emptyMessage = "Nothi
           {meta ? ` of ${meta.totalCount}` : ""}
         </span>
         {meta?.hasNextPage ? (
-          <button
+          <Button
+            variant="outline"
             type="button"
             onClick={loadMore}
             disabled={loading}
-            className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-4 py-2 text-sm font-semibold text-forest transition-colors hover:bg-muted disabled:opacity-60"
+            className="text-forest"
           >
             {loading ? <Loader2 className="size-4 animate-spin" /> : null} Load more
-          </button>
+          </Button>
         ) : null}
       </div>
     </div>

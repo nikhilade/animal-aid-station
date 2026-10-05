@@ -459,6 +459,18 @@ export interface LabOrderDto {
   orderedAt?: string;
 }
 
+export interface LabResultDto {
+  id?: string;
+  labOrderId: string;
+  result: string;
+  remarks?: string;
+  reportUrl?: string;
+  testedBy: string;
+  testedAt?: string;
+}
+
+export type CreateLabResultRequest = Omit<LabResultDto, "id" | "testedAt">;
+
 export interface Consultation {
   id: string;
   appointmentId: string;

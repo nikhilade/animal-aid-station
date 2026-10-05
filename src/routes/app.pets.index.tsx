@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Dog, Plus, Trash2, Loader2 } from "lucide-react";
 import { SpeciesName, BreedName } from "@/components/app/MasterData";
 import { StaffLayout } from "@/components/app/StaffLayout";

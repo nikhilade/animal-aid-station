@@ -43,6 +43,7 @@ export const endpoints = {
   },
   pets: {
     list: `${V1}/pets`,
+    search: `${V1}/pets/search`,
     detail: (id: string) => `${V1}/pets/${id}`,
     create: `${V1}/pets`,
     byOwner: (ownerId: string) => `${V1}/pet-owners/${ownerId}/pets`,
@@ -118,6 +119,10 @@ export const endpoints = {
     detail: (id: string) => `${V1}/lab-orders/${id}`,
     byConsultation: (consultationId: string) => `${V1}/lab-orders/consultation/${consultationId}`,
     cancel: (id: string) => `${V1}/lab-orders/${id}/cancel`,
+  },
+  labResults: {
+    create: `${V1}/lab-results`,
+    byOrder: (labOrderId: string) => `${V1}/lab-results/order/${labOrderId}`,
   },
   branches: {
     list: `${V1}/branches`,

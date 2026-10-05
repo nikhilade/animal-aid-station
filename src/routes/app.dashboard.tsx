@@ -8,7 +8,8 @@ import { apiClient } from "@/lib/api-client";
 import { endpoints } from "@/lib/api/endpoints";
 import type { DashboardStats } from "@/lib/api/types";
 import type { StaffMember } from "@/lib/api/tenancy-types";
-import { CheckCircle2, Clock, LogIn, LogOut } from "lucide-react";
+import { CalendarCheck2, CheckCircle2, Clock, FileClock, LogIn, LogOut, PackageSearch, UsersRound, WalletCards } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/app/dashboard")({
   head: () => ({
@@ -87,9 +88,11 @@ function StaffDashboard() {
         <div className="grid gap-6 md:grid-cols-12 auto-rows-min">
           {/* Top Row: KPIs */}
           <div className="md:col-span-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-            <StatCard 
+            <StatCard
               label="Appointments today" 
               value={stats.appointmentsToday}
+              icon={CalendarCheck2}
+              accent
               trend="+14%"
               trendDirection="up"
               sparklineData={[2, 4, 3, 6, 5, 8, stats.appointmentsToday]}
@@ -97,6 +100,7 @@ function StaffDashboard() {
             <StatCard 
               label="Active patients" 
               value={stats.activePatients}
+              icon={UsersRound}
               trend="+2%"
               trendDirection="up"
               sparklineData={[100, 105, 102, 110, 115, 120, stats.activePatients]}
@@ -104,6 +108,7 @@ function StaffDashboard() {
             <StatCard 
               label="Revenue (month)" 
               value={formatMoney(stats.revenueMonth)}
+              icon={WalletCards}
               trend="+8%"
               trendDirection="up"
               sparklineData={[4000, 5000, 4500, 6000, 7000, 6500, stats.revenueMonth]}
@@ -111,6 +116,7 @@ function StaffDashboard() {
             <StatCard 
               label="Pending invoices" 
               value={stats.pendingInvoices}
+              icon={FileClock}
               trend="-4"
               trendDirection="down"
               sparklineData={[10, 12, 8, 15, 7, 5, stats.pendingInvoices]}
@@ -118,6 +124,7 @@ function StaffDashboard() {
             <StatCard 
               label="Low stock items" 
               value={stats.lowStockItems}
+              icon={PackageSearch}
               trend="Stable"
               trendDirection="neutral"
               sparklineData={[2, 2, 3, 2, 2, 2, stats.lowStockItems]}
@@ -143,21 +150,22 @@ function StaffDashboard() {
                   
                   <div className="mt-auto">
                     {!myAttendance || myAttendance.status !== "PRESENT" ? (
-                      <button
+                      <Button
                         onClick={handleCheckIn}
-                        className="inline-flex w-full justify-center items-center gap-2 rounded-full bg-forest px-6 py-3 text-sm font-medium text-primary-foreground transition-all hover:bg-forest/90"
+                        className="h-11 w-full"
                       >
                         <LogIn className="size-4" />
                         Check In
-                      </button>
+                      </Button>
                     ) : !myAttendance.checkOutTime ? (
-                      <button
+                      <Button
+                        variant="secondary"
                         onClick={handleCheckOut}
-                        className="inline-flex w-full justify-center items-center gap-2 rounded-full bg-amber-500 px-6 py-3 text-sm font-medium text-white transition-all hover:bg-amber-600"
+                        className="h-11 w-full bg-clay text-accent-foreground hover:bg-clay/90"
                       >
                         <LogOut className="size-4" />
                         Check Out
-                      </button>
+                      </Button>
                     ) : (
                       <div className="inline-flex w-full justify-center items-center gap-2 rounded-full bg-muted px-6 py-3 text-sm font-medium text-foreground/60">
                         <CheckCircle2 className="size-4 text-forest" />
