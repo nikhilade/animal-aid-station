@@ -59,10 +59,12 @@ export interface Payment {
   id: string;
   invoiceId: string;
   invoiceNumber: string;
-  method: PaymentMethod;
+  paymentMode: PaymentMethod;
   amount: number;
   status: PaymentStatus;
-  reference: string;
+  transactionId?: string;
+  gatewayReference?: string;
+  remarks?: string;
   createdAt: string;
 }
 

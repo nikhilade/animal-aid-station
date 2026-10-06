@@ -290,4 +290,29 @@ export const apiClient = {
     const res = await request<T[]>(path, { method: "GET", query });
     return { items: res.data, meta: res.meta };
   },
+  async download(path: string, filename: string) {
+    const token = readToken();
+    const hospitalId = readHospitalId();
+    const url = `${BASE_URL}${path}`;
+    
+    const res = await fetch(url, {
+      method: "GET",
+      headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(hospitalId ? { "hospital-id": hospitalId } : {}),
+      },
+    });
+
+    if (!res.ok) throw new Error("Failed to download file");
+
+    const blob = await res.blob();
+    const blobUrl = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = blobUrl;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(blobUrl);
+  },
 };

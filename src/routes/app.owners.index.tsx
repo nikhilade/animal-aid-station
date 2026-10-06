@@ -207,7 +207,10 @@ function OwnersPage() {
           <>
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {owners.map((o) => (
-                <div key={o.id} className="flex flex-col justify-between h-full gap-4 rounded-[1.5rem] border border-border bg-card p-5 transition-shadow hover:shadow-sm">
+                <div
+                  key={o.id}
+                  className="flex flex-col justify-between h-full gap-4 rounded-[1.5rem] border border-border bg-card p-5 transition-shadow hover:shadow-sm"
+                >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
                       <InitialsAvatar
@@ -256,7 +259,8 @@ function OwnersPage() {
             {totalPages > 1 && (
               <div className="mt-6 flex flex-col items-center justify-center gap-4 sm:flex-row sm:justify-between border-t border-border pt-4">
                 <div className="text-sm text-foreground/60">
-                  Showing {(currentPage - 1) * pageSize + 1} to {Math.min(currentPage * pageSize, totalElements)} of {totalElements} owners
+                  Showing {(currentPage - 1) * pageSize + 1} to{" "}
+                  {Math.min(currentPage * pageSize, totalElements)} of {totalElements} owners
                 </div>
                 <div className="flex items-center gap-2">
                   <button

@@ -12,6 +12,11 @@ import { endpoints } from "@/lib/api/endpoints";
 import type { InvoiceDetail, Payment, PaymentMethod } from "@/lib/api/billing-types";
 
 export const Route = createFileRoute("/app/payments")({
+  validateSearch: (search: Record<string, unknown>) => {
+    return {
+      invoiceId: search.invoiceId as string | undefined,
+    };
+  },
   head: () => ({
     meta: [
       { title: "Collect Payment | Pet Good Console" },
@@ -36,28 +41,54 @@ const methods: { key: PaymentMethod; label: string; icon: typeof Banknote }[] = 
 function PaymentsPage() {
   const [invoices, setInvoices] = useState<InvoiceDetail[] | null>(null);
   const [history, setHistory] = useState<Payment[]>([]);
+  const [historyError, setHistoryError] = useState("");
   const [selected, setSelected] = useState<InvoiceDetail | null>(null);
   const [method, setMethod] = useState<PaymentMethod>("CASH");
   const [amount, setAmount] = useState(0);
   const [reference, setReference] = useState("");
+  const [cardNumber, setCardNumber] = useState("");
+  const [cvv, setCvv] = useState("");
+  const [upiId, setUpiId] = useState("");
   const [pending, setPending] = useState<Payment | null>(null);
   const [resolved, setResolved] = useState<Payment | null>(null);
   const [polls, setPolls] = useState(0);
   const [error, setError] = useState("");
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const { invoiceId } = Route.useSearch();
+
   const load = useCallback(() => {
     apiClient
       .get<InvoiceDetail[] | { content: InvoiceDetail[] }>(endpoints.billing.invoices)
       .then((res) => {
         const list = Array.isArray(res) ? res : (res?.content ?? []);
-        setInvoices(list.filter((i) => i.status === "DUE" || i.status === "OVERDUE"));
+        setInvoices(list.filter((i) => i.status === "DUE" || i.status === "OVERDUE" || i.status === "PENDING"));
       })
       .catch(() => setInvoices([]));
-    apiClient.get<Payment[]>(endpoints.payments.list).then(setHistory).catch(() => setHistory([]));
+    apiClient.get<Payment[]>(endpoints.payments.list)
+      .then((res) => {
+        setHistory(res);
+        setHistoryError("");
+      })
+      .catch((err) => {
+        setHistoryError(err.message || String(err));
+        setHistory([]);
+      });
   }, []);
 
   useEffect(() => load(), [load]);
+
+  useEffect(() => {
+    if (invoices && invoiceId && !selected) {
+      const match = invoices.find(i => i.id === invoiceId);
+      if (match) {
+        setSelected(match);
+        setAmount(Number((match.grandTotal - match.amountPaid).toFixed(2)));
+        setResolved(null);
+        setError("");
+      }
+    }
+  }, [invoices, invoiceId, selected]);
 
   // While a payment is UNKNOWN the gateway hasn't told us anything yet.
   // Poll reconcile until it settles — never allow a re-submit meanwhile.
@@ -97,21 +128,47 @@ function PaymentsPage() {
     setAmount(Number((invoice.grandTotal - invoice.amountPaid).toFixed(2)));
     setResolved(null);
     setError("");
+    setReference("");
+    setCardNumber("");
+    setCvv("");
+    setUpiId("");
   }
 
   async function submit(headers: { "Idempotency-Key": string }) {
     setError("");
     setResolved(null);
     if (!selected) throw new Error("Select an invoice first.");
+
+    let finalRemarks = "";
+    if (method === "CARD" && cardNumber) finalRemarks = `Card Number: ${cardNumber}, CVV: ${cvv}`;
+    if (method === "UPI" && upiId) finalRemarks = `UPI ID: ${upiId}`;
+    if (method === "CASH") finalRemarks = reference;
+
+    if (method === "UPI" || method === "ONLINE" || method === "CARD") {
+      await new Promise((r) => setTimeout(r, 2500));
+    }
+
+    const payload = {
+      invoiceId: selected.id,
+      paymentMode: method,
+      amount: amount,
+      transactionId: (method !== "CASH" && method !== "CARD" && method !== "UPI") ? reference : null,
+      remarks: finalRemarks,
+    };
+
     const payment = await apiClient.post<Payment>(
       endpoints.payments.create,
-      { invoiceId: selected.id, method, amount, reference },
+      payload,
       headers,
     );
     if (payment.status === "UNKNOWN") {
       setPolls(0);
       setPending(payment);
     } else {
+      if (payment.status === "SUCCESS") {
+        const audio = new Audio("https://actions.google.com/sounds/v1/cartoon/magic_chime.ogg");
+        audio.play().catch(() => {});
+      }
       setResolved(payment);
       load();
     }
@@ -182,17 +239,64 @@ function PaymentsPage() {
                     </div>
 
                     <MoneyInput label="Amount received" value={amount} onChange={setAmount} />
-                    <div>
-                      <label className="mb-1.5 block text-xs font-medium text-foreground/60">
-                        Reference {method === "CASH" ? "(optional)" : "(txn / auth code)"}
-                      </label>
-                      <input
-                        value={reference}
-                        onChange={(e) => setReference(e.target.value)}
-                        placeholder={method === "CASH" ? "Receipt note" : "e.g. UPI-88412"}
-                        className="w-full rounded-2xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-forest"
-                      />
-                    </div>
+                    
+                    {method === "CARD" && (
+                      <div className="grid grid-cols-[1fr_100px] gap-3">
+                        <div>
+                          <label className="mb-1.5 block text-xs font-medium text-foreground/60">
+                            Card Number
+                          </label>
+                          <input
+                            value={cardNumber}
+                            onChange={(e) => setCardNumber(e.target.value)}
+                            placeholder="0000 0000 0000 0000"
+                            maxLength={19}
+                            className="w-full rounded-2xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-forest"
+                          />
+                        </div>
+                        <div>
+                          <label className="mb-1.5 block text-xs font-medium text-foreground/60">
+                            CVV
+                          </label>
+                          <input
+                            type="password"
+                            value={cvv}
+                            onChange={(e) => setCvv(e.target.value)}
+                            placeholder="***"
+                            maxLength={4}
+                            className="w-full rounded-2xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-forest"
+                          />
+                        </div>
+                      </div>
+                    )}
+                    
+                    {method === "UPI" && (
+                      <div>
+                        <label className="mb-1.5 block text-xs font-medium text-foreground/60">
+                          UPI ID
+                        </label>
+                        <input
+                          value={upiId}
+                          onChange={(e) => setUpiId(e.target.value)}
+                          placeholder="e.g. username@bank"
+                          className="w-full rounded-2xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-forest"
+                        />
+                      </div>
+                    )}
+
+                    {method !== "CARD" && method !== "UPI" && (
+                      <div>
+                        <label className="mb-1.5 block text-xs font-medium text-foreground/60">
+                          {method === "CASH" ? "Reference (optional)" : "Transaction ID / Auth Code"}
+                        </label>
+                        <input
+                          value={reference}
+                          onChange={(e) => setReference(e.target.value)}
+                          placeholder={method === "CASH" ? "Receipt note" : "e.g. TXN-88412"}
+                          className="w-full rounded-2xl border border-border bg-background px-4 py-2.5 text-sm outline-none focus:border-forest"
+                        />
+                      </div>
+                    )}
 
                     {error ? <p className="text-xs text-destructive">{error}</p> : null}
 
@@ -218,7 +322,7 @@ function PaymentsPage() {
                         )}
                         <p>
                           Payment {resolved.status.toLowerCase()} — {INR(resolved.amount)} via{" "}
-                          {resolved.method.toLowerCase()} ({resolved.reference}).
+                          {resolved.paymentMode.toLowerCase()} {resolved.transactionId ? `(${resolved.transactionId})` : ""}.
                         </p>
                       </div>
                     ) : null}
@@ -228,7 +332,11 @@ function PaymentsPage() {
             )}
 
             <Panel title="Recent payments">
-              {history.length === 0 ? (
+              {historyError ? (
+                <div className="py-8 text-center text-sm text-destructive">
+                  Failed to load: {historyError}
+                </div>
+              ) : history.length === 0 ? (
                 <EmptyState message="No payments recorded yet." />
               ) : (
                 <ul className="divide-y divide-border text-sm">
@@ -237,7 +345,7 @@ function PaymentsPage() {
                       <span>
                         <span className="block font-medium">{p.invoiceNumber}</span>
                         <span className="block text-xs text-foreground/55">
-                          {p.method.toLowerCase()} · {new Date(p.createdAt).toLocaleString()}
+                          {p.paymentMode.toLowerCase()} · {new Date(p.createdAt).toLocaleString()}
                         </span>
                       </span>
                       <span className="shrink-0 text-right">

@@ -40,8 +40,11 @@ export function OwnerSearchCombobox({
     setLoading(true);
     const t = setTimeout(() => {
       apiClient
-        .get<PetOwner[]>(endpoints.petOwners.search, { query: query })
-        .then((r) => active && setResults(r))
+        .get<any>(endpoints.petOwners.search, { query: query })
+        .then((r) => {
+          if (!active) return;
+          setResults(r?.content ? r.content : Array.isArray(r) ? r : []);
+        })
         .catch(() => active && setResults([]))
         .finally(() => active && setLoading(false));
     }, 250);

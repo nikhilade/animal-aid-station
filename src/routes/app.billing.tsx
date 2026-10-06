@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Lock, Plus, Trash2, X } from "lucide-react";
+import { Lock, Plus, Trash2, X, Loader2, Download } from "lucide-react";
 import { StaffLayout } from "@/components/app/StaffLayout";
 import { AdminHospitalSelector } from "@/components/app/AdminHospitalSelector";
 
@@ -30,8 +30,9 @@ export const Route = createFileRoute("/app/billing")({
   component: BillingPage,
 });
 
-const statusTone: Record<InvoiceDetail["status"], string> = {
+const statusTone: Record<string, string> = {
   DRAFT: "bg-muted text-foreground/70",
+  PENDING: "bg-clay/15 text-clay",
   DUE: "bg-clay/15 text-clay",
   OVERDUE: "bg-destructive/10 text-destructive",
   PAID: "bg-forest/10 text-forest",
@@ -147,9 +148,30 @@ function BillingPage() {
                         </span>
                       </td>
                       <td className="py-3 text-right">
-                        <button onClick={() => setEditing(i)} className="text-xs font-medium text-forest underline">
-                          {isLocked(i) ? "View" : "Edit"}
-                        </button>
+                        <div className="flex items-center justify-end gap-3">
+                          {!isLocked(i) && (
+                            <Link
+                              to="/app/payments"
+                              search={{ invoiceId: i.id }}
+                              className="inline-flex items-center gap-1.5 rounded-full bg-forest px-3 py-1 text-xs font-medium text-primary-foreground hover:opacity-90"
+                            >
+                              Pay now
+                            </Link>
+                          )}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              apiClient.download(endpoints.billing.invoicePdf(i.id), `Invoice-${i.invoiceNumber}.pdf`).catch(() => alert("Failed to download PDF"));
+                            }}
+                            className="text-xs font-medium text-forest hover:opacity-80"
+                            title="Download PDF"
+                          >
+                            <Download className="size-4" />
+                          </button>
+                          <button onClick={() => setEditing(i)} className="text-xs font-medium text-forest underline">
+                            {isLocked(i) ? "View" : "Edit"}
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}

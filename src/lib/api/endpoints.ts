@@ -171,6 +171,7 @@ export const endpoints = {
     invoices: `${V1}/billing/invoices`,
     invoice: (id: string) => `${V1}/billing/invoices/${id}`,
     invoiceStatus: (id: string) => `${V1}/billing/invoices/${id}/status`,
+    invoicePdf: (id: string) => `${V1}/billing/invoices/${id}/download`,
   },
   payments: {
     list: `${V1}/payments`,

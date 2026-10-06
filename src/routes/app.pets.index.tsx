@@ -26,7 +26,10 @@ export const Route = createFileRoute("/app/pets/")({
   head: () => ({
     meta: [
       { title: "Patients | Pet Good Console" },
-      { name: "description", content: "Full patient register with species, breed, weight and microchip data." },
+      {
+        name: "description",
+        content: "Full patient register with species, breed, weight and microchip data.",
+      },
       { property: "og:title", content: "Patients | Pet Good Console" },
       { property: "og:description", content: "Every pet registered with the clinic." },
       { property: "og:type", content: "website" },
@@ -45,7 +48,15 @@ const getPageNumbers = (currentPage: number, totalPages: number) => {
     if (currentPage <= 4) {
       pages.push(1, 2, 3, 4, 5, "...", totalPages);
     } else if (currentPage >= totalPages - 3) {
-      pages.push(1, "...", totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+      pages.push(
+        1,
+        "...",
+        totalPages - 4,
+        totalPages - 3,
+        totalPages - 2,
+        totalPages - 1,
+        totalPages,
+      );
     } else {
       pages.push(1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages);
     }
@@ -61,7 +72,7 @@ function PetsPage() {
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
   const pageSize = 10;
-  
+
   const [empty, setEmpty] = useState(false);
   const [petToDelete, setPetToDelete] = useState<Pet | null>(null);
   const [deleting, setDeleting] = useState(false);
@@ -128,7 +139,21 @@ function PetsPage() {
         <div className="mb-4 flex flex-wrap items-center gap-3">
           <div className="flex-1 min-w-[200px] flex gap-2">
             <div className="relative flex-1">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-foreground/40"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-foreground/40"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+              </svg>
               <input
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
@@ -156,13 +181,17 @@ function PetsPage() {
         </div>
 
         {pets === null ? (
-          <div className="flex justify-center p-8"><Loader2 className="size-6 animate-spin text-forest" /></div>
+          <div className="flex justify-center p-8">
+            <Loader2 className="size-6 animate-spin text-forest" />
+          </div>
         ) : empty && !search ? (
           <div className="py-8 text-center text-sm text-foreground/60">
             No patients registered yet — add your first pet to get started.
           </div>
         ) : pets.length === 0 ? (
-          <div className="py-8 text-center text-sm text-foreground/60">No patients match this search.</div>
+          <div className="py-8 text-center text-sm text-foreground/60">
+            No patients match this search.
+          </div>
         ) : (
           <>
             <div className="overflow-x-auto">
@@ -182,17 +211,29 @@ function PetsPage() {
                   {pets.map((p) => (
                     <tr key={p.id} className="border-t border-border">
                       <td className="py-3 pr-4">
-                        <Link to="/app/pets/$id" params={{ id: p.id }} className="font-medium text-forest underline-offset-4 hover:underline">
+                        <Link
+                          to="/app/pets/$id"
+                          params={{ id: p.id }}
+                          className="font-medium text-forest underline-offset-4 hover:underline"
+                        >
                           {p.petName}
                         </Link>
                       </td>
                       <td className="py-3 pr-4">
-                        <Link to="/app/owners/$id" params={{ id: p.ownerId }} className="text-forest hover:underline underline-offset-4">
+                        <Link
+                          to="/app/owners/$id"
+                          params={{ id: p.ownerId }}
+                          className="text-forest hover:underline underline-offset-4"
+                        >
                           {p.ownerName || p.ownerId}
                         </Link>
                       </td>
-                      <td className="py-3 pr-4"><SpeciesName id={p.speciesId} /></td>
-                      <td className="py-3 pr-4"><BreedName id={p.breedId} /></td>
+                      <td className="py-3 pr-4">
+                        <SpeciesName id={p.speciesId} />
+                      </td>
+                      <td className="py-3 pr-4">
+                        <BreedName id={p.breedId} />
+                      </td>
                       <td className="py-3 pr-4">{p.age != null ? `${p.age} yrs` : "—"}</td>
                       <td className="py-3 pr-4">{p.weightKg != null ? `${p.weightKg} kg` : "—"}</td>
                       <td className="py-3 text-right">
@@ -214,7 +255,8 @@ function PetsPage() {
             {totalPages > 1 && (
               <div className="mt-6 flex flex-col items-center justify-center gap-4 sm:flex-row sm:justify-between border-t border-border pt-4">
                 <div className="text-sm text-foreground/60">
-                  Showing {(currentPage - 1) * pageSize + 1} to {Math.min(currentPage * pageSize, totalElements)} of {totalElements} patients
+                  Showing {(currentPage - 1) * pageSize + 1} to{" "}
+                  {Math.min(currentPage * pageSize, totalElements)} of {totalElements} patients
                 </div>
                 <div className="flex items-center gap-2">
                   <button
@@ -281,7 +323,9 @@ function PetsPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Patient Record</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete <span className="font-semibold text-foreground">{petToDelete?.petName}</span>? This action cannot be undone and will permanently delete this patient record.
+              Are you sure you want to delete{" "}
+              <span className="font-semibold text-foreground">{petToDelete?.petName}</span>? This
+              action cannot be undone and will permanently delete this patient record.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
