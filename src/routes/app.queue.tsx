@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
-import { CheckCircle2, MonitorPlay, RefreshCw, Users } from "lucide-react";
+import { CheckCircle2, Clock3, MonitorPlay, RefreshCw, TicketCheck, UserRoundCheck, Users } from "lucide-react";
 import { StaffLayout } from "@/components/app/StaffLayout";
 import { AdminHospitalSelector } from "@/components/app/AdminHospitalSelector";
 
@@ -9,6 +9,8 @@ import { StatusBadge } from "@/components/app/kit/StatusBadge";
 import { apiClient } from "@/lib/api-client";
 import { endpoints } from "@/lib/api/endpoints";
 import type { Appointment, AppointmentStatus } from "@/lib/api/types";
+import { Button } from "@/components/ui/button";
+import { InitialsAvatar } from "@/components/app/ui";
 
 export const Route = createFileRoute("/app/queue")({
   head: () => ({
@@ -128,20 +130,23 @@ function QueuePage() {
     <StaffLayout title="Reception & Queue" subtitle="Today's check-ins" permission="appointments:read">
       <AdminHospitalSelector />
       <div className="space-y-5">
-        <div className="grid gap-4 sm:grid-cols-4">
-          <StatCard label="Now serving" value={serving?.tokenNumber ? `#${serving.tokenNumber}` : "—"} hint={serving?.petName} />
-          <StatCard label="Waiting" value={waiting.length} hint="Checked in, not called" />
-          <StatCard label="Completed" value={done} hint="So far today" />
-          <div className="flex items-center justify-center gap-2 rounded-[1.5rem] border border-border bg-card p-5">
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <StatCard label="Now serving" value={serving?.tokenNumber ? `#${serving.tokenNumber}` : "—"} hint={serving?.petName || "Queue ready"} icon={TicketCheck} accent />
+          <StatCard label="Waiting" value={waiting.length} hint="Checked in, not called" icon={Users} />
+          <StatCard label="Completed" value={done} hint="Finished so far today" icon={CheckCircle2} />
+          <div className="admin-stat flex min-h-36 flex-col justify-between rounded-lg border border-border bg-card p-5 shadow-sm">
+            <div><p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">Waiting room display</p><p className="mt-2 text-sm text-foreground/65">Open the live token board on a clinic screen.</p></div>
+            <div className="mt-4 flex gap-2">
             <Link
               to="/app/now-serving"
-              className="inline-flex items-center gap-2 rounded-full bg-forest px-5 py-2.5 text-sm font-medium text-primary-foreground"
+              className="inline-flex h-9 flex-1 items-center justify-center gap-2 rounded-md bg-forest px-4 text-xs font-semibold text-primary-foreground"
             >
               <MonitorPlay className="size-4" /> TV display
             </Link>
-            <button aria-label="Refresh" onClick={load} className="rounded-full border border-border p-2.5">
+            <Button aria-label="Refresh queue" title="Refresh queue" variant="outline" size="icon" onClick={load}>
               <RefreshCw className="size-4" />
-            </button>
+            </Button>
+            </div>
           </div>
         </div>
 
@@ -156,99 +161,105 @@ function QueuePage() {
             />
           </Panel>
         ) : (
-          <Panel title={`${list.length} appointments today`}>
+          <Panel className="overflow-hidden p-0 lg:p-0">
+            <div className="flex flex-col gap-3 border-b border-border px-5 py-5 sm:flex-row sm:items-center sm:justify-between lg:px-6">
+              <div><p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">Live reception desk</p><h2 className="mt-1 text-xl font-bold">{list.length} appointments today</h2></div>
+              <div className="flex items-center gap-2 text-xs text-muted-foreground"><span className="size-2 animate-pulse rounded-full bg-forest" /> Updates every 15 seconds</div>
+            </div>
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[760px] text-left text-sm">
-                <thead className="text-xs uppercase text-foreground/50">
+              <table className="w-full min-w-[900px] text-left text-sm">
+                <thead className="bg-muted/35 text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
                   <tr>
-                    <th className="pb-3">Token</th>
-                    <th className="pb-3">Time</th>
-                    <th className="pb-3">Pet</th>
-                    <th className="pb-3">Owner</th>
-                    <th className="pb-3">Doctor</th>
-                    <th className="pb-3">Status</th>
-                    <th className="pb-3 text-right">Action</th>
+                    <th className="px-6 py-3">Token</th>
+                    <th className="px-4 py-3">Patient</th>
+                    <th className="px-4 py-3">Visit time</th>
+                    <th className="px-4 py-3">Doctor</th>
+                    <th className="px-4 py-3">Status</th>
+                    <th className="px-6 py-3 text-right">Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   {list.map((a) => (
-                    <tr key={a.id} className="border-t border-border">
-                      <td className="py-3 font-mono text-base font-bold text-forest">
-                        {a.tokenNumber ? `#${a.tokenNumber}` : "—"}
+                    <tr key={a.id} className={`border-t border-border transition-colors hover:bg-sage/20 ${a.id === serving?.id ? "bg-sage/35" : ""}`}>
+                      <td className="px-6 py-4">
+                        <span className={`inline-flex min-w-12 items-center justify-center rounded-md px-2.5 py-2 font-mono text-sm font-bold ${a.tokenNumber ? "bg-forest text-primary-foreground" : "bg-muted text-muted-foreground"}`}>{a.tokenNumber ? `#${a.tokenNumber}` : "—"}</span>
                       </td>
-                      <td className="py-3 text-foreground/70">{timeLabel(a.scheduledAt)}</td>
-                      <td className="py-3 font-medium">{a.petName}</td>
-                      <td className="py-3 text-foreground/70">{a.ownerName}</td>
-                      <td className="py-3 text-foreground/70">{a.doctorName}</td>
-                      <td className="py-3">
+                      <td className="px-4 py-4"><div className="flex items-center gap-3"><InitialsAvatar name={a.petName} className="size-9 text-[11px]" /><div><p className="font-semibold">{a.petName}</p><p className="mt-0.5 text-xs text-muted-foreground">{a.ownerName}</p></div></div></td>
+                      <td className="px-4 py-4"><p className="flex items-center gap-1.5 font-medium"><Clock3 className="size-3.5 text-clay" />{timeLabel(a.scheduledAt)}</p><p className="mt-0.5 text-xs text-muted-foreground">Scheduled arrival</p></td>
+                      <td className="px-4 py-4 text-foreground/75">{a.doctorName}</td>
+                      <td className="px-4 py-4">
                         <StatusBadge status={a.status} />
                       </td>
-                      <td className="py-3 text-right">
+                      <td className="px-6 py-4 text-right">
                         {a.status === "SCHEDULED" || a.status === "CONFIRMED" ? (
-                          <button
+                          <Button
                             disabled={busy === a.id}
                             onClick={() => checkIn(a.id)}
-                            className="rounded-full bg-forest px-4 py-2 text-xs font-medium text-primary-foreground disabled:opacity-60"
+                            size="sm"
+                            className="gap-1.5"
                           >
-                            Check in
-                          </button>
+                            <UserRoundCheck className="size-3.5" /> Check in
+                          </Button>
                         ) : a.status === "CHECKED_IN" || (a.status as string) === "WAITING" ? (
                           <div className="flex justify-end gap-2">
-                            <button
+                            <Button
                               disabled={busy === a.id}
                               onClick={() => setStatus(a.id, "IN_PROGRESS")}
-                              className="rounded-full border border-forest px-4 py-2 text-xs font-medium text-forest disabled:opacity-60"
+                              size="sm"
                             >
                               Call in
-                            </button>
-                            <button
+                            </Button>
+                            <Button
                               disabled={busy === a.id}
                               onClick={() => skipPatient(a.id)}
-                              className="rounded-full border border-border px-4 py-2 text-xs font-medium text-foreground/70 disabled:opacity-60"
+                              variant="outline"
+                              size="sm"
                             >
                               Skip
-                            </button>
-                            <button
+                            </Button>
+                            <Button
                               disabled={busy === a.id}
                               onClick={() => setStatus(a.id, "NO_SHOW")}
-                              className="rounded-full border border-destructive px-4 py-2 text-xs font-medium text-destructive disabled:opacity-60"
+                              variant="outline"
+                              size="sm"
+                              className="border-destructive text-destructive hover:bg-destructive/10 hover:text-destructive"
                             >
                               No-show
-                            </button>
+                            </Button>
                           </div>
                         ) : (a.status as string) === "SKIPPED" ? (
                           <div className="flex justify-end gap-2">
-                            <button
+                            <Button
                               disabled={busy === a.id}
                               onClick={() => recallPatient(a.id)}
-                              className="rounded-full border border-forest px-4 py-2 text-xs font-medium text-forest disabled:opacity-60"
+                              size="sm"
                             >
                               Recall
-                            </button>
-                            <button
+                            </Button>
+                            <Button
                               disabled={busy === a.id}
                               onClick={() => setStatus(a.id, "NO_SHOW")}
-                              className="rounded-full border border-destructive px-4 py-2 text-xs font-medium text-destructive disabled:opacity-60"
+                              variant="outline" size="sm" className="border-destructive text-destructive hover:bg-destructive/10 hover:text-destructive"
                             >
                               No-show
-                            </button>
+                            </Button>
                           </div>
                         ) : a.status === "IN_PROGRESS" || (a.status as string) === "CALLED" ? (
                           <div className="flex justify-end gap-2">
-                            <button
+                            <Button
                               disabled={busy === a.id}
                               onClick={() => setStatus(a.id, "COMPLETED")}
-                              className="inline-flex items-center gap-1.5 rounded-full border border-border px-4 py-2 text-xs font-medium disabled:opacity-60"
+                              variant="outline" size="sm" className="gap-1.5"
                             >
                               <CheckCircle2 className="size-3.5" /> Complete
-                            </button>
-                            <button
+                            </Button>
+                            <Button
                               disabled={busy === a.id}
                               onClick={() => setStatus(a.id, "NO_SHOW")}
-                              className="rounded-full border border-destructive px-4 py-2 text-xs font-medium text-destructive disabled:opacity-60"
+                              variant="outline" size="sm" className="border-destructive text-destructive hover:bg-destructive/10 hover:text-destructive"
                             >
                               No-show
-                            </button>
+                            </Button>
                           </div>
                         ) : (
                           <span className="text-xs text-foreground/40">—</span>

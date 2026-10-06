@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { CalendarDays, ChevronLeft, ChevronRight, Plus, X, AlertTriangle } from "lucide-react";
+import { CalendarDays, ChevronLeft, ChevronRight, Plus, X, AlertTriangle, Clock3, Move } from "lucide-react";
 import { StaffLayout } from "@/components/app/StaffLayout";
 import { AdminHospitalSelector } from "@/components/app/AdminHospitalSelector";
 
@@ -11,6 +11,7 @@ import { todayISODate } from "@/components/app/kit/SlotPicker";
 import { ApiError, apiClient } from "@/lib/api-client";
 import { endpoints } from "@/lib/api/endpoints";
 import type { Appointment, Branch } from "@/lib/api/types";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/app/calendar")({
   head: () => ({
@@ -138,30 +139,29 @@ function CalendarPage() {
     <StaffLayout title="Appointment Calendar" subtitle="Day & week schedule" permission="appointments:read">
       <AdminHospitalSelector />
       <div className="space-y-5">
-        <Panel>
-          <div className="flex flex-wrap items-center justify-between gap-3">
+        <Panel className="p-0 lg:p-0">
+          <div className="flex flex-wrap items-center justify-between gap-4 px-5 py-5 lg:px-6">
             <div className="flex items-center gap-2">
-              <button
+              <Button
                 aria-label="Previous"
+                variant="outline"
+                size="icon"
                 onClick={() => setAnchor((d) => addDays(d, view === "day" ? -1 : -7))}
-                className="rounded-full border border-border p-2"
               >
                 <ChevronLeft className="size-4" />
-              </button>
-              <button
-                onClick={() => setAnchor(new Date())}
-                className="rounded-full border border-border px-4 py-2 text-sm"
-              >
+              </Button>
+              <Button variant="outline" onClick={() => setAnchor(new Date())} className="h-9 px-4">
                 Today
-              </button>
-              <button
+              </Button>
+              <Button
                 aria-label="Next"
+                variant="outline"
+                size="icon"
                 onClick={() => setAnchor((d) => addDays(d, view === "day" ? 1 : 7))}
-                className="rounded-full border border-border p-2"
               >
                 <ChevronRight className="size-4" />
-              </button>
-              <p className="ml-2 text-sm font-medium">
+              </Button>
+              <p className="ml-2 hidden text-sm font-semibold sm:block">
                 {view === "day"
                   ? anchor.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" })
                   : `${days[0].toLocaleDateString(undefined, { month: "short", day: "numeric" })} – ${days[6].toLocaleDateString(undefined, { month: "short", day: "numeric" })}`}
@@ -172,7 +172,7 @@ function CalendarPage() {
               <select
                 value={branchId}
                 onChange={(e) => setBranchId(e.target.value)}
-                className="rounded-full border border-border bg-background px-4 py-2 text-sm outline-none focus:border-forest"
+                className="h-9 rounded-lg border border-border bg-background px-3 text-sm outline-none focus:border-forest"
               >
                 {branches.map((b) => (
                   <option key={b.id} value={b.id}>
@@ -180,36 +180,33 @@ function CalendarPage() {
                   </option>
                 ))}
               </select>
-              <div className="flex rounded-full border border-border p-1">
+              <div className="flex rounded-lg border border-border bg-muted/40 p-1">
                 {(["day", "week"] as const).map((v) => (
-                  <button
+                  <Button
                     key={v}
+                    size="sm"
+                    variant={view === v ? "default" : "ghost"}
                     onClick={() => setView(v)}
-                    className={`rounded-full px-4 py-1.5 text-sm capitalize ${
-                      view === v ? "bg-forest text-primary-foreground" : "text-foreground/70"
-                    }`}
+                    className="h-7 px-3 text-xs capitalize"
                   >
                     {v}
-                  </button>
+                  </Button>
                 ))}
               </div>
-              <button
-                onClick={() => setCreating((v) => !v)}
-                className="inline-flex items-center gap-2 rounded-full bg-forest px-5 py-2.5 text-sm font-medium text-primary-foreground"
-              >
+              <Button onClick={() => setCreating((v) => !v)} className="h-9 gap-2">
                 {creating ? <X className="size-4" /> : <Plus className="size-4" />}
                 {creating ? "Close" : "New appointment"}
-              </button>
+              </Button>
             </div>
           </div>
           {banner ? (
-            <p className="mt-3 flex items-center gap-2 rounded-2xl bg-destructive/10 px-4 py-3 text-sm text-destructive">
+            <p className="mx-5 mb-4 flex items-center gap-2 rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive lg:mx-6">
               <AlertTriangle className="size-4 shrink-0" /> {banner}
             </p>
           ) : null}
-          <p className="mt-3 text-xs text-foreground/50">
-            Drag an appointment card onto another time slot to reschedule it. Past and out-of-hours cells are blocked.
-          </p>
+          <div className="flex items-center gap-2 border-t border-border bg-muted/35 px-5 py-3 text-xs text-muted-foreground lg:px-6">
+            <Move className="size-3.5" /> Drag appointments to reschedule. Unavailable hours are shaded.
+          </div>
         </Panel>
 
         {creating ? (
@@ -235,19 +232,19 @@ function CalendarPage() {
             />
           </Panel>
         ) : (
-          <Panel>
+          <Panel className="overflow-hidden p-0 lg:p-0">
             <div className="overflow-x-auto">
               <div
-                className="min-w-[720px]"
+                className="min-w-[840px]"
                 style={{ display: "grid", gridTemplateColumns: `72px repeat(${days.length}, minmax(0, 1fr))` }}
               >
-                <div />
+                <div className="sticky left-0 z-10 border-b border-border bg-card" />
                 {days.map((d) => (
-                  <div key={d.toISOString()} className="pb-2 text-center">
-                    <p className="text-xs uppercase text-foreground/50">
+                  <div key={d.toISOString()} className={`border-b border-l border-border px-2 py-4 text-center ${isoDate(d) === isoDate(new Date()) ? "bg-sage/45" : "bg-card"}`}>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
                       {d.toLocaleDateString(undefined, { weekday: "short" })}
                     </p>
-                    <p className={`text-sm font-medium ${isoDate(d) === isoDate(new Date()) ? "text-forest" : ""}`}>
+                    <p className={`mx-auto mt-1 flex size-8 items-center justify-center rounded-full text-sm font-bold ${isoDate(d) === isoDate(new Date()) ? "bg-forest text-primary-foreground" : "text-foreground"}`}>
                       {d.getDate()}
                     </p>
                   </div>
@@ -255,7 +252,7 @@ function CalendarPage() {
 
                 {hours.map((h) => (
                   <div key={h} className="contents">
-                    <div className="border-t border-border py-3 pr-2 text-right text-xs text-foreground/50">
+                    <div className="sticky left-0 z-10 border-t border-border bg-card py-4 pr-3 text-right text-[11px] font-medium text-muted-foreground">
                       {String(h).padStart(2, "0")}:00
                     </div>
                     {days.map((d) => {
@@ -270,8 +267,8 @@ function CalendarPage() {
                             if (!blocked && !past) e.preventDefault();
                           }}
                           onDrop={() => drop(d, h)}
-                          className={`min-h-14 space-y-1 border-t border-l border-border p-1 ${
-                            blocked || past ? "bg-muted/60" : "bg-background"
+                          className={`min-h-20 space-y-1.5 border-t border-l border-border p-1.5 transition-colors ${
+                            blocked || past ? "bg-muted/70" : "bg-card hover:bg-sage/20"
                           }`}
                         >
                           {forCell(d, h).map((a) => (
@@ -280,7 +277,7 @@ function CalendarPage() {
                               draggable={a.status !== "COMPLETED" && a.status !== "CANCELLED"}
                               onDragStart={() => setDragId(a.id)}
                               onDragEnd={() => setDragId(null)}
-                              className={`cursor-grab rounded-xl border border-border bg-card p-2 text-left text-xs shadow-sm active:cursor-grabbing ${
+                              className={`cursor-grab rounded-md border-l-[3px] border-forest bg-sage/55 p-2.5 text-left text-xs shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md active:cursor-grabbing ${
                                 dragId === a.id ? "opacity-50" : ""
                               }`}
                             >
@@ -288,8 +285,8 @@ function CalendarPage() {
                                 <span className={`size-1.5 shrink-0 rounded-full ${statusAccent(a.status)}`} />
                                 <span className="truncate font-medium">{a.petName}</span>
                               </span>
-                              <p className="truncate text-foreground/60">{timeLabel(a.scheduledAt)} · {a.service}</p>
-                              <p className="truncate text-foreground/50">{a.doctorName}</p>
+                               <p className="mt-1 flex items-center gap-1 truncate text-foreground/65"><Clock3 className="size-3" />{timeLabel(a.scheduledAt)} · {a.service}</p>
+                               <p className="mt-0.5 truncate text-muted-foreground">{a.doctorName}</p>
                             </div>
                           ))}
                         </div>
@@ -300,7 +297,7 @@ function CalendarPage() {
               </div>
             </div>
 
-            <div className="mt-5 flex flex-wrap gap-2 border-t border-border pt-4">
+            <div className="flex flex-wrap gap-2 border-t border-border bg-muted/30 px-5 py-4 lg:px-6">
               {(["SCHEDULED", "CONFIRMED", "CHECKED_IN", "IN_PROGRESS", "COMPLETED", "CANCELLED", "NO_SHOW"] as const).map(
                 (s) => (
                   <StatusBadge key={s} status={s} />
